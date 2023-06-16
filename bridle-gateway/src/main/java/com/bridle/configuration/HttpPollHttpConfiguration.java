@@ -52,7 +52,6 @@ public class HttpPollHttpConfiguration {
     }
 
     @Bean(name = ComponentNameConstants.REST_POLL_COMPONENT_NAME)
-    @Lazy
     public HttpComponent restPollComponent() {
         return new HttpComponent();
     }
@@ -70,7 +69,6 @@ public class HttpPollHttpConfiguration {
     }
 
     @Bean(name = REST_CALL_COMPONENT_NAME)
-    @Lazy
     public HttpComponent restCallComponent() {
         return new HttpComponent();
     }
