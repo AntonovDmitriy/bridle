@@ -36,13 +36,14 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
 public class KafkaHttpKafkaRouteTest {
 
     private static final String TOPIC_NAME_REQUST = "routetest_request";
+
     private static final String TOPIC_NAME_RESPONSE = "routetest_response";
 
     @Autowired
     private ProducerTemplate producerTemplate;
+
     @Autowired
     private CamelContext context;
-    private static Logger logger = LoggerFactory.getLogger(KafkaHttpKafkaRouteTest.class);
 
     @Container
     private static final KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"));
@@ -58,9 +59,11 @@ public class KafkaHttpKafkaRouteTest {
         System.setProperty("kafka-in.brokers", "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
         System.setProperty("kafka-out.brokers", "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
         kafka.execInContainer("/bin/bash", "-c",
-                String.format("kafka-topics --create --bootstrap-server localhost:9092 --topic %s --partitions 1 --replication-factor 1", TOPIC_NAME_REQUST));
+                String.format("kafka-topics --create --bootstrap-server localhost:9092 " +
+                        "--topic %s --partitions 1 --replication-factor 1", TOPIC_NAME_REQUST));
         kafka.execInContainer("/bin/bash", "-c",
-                String.format("kafka-topics --create --bootstrap-server localhost:9092 --topic %s --partitions 1 --replication-factor 1", TOPIC_NAME_RESPONSE));
+                String.format("kafka-topics --create --bootstrap-server localhost:9092 " +
+                        "--topic %s --partitions 1 --replication-factor 1", TOPIC_NAME_RESPONSE));
 
         mockServer.start();
         System.setProperty("rest-call.port", mockServer.getServerPort().toString());

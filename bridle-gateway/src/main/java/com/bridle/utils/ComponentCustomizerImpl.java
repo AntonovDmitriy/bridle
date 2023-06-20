@@ -9,7 +9,9 @@ import java.util.Objects;
 
 public class ComponentCustomizerImpl implements ComponentCustomizer {
     private final CamelContext context;
+
     private final Object propertySource;
+
     private final String componentName;
 
     public ComponentCustomizerImpl(CamelContext context, Object propertySource, String componentName) {

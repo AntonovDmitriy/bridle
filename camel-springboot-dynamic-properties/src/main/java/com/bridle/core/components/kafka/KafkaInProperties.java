@@ -11,25 +11,37 @@ public class KafkaInProperties extends AbstractProperties {
 
     @NotBlank
     private String topic;
+
     @NotBlank
     private String brokers;
+
     @Min(1)
     private int consumers;
+
     @NotBlank
     private String groupId;
+
     private boolean breakOnFirstError;
+
     private AutoOffsetReset autoOffsetReset;
+
     @Positive
     private Long maxPollIntervalMs;
+
     @Positive
     private Integer maxPollRecords;
+
     @Positive
     private Integer maxPartitionFetchBytes;
+
     @Positive
     private Integer heartbeatIntervalMs;
+
     @Positive
     private Integer sessionTimeoutMs;
+
     private ChangeOffsetTo changeOffsetTo;
+
     @NotEmpty
     private String valueDeserializerClassName = "org.apache.kafka.common.serialization.StringDeserializer";
 

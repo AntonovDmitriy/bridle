@@ -16,11 +16,15 @@ import static org.mockito.Mockito.when;
 class SimpleSchedulerEndpointConsumerBuilderFactoryTest {
 
     private static final int EXPECTED_DELAY = 12344;
+
     private static final int EXPECTED_THREAD_COUNT = 34;
+
     @InjectMocks
     private SimpleSchedulerEndpointConsumerBuilderFactory schedulerFactory;
+
     @Mock
     private PropertiesLoader loader;
+
     private SchedulerProperties properties;
 
     @BeforeEach

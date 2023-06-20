@@ -33,6 +33,7 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
 public class HttpPollKafkaRouteTest {
 
     private static final String TOPIC_NAME = "routetest";
+
     @Autowired
     private CamelContext context;
 
@@ -42,7 +43,8 @@ public class HttpPollKafkaRouteTest {
             .withTag("mockserver-" + MockServerClient.class.getPackage().getImplementationVersion()));
 
     @Container
-    private static final KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"));
+    private static final KafkaContainer kafka =
+            new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"));
 
     @BeforeAll
     public static void setUp() throws Exception {
@@ -55,8 +57,9 @@ public class HttpPollKafkaRouteTest {
 
         kafka.start();
         System.setProperty("kafka-out.brokers", "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
-        org.testcontainers.containers.Container.ExecResult topicCreatedResult = kafka.execInContainer("/bin/bash", "-c",
-                String.format("kafka-topics --create --bootstrap-server localhost:9092 --topic %s --partitions 1 --replication-factor 1", TOPIC_NAME));
+        kafka.execInContainer("/bin/bash", "-c",
+                String.format("kafka-topics --create --bootstrap-server localhost:9092 " +
+                        "--topic %s --partitions 1 --replication-factor 1", TOPIC_NAME));
     }
 
     @AfterAll

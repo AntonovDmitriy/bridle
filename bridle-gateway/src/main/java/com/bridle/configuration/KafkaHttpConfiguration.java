@@ -18,11 +18,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 
+import static com.bridle.configuration.ComponentNameConstants.REST_CALL_COMPONENT_NAME;
+import static com.bridle.configuration.KafkaHttpConfiguration.GATEWAY_TYPE_KAFKA_HTTP;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.http;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.kafka;
 
 @Configuration
-@ConditionalOnProperty(name = "gateway.type", havingValue = KafkaHttpConfiguration.GATEWAY_TYPE_KAFKA_HTTP)
+@ConditionalOnProperty(name = "gateway.type", havingValue = GATEWAY_TYPE_KAFKA_HTTP)
 public class KafkaHttpConfiguration {
 
     public static final String GATEWAY_TYPE_KAFKA_HTTP = "kafka-http";
@@ -40,17 +42,18 @@ public class KafkaHttpConfiguration {
 
     @Lazy
     @Bean
-    public ComponentCustomizer configureKafkaComponent(CamelContext context, KafkaComponentConfiguration componentConfiguration) {
+    public ComponentCustomizer configureKafkaComponent(CamelContext context,
+                                                       KafkaComponentConfiguration componentConfiguration) {
         return new ComponentCustomizerImpl(context, componentConfiguration, ComponentNameConstants.KAFKA_IN_COMPONENT_NAME);
     }
 
-    @ConfigurationProperties(prefix = ComponentNameConstants.REST_CALL_COMPONENT_NAME)
+    @ConfigurationProperties(prefix = REST_CALL_COMPONENT_NAME)
     @Bean
     public HttpProducerConfiguration restCallConfiguration() {
         return new HttpProducerConfiguration();
     }
 
-    @Bean(name = ComponentNameConstants.REST_CALL_COMPONENT_NAME)
+    @Bean(name = REST_CALL_COMPONENT_NAME)
     @Lazy
     public HttpComponent restCallComponent() {
         return new HttpComponent();
@@ -58,18 +61,21 @@ public class KafkaHttpConfiguration {
 
     @Lazy
     @Bean
-    public ComponentCustomizer configureHttpComponent(CamelContext context, HttpProducerConfiguration componentConfiguration) {
-        return new ComponentCustomizerImpl(context, componentConfiguration, ComponentNameConstants.REST_CALL_COMPONENT_NAME);
+    public ComponentCustomizer configureHttpComponent(CamelContext context,
+                                                      HttpProducerConfiguration componentConfiguration) {
+        return new ComponentCustomizerImpl(context, componentConfiguration, REST_CALL_COMPONENT_NAME);
     }
 
     @Bean
     public RouteBuilder kafkaHttpRoute(ValidatedKafkaConsumerConfiguration kafkaConfiguration,
                                        HttpProducerConfiguration restConfiguration) {
 
-        EndpointConsumerBuilder kafka = kafka(ComponentNameConstants.KAFKA_IN_COMPONENT_NAME, kafkaConfiguration.getTopic());
-        kafkaConfiguration.getEndpointProperties().ifPresent(additional -> additional.forEach(kafka::doSetProperty));
+        EndpointConsumerBuilder kafka = kafka(ComponentNameConstants.KAFKA_IN_COMPONENT_NAME,
+                kafkaConfiguration.getTopic());
+        kafkaConfiguration.getEndpointProperties()
+                .ifPresent(additional -> additional.forEach(kafka::doSetProperty));
 
-        EndpointProducerBuilder http = http(ComponentNameConstants.REST_CALL_COMPONENT_NAME, restConfiguration.createHttpUrl());
+        EndpointProducerBuilder http = http(REST_CALL_COMPONENT_NAME, restConfiguration.createHttpUrl());
         restConfiguration.getEndpointProperties().ifPresent(additional -> additional.forEach(http::doSetProperty));
 
         return new KafkaHttpRoute(kafka, http);

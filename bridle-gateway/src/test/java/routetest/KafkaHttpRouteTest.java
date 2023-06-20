@@ -4,7 +4,6 @@ import com.bridle.App;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.NotifyBuilder;
-import org.apache.camel.component.kafka.KafkaConfiguration;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -13,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.mockserver.client.MockServerClient;
-import org.mockserver.model.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -38,14 +36,16 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
 public class KafkaHttpRouteTest {
 
     private static final String TOPIC_NAME = "routetest";
+
     @Autowired
     private ProducerTemplate producerTemplate;
+
     @Autowired
     private CamelContext context;
-    private static Logger logger = LoggerFactory.getLogger(KafkaHttpRouteTest.class);
 
     @Container
-    private static final KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"));
+    private static final KafkaContainer kafka =
+            new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"));
 
     @Container
     public static MockServerContainer mockServer = new MockServerContainer(DockerImageName
@@ -56,9 +56,9 @@ public class KafkaHttpRouteTest {
     public static void setUp() throws Exception {
         kafka.start();
         System.setProperty("kafka-in.brokers", "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
-        org.testcontainers.containers.Container.ExecResult topicCreatedResult = kafka.execInContainer("/bin/bash", "-c",
-                String.format("kafka-topics --create --bootstrap-server localhost:9092 --topic %s --partitions 1 --replication-factor 1", TOPIC_NAME));
-        logger.info(topicCreatedResult::toString);
+        kafka.execInContainer("/bin/bash", "-c",
+                String.format("kafka-topics --create --bootstrap-server localhost:9092 " +
+                        "--topic %s --partitions 1 --replication-factor 1", TOPIC_NAME));
 
         mockServer.start();
         System.setProperty("rest-call.port", mockServer.getServerPort().toString());
@@ -70,9 +70,8 @@ public class KafkaHttpRouteTest {
 
     }
 
-
     @AfterAll
-    public static void afterAll() throws Exception{
+    public static void afterAll() throws Exception {
         mockServer.stop();
     }
 

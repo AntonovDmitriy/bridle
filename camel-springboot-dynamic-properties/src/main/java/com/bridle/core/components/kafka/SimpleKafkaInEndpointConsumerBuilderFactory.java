@@ -10,6 +10,7 @@ import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.kafka;
 public class SimpleKafkaInEndpointConsumerBuilderFactory implements KafkaInFactory {
 
     public static final String DEFAULT_CONFIG_PROPERTIES_KEY_KAFKA_IN = "kafka-in";
+
     private final PropertiesLoader loader;
 
     public SimpleKafkaInEndpointConsumerBuilderFactory(PropertiesLoader loader) {

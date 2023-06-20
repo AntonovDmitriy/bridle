@@ -7,6 +7,7 @@ import javax.validation.constraints.Positive;
 public class SchedulerProperties extends AbstractProperties {
     @Positive
     private int delayMillis;
+
     @Positive
     private int threadCount;
 

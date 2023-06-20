@@ -12,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @ContextConfiguration(classes = {SimpleBridleConfiguration.class})
@@ -20,7 +20,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class ConfigurationPropertiesJsr303ValidatorTest {
 
     private static final int EXPECTED_INTEGER_VALUE = 1;
+
     private static final String EXPECTED_STRING_VALUE = "localhost:8080";
+
     @Autowired
     private PropertiesLoader propertiesLoader;
 

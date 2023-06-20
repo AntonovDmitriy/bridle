@@ -8,12 +8,15 @@ import static com.bridle.configuration.HttpPollHttpConfiguration.GATEWAY_TYPE_HT
 
 public class HttpPollHttpRoute extends RouteBuilder {
 
-
     private final EndpointConsumerBuilder scheduler;
+
     private final EndpointProducerBuilder restPoll;
+
     private final EndpointProducerBuilder restCall;
 
-    public HttpPollHttpRoute(EndpointConsumerBuilder scheduler, EndpointProducerBuilder restPoll, EndpointProducerBuilder restCall) {
+    public HttpPollHttpRoute(EndpointConsumerBuilder scheduler,
+                             EndpointProducerBuilder restPoll,
+                             EndpointProducerBuilder restCall) {
         this.scheduler = scheduler;
         this.restPoll = restPoll;
         this.restCall = restCall;

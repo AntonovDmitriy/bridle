@@ -6,7 +6,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.web.client.RestTemplate;
@@ -33,8 +37,9 @@ public class HttpKafkaRouteTest {
     public static void setUp() throws Exception {
         kafka.start();
         System.setProperty("kafka-out.brokers", "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
-        org.testcontainers.containers.Container.ExecResult topicCreatedResult = kafka.execInContainer("/bin/bash", "-c",
-                String.format("kafka-topics --create --bootstrap-server localhost:9092 --topic %s --partitions 1 --replication-factor 1", TOPIC_NAME));
+        kafka.execInContainer("/bin/bash", "-c",
+                String.format("kafka-topics --create --bootstrap-server localhost:9092" +
+                        " --topic %s --partitions 1 --replication-factor 1", TOPIC_NAME));
     }
 
     @Test

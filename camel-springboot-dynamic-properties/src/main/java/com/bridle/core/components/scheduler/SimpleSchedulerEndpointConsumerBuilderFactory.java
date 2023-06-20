@@ -3,14 +3,13 @@ package com.bridle.core.components.scheduler;
 import com.bridle.core.properties.PropertiesLoader;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 
-import java.util.Map;
-
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.scheduler;
 
 
 public class SimpleSchedulerEndpointConsumerBuilderFactory implements SchedulerFactory {
 
     public static final String DEFAULT_CONFIG_PROPERTIES_KEY_SCHEDULER = "scheduler";
+
     private final PropertiesLoader propertiesLoader;
 
     public SimpleSchedulerEndpointConsumerBuilderFactory(PropertiesLoader propertiesLoader) {

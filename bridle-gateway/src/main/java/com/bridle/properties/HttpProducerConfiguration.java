@@ -1,4 +1,4 @@
-package com.bridle.configuration.component;
+package com.bridle.properties;
 
 import org.apache.camel.component.http.springboot.HttpComponentConfiguration;
 import org.springframework.validation.annotation.Validated;

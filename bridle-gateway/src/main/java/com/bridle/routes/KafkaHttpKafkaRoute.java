@@ -10,7 +10,9 @@ public class KafkaHttpKafkaRoute extends RouteBuilder {
 
 
     private final EndpointConsumerBuilder kafkaIn;
+
     private final EndpointProducerBuilder restCall;
+
     private final EndpointProducerBuilder kafkaOut;
 
 

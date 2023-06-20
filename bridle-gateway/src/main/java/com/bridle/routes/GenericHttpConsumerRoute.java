@@ -3,9 +3,7 @@ package com.bridle.routes;
 import com.bridle.properties.HttpConsumerConfiguration;
 import org.apache.camel.builder.RouteBuilder;
 
-import java.util.List;
-
-public class GenericHttpConsumerRoute  extends RouteBuilder {
+public class GenericHttpConsumerRoute extends RouteBuilder {
 
     private final HttpConsumerConfiguration restConfiguration;
 

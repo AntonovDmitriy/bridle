@@ -5,11 +5,9 @@ import com.bridle.properties.ValidatedKafkaProducerConfiguration;
 import com.bridle.routes.HttpKafkaRoute;
 import com.bridle.utils.ComponentCustomizerImpl;
 import org.apache.camel.CamelContext;
-import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.kafka.KafkaComponent;
-import org.apache.camel.component.rest.RestComponent;
 import org.apache.camel.spi.ComponentCustomizer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -19,7 +17,7 @@ import org.springframework.context.annotation.Lazy;
 
 import static com.bridle.configuration.ComponentNameConstants.KAFKA_OUT_COMPONENT_NAME;
 import static com.bridle.configuration.ComponentNameConstants.REST_IN_COMPONENT_NAME;
-import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.*;
+import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.kafka;
 
 @Configuration
 @ConditionalOnProperty(name = "gateway.type", havingValue = HttpKafkaConfiguration.GATEWAY_TYPE_HTTP_KAFKA)
@@ -30,7 +28,7 @@ public class HttpKafkaConfiguration {
 
     @ConfigurationProperties(prefix = REST_IN_COMPONENT_NAME)
     @Bean
-    public HttpConsumerConfiguration restInConfiguration(){
+    public HttpConsumerConfiguration restInConfiguration() {
         return new HttpConsumerConfiguration();
     }
 
@@ -47,17 +45,18 @@ public class HttpKafkaConfiguration {
 
     @Lazy
     @Bean
-    public ComponentCustomizer configureKafkaOutComponent(CamelContext context,  ValidatedKafkaProducerConfiguration componentConfiguration) {
+    public ComponentCustomizer configureKafkaOutComponent(CamelContext context,
+                                                          ValidatedKafkaProducerConfiguration componentConfiguration) {
         return new ComponentCustomizerImpl(context, componentConfiguration, KAFKA_OUT_COMPONENT_NAME);
     }
-
 
     @Bean
     public RouteBuilder kafkaHttpKafkaRoute(ValidatedKafkaProducerConfiguration kafkaOutConfiguration,
                                             HttpConsumerConfiguration httpConsumerConfiguration) {
 
-        EndpointProducerBuilder kafkaOut = kafka(ComponentNameConstants.KAFKA_OUT_COMPONENT_NAME, kafkaOutConfiguration.getTopic());
-        kafkaOutConfiguration.getEndpointProperties().ifPresent(additional -> additional.forEach(kafkaOut::doSetProperty));
+        EndpointProducerBuilder kafkaOut = kafka(KAFKA_OUT_COMPONENT_NAME, kafkaOutConfiguration.getTopic());
+        kafkaOutConfiguration.getEndpointProperties()
+                .ifPresent(additional -> additional.forEach(kafkaOut::doSetProperty));
 
         return new HttpKafkaRoute(httpConsumerConfiguration, kafkaOut);
     }

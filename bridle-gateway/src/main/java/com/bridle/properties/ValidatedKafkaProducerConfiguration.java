@@ -6,12 +6,8 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Positive;
 import java.util.Map;
 import java.util.Optional;
-
-import static javax.validation.constraints.Pattern.Flag.CASE_INSENSITIVE;
 
 @Validated
 public class ValidatedKafkaProducerConfiguration extends KafkaComponentConfiguration {
@@ -27,14 +23,14 @@ public class ValidatedKafkaProducerConfiguration extends KafkaComponentConfigura
     }
 
     @AssertTrue(message = "ssl configuration is not consistent")
-    private boolean isSslSettingsConsistent() {
+    public boolean isSslSettingsConsistent() {
         boolean result = true;
         if (getSecurityProtocol() == null
                 || (!getSecurityProtocol().equals("PLAINTEXT")
-                    && StringUtils.isAnyBlank(  getSslKeystoreLocation(),
-                                                getSslKeystorePassword(),
-                                                getSslTruststoreLocation(),
-                                                getSslTruststorePassword()))) {
+                && StringUtils.isAnyBlank(getSslKeystoreLocation(),
+                getSslKeystorePassword(),
+                getSslTruststoreLocation(),
+                getSslTruststorePassword()))) {
             result = false;
         }
         return result;
