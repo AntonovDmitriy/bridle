@@ -44,7 +44,8 @@ public class KafkaHttpConfiguration {
     @Bean
     public ComponentCustomizer configureKafkaComponent(CamelContext context,
                                                        KafkaComponentConfiguration componentConfiguration) {
-        return new ComponentCustomizerImpl(context, componentConfiguration, ComponentNameConstants.KAFKA_IN_COMPONENT_NAME);
+        return new ComponentCustomizerImpl(context, componentConfiguration,
+                ComponentNameConstants.KAFKA_IN_COMPONENT_NAME);
     }
 
     @ConfigurationProperties(prefix = REST_CALL_COMPONENT_NAME)

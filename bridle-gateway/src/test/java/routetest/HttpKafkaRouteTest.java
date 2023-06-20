@@ -31,7 +31,8 @@ public class HttpKafkaRouteTest {
     private static final String TOPIC_NAME = "routetest";
 
     @Container
-    private static final KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"));
+    private static final KafkaContainer kafka = new KafkaContainer(
+            DockerImageName.parse("confluentinc/cp-kafka:6.2.1"));
 
     @BeforeAll
     public static void setUp() throws Exception {

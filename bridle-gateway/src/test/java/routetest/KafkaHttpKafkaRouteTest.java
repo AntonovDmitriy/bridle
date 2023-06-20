@@ -9,8 +9,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.commons.logging.Logger;
-import org.junit.platform.commons.logging.LoggerFactory;
 import org.mockserver.client.MockServerClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -46,7 +44,8 @@ public class KafkaHttpKafkaRouteTest {
     private CamelContext context;
 
     @Container
-    private static final KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"));
+    private static final KafkaContainer kafka = new KafkaContainer(DockerImageName
+            .parse("confluentinc/cp-kafka:6.2.1"));
 
     @Container
     public static MockServerContainer mockServer = new MockServerContainer(DockerImageName
@@ -76,7 +75,7 @@ public class KafkaHttpKafkaRouteTest {
 
 
     @AfterAll
-    public static void afterAll() throws Exception{
+    public static void afterAll() throws Exception {
         mockServer.stop();
     }
 

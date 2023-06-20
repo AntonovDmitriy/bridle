@@ -97,8 +97,7 @@ public class KafkaHttpKafkaConfiguration {
         EndpointProducerBuilder http = http(REST_CALL_COMPONENT_NAME, restConfiguration.createHttpUrl());
         restConfiguration.getEndpointProperties().ifPresent(additional -> additional.forEach(http::doSetProperty));
 
-        EndpointProducerBuilder kafkaOut = kafka(ComponentNameConstants.KAFKA_OUT_COMPONENT_NAME,
-                kafkaOutConfiguration.getTopic());
+        EndpointProducerBuilder kafkaOut = kafka(KAFKA_OUT_COMPONENT_NAME, kafkaOutConfiguration.getTopic());
         kafkaOutConfiguration.getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(kafkaOut::doSetProperty));
 
