@@ -1,0 +1,19 @@
+name: On PR build
+
+on:
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  build-with-test-coverage-and-sonar:
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+    steps:
+      - uses: actions/checkout@v3
+      - name: Generic build maven with test coverage and sonar
+        uses: ./.github/actions/generic-build-maven-with-test-coverage-and-sonar/
+        with:
+          sonar_token: ${{ secrets.SONAR_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
