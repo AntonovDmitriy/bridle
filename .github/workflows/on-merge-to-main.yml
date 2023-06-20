@@ -1,0 +1,29 @@
+---
+name: on merge to main
+
+on:
+  push:
+    branches:
+      - 'main'
+  workflow_dispatch:
+
+jobs:
+  build-and-publish-docker-images:
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v3
+      - name: Generic build maven with test coverage and sonar
+        uses: ./.github/actions/generic-build-maven-with-test-coverage-and-sonar/
+        with:
+          sonar_token: ${{ secrets.SONAR_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create docker image frontend and push to registry
+        uses: ./.github/actions/build-image-and-push-to-registry/
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          context: ./static
+          image_name: bridle-gateway

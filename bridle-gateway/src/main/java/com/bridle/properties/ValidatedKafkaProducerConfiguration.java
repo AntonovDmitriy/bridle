@@ -13,6 +13,7 @@ import java.util.Optional;
 public class ValidatedKafkaProducerConfiguration extends KafkaComponentConfiguration {
 
     private Map<String, Object> endpointProperties;
+
     @NotEmpty
     private String topic;
 

@@ -67,7 +67,7 @@ public class HttpPollHttpRouteTest {
     }
 
     @Test
-    public void verifySuccessHttpPollHttpScenario() throws Exception {
+    void verifySuccessHttpPollHttpScenario() throws Exception {
 
         NotifyBuilder notify = new NotifyBuilder(context).whenExactlyCompleted(3).create();
         boolean done = notify.matches(10, TimeUnit.SECONDS);

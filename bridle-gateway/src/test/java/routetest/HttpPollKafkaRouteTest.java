@@ -63,12 +63,12 @@ public class HttpPollKafkaRouteTest {
     }
 
     @AfterAll
-    public static void afterAll() throws Exception{
+    public static void afterAll() throws Exception {
         mockPollServer.stop();
     }
 
     @Test
-    public void verifySuccessHttpPollKafkaScenario() throws Exception {
+    void verifySuccessHttpPollKafkaScenario() throws Exception {
 
         NotifyBuilder notify = new NotifyBuilder(context).whenExactlyCompleted(3).create();
         boolean done = notify.matches(10, TimeUnit.SECONDS);

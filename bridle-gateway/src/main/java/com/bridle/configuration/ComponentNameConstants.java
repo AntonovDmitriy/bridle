@@ -1,17 +1,15 @@
 package com.bridle.configuration;
 
-public interface ComponentNameConstants {
+public final class ComponentNameConstants {
 
-    String KAFKA_IN_COMPONENT_NAME = "kafka-in";
+    public static final String KAFKA_IN_COMPONENT_NAME = "kafka-in";
 
-    String KAFKA_OUT_COMPONENT_NAME = "kafka-out";
+    public static final String KAFKA_OUT_COMPONENT_NAME = "kafka-out";
 
-    String REST_CALL_COMPONENT_NAME = "rest-call";
+    public static final String REST_CALL_COMPONENT_NAME = "rest-call";
 
-    String REST_IN_COMPONENT_NAME = "rest-in";
+    public static final String REST_IN_COMPONENT_NAME = "rest-in";
+    public static final String SCHEDULER_COMPONENT_NAME = "main-scheduler";
 
-
-    String SCHEDULER_COMPONENT_NAME = "main-scheduler";
-
-    String REST_POLL_COMPONENT_NAME = "rest-poll";
+    public static final String REST_POLL_COMPONENT_NAME = "rest-poll";
 }

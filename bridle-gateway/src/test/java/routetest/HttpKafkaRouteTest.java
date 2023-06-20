@@ -44,7 +44,7 @@ public class HttpKafkaRouteTest {
     }
 
     @Test
-    public void verifySuccessHttpKafkaScenario() throws Exception {
+    void verifySuccessHttpKafkaScenario() throws Exception {
 
         String uri = "http://" + "localhost" + ":" + "8080" + "/camel/myapi";
         String requestBody = "Request Body";

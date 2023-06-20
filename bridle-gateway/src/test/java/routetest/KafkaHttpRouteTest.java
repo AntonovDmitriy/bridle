@@ -74,7 +74,7 @@ public class KafkaHttpRouteTest {
     }
 
     @Test
-    public void verifyThatRouteReadMessagesFromTopicAndInvokeHttpEndpoint() throws Exception {
+    void verifyThatRouteReadMessagesFromTopicAndInvokeHttpEndpoint() throws Exception {
 
         NotifyBuilder notify = new NotifyBuilder(context).whenExactlyCompleted(1).create();
 

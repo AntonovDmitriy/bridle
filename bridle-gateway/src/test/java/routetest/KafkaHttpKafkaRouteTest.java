@@ -80,7 +80,7 @@ public class KafkaHttpKafkaRouteTest {
     }
 
     @Test
-    public void verifySuccessKafkaHttpKafkaScenario() throws Exception {
+    void verifySuccessKafkaHttpKafkaScenario() throws Exception {
 
         NotifyBuilder notify = new NotifyBuilder(context).whenExactlyCompleted(1).create();
 
