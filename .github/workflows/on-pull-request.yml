@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       security-events: write
+
     steps:
       - uses: actions/checkout@v3
       - name: Generic build maven with test coverage and sonar
