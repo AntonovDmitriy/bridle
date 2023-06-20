@@ -23,26 +23,32 @@ runs:
       with:
         languages: java
     - name: Build
-      run: mvn -B install --file pom.xml
+      run: mvn -B verify -Pcoverage
       shell: bash
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
-    - name: Cache SonarCloud packages
-      uses: actions/cache@v3
-      with:
-        path: ~/.sonar/cache
-        key: ${{ runner.os }}-sonar
-        restore-keys: ${{ runner.os }}-sonar
-    - name: Cache Maven packages
-      uses: actions/cache@v3
-      with:
-        path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2
-    - name: Build and analyze
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@master
       env:
         GITHUB_TOKEN: ${{ inputs.github_token }}
-        GITHUB_USERNAME: x-access-token
         SONAR_TOKEN: ${{ inputs.sonar_token }}
-      run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Pcoverage -Dsonar.projectKey=AntonovDmitriy_bridle
-      shell: bash
+
+#    - name: Perform CodeQL Analysis
+#      uses: github/codeql-action/analyze@v2
+#    - name: Cache SonarCloud packages
+#      uses: actions/cache@v3
+#      with:
+#        path: ~/.sonar/cache
+#        key: ${{ runner.os }}-sonar
+#        restore-keys: ${{ runner.os }}-sonar
+#    - name: Cache Maven packages
+#      uses: actions/cache@v3
+#      with:
+#        path: ~/.m2
+#        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+#        restore-keys: ${{ runner.os }}-m2
+#    - name: Build and analyzegit
+#      env:
+#        GITHUB_TOKEN: ${{ inputs.github_token }}
+#        GITHUB_USERNAME: x-access-token
+#        SONAR_TOKEN: ${{ inputs.sonar_token }}
+#      run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Pcoverage -Dsonar.projectKey=AntonovDmitriy_bridle
+#      shell: bash
