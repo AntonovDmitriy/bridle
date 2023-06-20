@@ -22,14 +22,14 @@ runs:
       uses: github/codeql-action/init@v2
       with:
         languages: java
-    - name: Build
-      run: mvn -B verify -Pcoverage
-      shell: bash
-    - name: SonarCloud Scan
-      uses: SonarSource/sonarcloud-github-action@master
-      env:
-        GITHUB_TOKEN: ${{ inputs.github_token }}
-        SONAR_TOKEN: ${{ inputs.sonar_token }}
+#    - name: Build
+#      run: mvn -B verify -Pcoverage
+#      shell: bash
+#    - name: SonarCloud Scan
+#      uses: SonarSource/sonarcloud-github-action@master
+#      env:
+#        GITHUB_TOKEN: ${{ inputs.github_token }}
+#        SONAR_TOKEN: ${{ inputs.sonar_token }}
 
 #    - name: Perform CodeQL Analysis
 #      uses: github/codeql-action/analyze@v2
@@ -45,10 +45,10 @@ runs:
 #        path: ~/.m2
 #        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
 #        restore-keys: ${{ runner.os }}-m2
-#    - name: Build and analyzegit
-#      env:
-#        GITHUB_TOKEN: ${{ inputs.github_token }}
-#        GITHUB_USERNAME: x-access-token
-#        SONAR_TOKEN: ${{ inputs.sonar_token }}
-#      run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Pcoverage -Dsonar.projectKey=AntonovDmitriy_bridle
-#      shell: bash
+    - name: Build and analyzegit
+      env:
+        GITHUB_TOKEN: ${{ inputs.github_token }}
+        GITHUB_USERNAME: x-access-token
+        SONAR_TOKEN: ${{ inputs.sonar_token }}
+      run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Pcoverage,sonar -Dsonar.projectKey=AntonovDmitriy_bridle
+      shell: bash

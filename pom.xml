@@ -19,7 +19,7 @@
         <spring-boot-version>2.7.5</spring-boot-version>
         <camel-version>3.18.3</camel-version>
         <jacoco-version>0.8.7</jacoco-version>
-        <sonar.version>3.7.0.1746</sonar.version>
+        <sonar.version>3.9.1.2184</sonar.version>
         <jacoco.reportDirectory>${project.basedir}/../target/site/jacoco-aggregate</jacoco.reportDirectory>
     </properties>
 
@@ -39,11 +39,11 @@
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>${jacoco-version}</version>
                 </plugin>
-<!--                <plugin>-->
-<!--                    <groupId>org.sonarsource.scanner.maven</groupId>-->
-<!--                    <artifactId>sonar-maven-plugin</artifactId>-->
-<!--                    <version>${sonar.version}</version>-->
-<!--                </plugin>-->
+                <plugin>
+                    <groupId>org.sonarsource.scanner.maven</groupId>
+                    <artifactId>sonar-maven-plugin</artifactId>
+                    <version>${sonar.version}</version>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
@@ -107,7 +107,7 @@
                 <sonar.organization>antonovdmitriy</sonar.organization>
                 <sonar.projectKey>AntonovDmitriy_bridle</sonar.projectKey>
                 <sonar.moduleKey>${project.groupId}:${project.artifactId}</sonar.moduleKey>
-                <sonar.report>bridle-core/target/site/jacoco/jacoco.xml</sonar.report>
+                <sonar.report>bridle-gateway/target/site/jacoco/jacoco.xml</sonar.report>
             </properties>
             <activation>
                 <activeByDefault>false</activeByDefault>
