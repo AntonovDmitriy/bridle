@@ -1,6 +1,6 @@
 package com.bridle.configuration;
 
-import com.bridle.configuration.component.HttpProducerConfiguration;
+import com.bridle.properties.HttpProducerConfiguration;
 import com.bridle.properties.SchedulerConsumerConfiguration;
 import com.bridle.routes.HttpPollHttpRoute;
 import com.bridle.utils.ComponentCustomizerImpl;

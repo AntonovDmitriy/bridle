@@ -1,5 +1,5 @@
-name: Generic build maven with test coverage and sonar and codeql
-description: 'Generic build maven with test coverage and sonar and codeql'
+name: Generic build maven with test coverage and sonar
+description: 'Generic build maven with test coverage and sonar'
 
 inputs:
   sonar_token:
@@ -18,10 +18,10 @@ runs:
       with:
         java-version: 17
         distribution: 'corretto'
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v2
-      with:
-        languages: java
+#    - name: Initialize CodeQL
+#      uses: github/codeql-action/init@v2
+#      with:
+#        languages: java
 #    - name: Build
 #      run: mvn -B verify -Pcoverage
 #      shell: bash

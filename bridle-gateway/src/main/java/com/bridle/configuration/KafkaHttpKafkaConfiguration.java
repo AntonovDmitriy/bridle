@@ -1,7 +1,7 @@
 package com.bridle.configuration;
 
-import com.bridle.configuration.component.HttpProducerConfiguration;
-import com.bridle.configuration.component.ValidatedKafkaConsumerConfiguration;
+import com.bridle.properties.HttpProducerConfiguration;
+import com.bridle.properties.ValidatedKafkaConsumerConfiguration;
 import com.bridle.properties.ValidatedKafkaProducerConfiguration;
 import com.bridle.routes.KafkaHttpKafkaRoute;
 import com.bridle.utils.ComponentCustomizerImpl;
