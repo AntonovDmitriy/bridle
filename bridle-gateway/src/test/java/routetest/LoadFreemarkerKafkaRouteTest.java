@@ -27,41 +27,35 @@ import static org.mockserver.model.HttpResponse.response;
 import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
 
 @SpringBootTest(classes = {App.class})
-@TestPropertySource(properties = {"spring.config.location=classpath:routetest/load-freemarker-http/application.yml"})
+@TestPropertySource(properties = {"spring.config.location=classpath:routetest/load-freemarker-kafka/application.yml"})
 @CamelSpringBootTest
 @DirtiesContext
 @Testcontainers
-public class LoadFreemarkerHttpRouteTest {
+public class LoadFreemarkerKafkaRouteTest {
 
     @Autowired
     private ProducerTemplate producerTemplate;
 
     @Autowired
     private CamelContext context;
+
+    private static final String TOPIC_NAME = "routetest";
+
     @Container
-    public static MockServerContainer mockServer = new MockServerContainer(DockerImageName
-            .parse("mockserver/mockserver")
-            .withTag("mockserver-" + MockServerClient.class.getPackage().getImplementationVersion()));
+    private static final KafkaContainer kafka = new KafkaContainer(
+            DockerImageName.parse("confluentinc/cp-kafka:6.2.1"));
 
     @BeforeAll
     public static void setUp() throws Exception {
-        mockServer.start();
-        System.setProperty("rest-call.port", mockServer.getServerPort().toString());
-
-        var mockServerClient = new MockServerClient(mockServer.getHost(), mockServer.getServerPort());
-        mockServerClient
-                .when(request().withMethod("POST").withPath("/person"))
-                .respond(response("OK").withStatusCode(200));
-
-    }
-
-    @AfterAll
-    public static void afterAll() throws Exception {
-        mockServer.stop();
+        kafka.start();
+        System.setProperty("kafka-out.brokers", "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
+        kafka.execInContainer("/bin/bash", "-c",
+                String.format("kafka-topics --create --bootstrap-server localhost:9092" +
+                        " --topic %s --partitions 1 --replication-factor 1", TOPIC_NAME));
     }
 
     @Test
-    void verifySuccessLoadFreemarkerHttpScenario() throws Exception {
+    void verifySuccessLoadFreemarkerKafkaScenario() throws Exception {
 
         NotifyBuilder notify = new NotifyBuilder(context).whenExactlyCompleted(5).create();
 
