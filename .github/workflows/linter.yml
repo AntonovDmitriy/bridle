@@ -57,6 +57,6 @@ jobs:
       - name: Lint Code Base
         uses: super-linter/super-linter@v5.0.0
         env:
-          DEFAULT_BRANCH: main
+          DEFAULT_BRANCH: develop
           VALIDATE_ALL_CODEBASE: false
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
