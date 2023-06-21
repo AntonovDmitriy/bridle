@@ -13,9 +13,10 @@ name: Lint Code Base
 on:
   push:
     branches:
-      - 'main'
+      - 'develop'
   pull_request:
-    branches: [main]
+    branches:
+      - '*'
   workflow_dispatch:
 
 permissions:

@@ -4,7 +4,7 @@ name: on merge to main
 on:
   push:
     branches:
-      - 'main'
+      - 'develop'
   workflow_dispatch:
 
 jobs:
