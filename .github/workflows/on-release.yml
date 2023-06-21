@@ -1,14 +1,12 @@
 ---
-name: on merge to main
+name: On new release
 
 on:
-  push:
-    branches:
-      - 'develop'
-  workflow_dispatch:
+  release:
+    types: [created]
 
 jobs:
-  build-and-publish-docker-images:
+  build-and-push-image-to-registry:
     runs-on: ubuntu-latest
     permissions:
       security-events: write

@@ -1,0 +1,16 @@
+spring:
+  output:
+    ansi:
+      enabled: always
+camel:
+  component:
+    kafka:
+      enabled: false
+    http:
+      enabled: false
+    servlet:
+      enabled: false
+    scheduler:
+      enabled: false
+    rest:
+      enabled: false
