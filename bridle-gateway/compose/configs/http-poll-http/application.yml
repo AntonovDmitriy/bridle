@@ -17,13 +17,13 @@ main-scheduler:
   endpoint-properties:
     delay: "1000"
 rest-poll:
-  host: "localhost"
+  host: "nginx-poll"
   resource-path: "salary"
   port: "80"
   endpoint-properties:
     httpMethod: "GET"
 rest-call:
-  host: "localhost"
+  host: "nginx-call"
   resource-path: "person"
   port: "80"
   endpoint-properties:
