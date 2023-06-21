@@ -3,20 +3,13 @@ package com.bridle.configuration;
 import com.bridle.properties.HttpProducerConfiguration;
 import com.bridle.properties.ValidatedKafkaConsumerConfiguration;
 import com.bridle.routes.KafkaHttpRoute;
-import com.bridle.utils.ComponentCustomizerImpl;
-import org.apache.camel.CamelContext;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.http.HttpComponent;
-import org.apache.camel.component.kafka.KafkaComponent;
-import org.apache.camel.component.kafka.springboot.KafkaComponentConfiguration;
-import org.apache.camel.spi.ComponentCustomizer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Import;
 
 import static com.bridle.configuration.ComponentNameConstants.REST_CALL_COMPONENT_NAME;
 import static com.bridle.configuration.KafkaHttpConfiguration.GATEWAY_TYPE_KAFKA_HTTP;
@@ -24,48 +17,11 @@ import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.http;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.kafka;
 
 @Configuration
+@Import({KafkaInConfiguration.class, RestCallConfiguration.class})
 @ConditionalOnProperty(name = "gateway.type", havingValue = GATEWAY_TYPE_KAFKA_HTTP)
 public class KafkaHttpConfiguration {
 
     public static final String GATEWAY_TYPE_KAFKA_HTTP = "kafka-http";
-
-    @ConfigurationProperties(prefix = ComponentNameConstants.KAFKA_IN_COMPONENT_NAME)
-    @Bean
-    public KafkaComponentConfiguration kafkaInConfiguration() {
-        return new ValidatedKafkaConsumerConfiguration();
-    }
-
-    @Bean(name = ComponentNameConstants.KAFKA_IN_COMPONENT_NAME)
-    public KafkaComponent kafkaInComponent() {
-        return new KafkaComponent();
-    }
-
-    @Lazy
-    @Bean
-    public ComponentCustomizer configureKafkaComponent(CamelContext context,
-                                                       KafkaComponentConfiguration componentConfiguration) {
-        return new ComponentCustomizerImpl(context, componentConfiguration,
-                ComponentNameConstants.KAFKA_IN_COMPONENT_NAME);
-    }
-
-    @ConfigurationProperties(prefix = REST_CALL_COMPONENT_NAME)
-    @Bean
-    public HttpProducerConfiguration restCallConfiguration() {
-        return new HttpProducerConfiguration();
-    }
-
-    @Bean(name = REST_CALL_COMPONENT_NAME)
-    @Lazy
-    public HttpComponent restCallComponent() {
-        return new HttpComponent();
-    }
-
-    @Lazy
-    @Bean
-    public ComponentCustomizer configureHttpComponent(CamelContext context,
-                                                      HttpProducerConfiguration componentConfiguration) {
-        return new ComponentCustomizerImpl(context, componentConfiguration, REST_CALL_COMPONENT_NAME);
-    }
 
     @Bean
     public RouteBuilder kafkaHttpRoute(ValidatedKafkaConsumerConfiguration kafkaConfiguration,
