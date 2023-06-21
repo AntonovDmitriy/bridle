@@ -1,0 +1,32 @@
+spring:
+  output:
+    ansi:
+      enabled: always
+camel:
+  component:
+    kafka:
+      enabled: false
+    http:
+      enabled: false
+    servlet:
+      enabled: false
+    rest:
+      enabled: false
+
+gateway:
+  type: "http-kafka"
+rest-in:
+  clientRequestValidation: "true"
+  component: "servlet"
+  routes:
+    -
+      path: "/myapi"
+      consumes: "text/plain"
+      produces: "text/plain"
+      httpMethod: "POST"
+      id: "rest-in"
+      to:
+        uri: "direct:process"
+kafka-out:
+  brokers: "kafka:9091"
+  topic: "routetest"

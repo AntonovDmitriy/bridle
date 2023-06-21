@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    ports:
+      - '9092:9092'
+    environment:
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=false
+    networks:
+      - gateway-network
+
+  kafka-topic:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - kafka
+    command: >
+      bash -c "sleep 10 &&
+      kafka-topics --create --topic routetest --partitions 1 --replication-factor 1 --bootstrap-server kafka:9092"
+    networks:
+      - gateway-network
+
+  gateway:
+    image: bridle-gateway:latest
+    build: ../.
+    environment:
+      - SPRING_CONFIG=/app/config/application.yml
+    volumes:
+      - ./configs/http-kafka/application.yml:/app/config/application.yml
+    depends_on:
+      - kafka
+    networks:
+      - gateway-network
+
+networks:
+  gateway-network:
