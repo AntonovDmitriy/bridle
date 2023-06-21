@@ -1,0 +1,29 @@
+spring:
+  output:
+    ansi:
+      enabled: always
+camel:
+  component:
+    kafka:
+      enabled: false
+    http:
+      enabled: false
+    scheduler:
+      enabled: false
+    freemarker:
+      enabled: false
+
+gateway:
+  type: "load-freemarker-http"
+main-scheduler:
+  poolSize: "1"
+  endpoint-properties:
+    delay: "2000"
+main-freemarker:
+  resourceUri: "file://app/load.tmpl"
+rest-call:
+  host: "gateway"
+  resource-path: "/camel/api"
+  port: "8080"
+  endpoint-properties:
+    httpMethod: "POST"

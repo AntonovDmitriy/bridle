@@ -1,0 +1,29 @@
+spring:
+  output:
+    ansi:
+      enabled: always
+camel:
+  component:
+    kafka:
+      enabled: false
+    http:
+      enabled: false
+    scheduler:
+      enabled: false
+    freemarker:
+      enabled: false
+
+gateway:
+  type: "load-freemarker-http"
+main-scheduler:
+  poolSize: "1"
+  endpoint-properties:
+    delay: "100"
+main-freemarker:
+  resourceUri: "/routetest/load-freemarker-http/load.tmpl"
+rest-call:
+  host: "localhost"
+  resource-path: "person"
+  port: "443"
+  endpoint-properties:
+    httpMethod: "POST"
