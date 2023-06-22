@@ -16,12 +16,14 @@ services:
     build: ../.
     ports:
       - '8080:8080'
+      - '5005:5005'
     deploy:
       resources:
         limits:
           memory: 512m
           cpus: '1'
     environment:
+      - JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,address=*:5005,server=y,suspend=n"
       - SPRING_CONFIG=/app/config/application.yml
     volumes:
       - ./configs/kafka-http-kafka/application.yml:/app/config/application.yml
@@ -88,35 +90,5 @@ services:
     networks:
       - gateway-network
 
-  prometheus:
-    image: prom/prometheus:latest
-    ports:
-      - '9090:9090'
-    volumes:
-      - ./configs/kafka-http-kafka/prometheus.yml:/etc/prometheus/prometheus.yml
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-    depends_on:
-      - gateway
-    networks:
-      - gateway-network
-
-  grafana:
-    image: grafana/grafana:latest
-    ports:
-      - '3000:3000'
-    volumes:
-      - grafana_data:/var/lib/grafana
-    depends_on:
-      - prometheus
-    networks:
-      - gateway-network
-
 networks:
   gateway-network:
-
-volumes:
-  grafana_data: {}
-
-
