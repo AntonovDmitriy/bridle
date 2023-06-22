@@ -41,6 +41,11 @@ services:
   gateway:
     image: bridle-gateway:latest
     build: ../.
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+          cpus: '1'
     environment:
       - SPRING_CONFIG=/app/config/application.yml
     volumes:
@@ -55,7 +60,7 @@ services:
     build: ../.
     environment:
       - SPRING_CONFIG=/app/config/application.yml
-      - MAIN-SCHEDULER_ENDPOINT-PROPERTIES_DElAY=20
+      - MAIN-SCHEDULER_ENDPOINT-PROPERTIES_DElAY=1000
     volumes:
       - ./configs/load-freemarker-http/application.yml:/app/config/application.yml
       - ./configs/load-freemarker-http/load.tmpl:/app/load.tmpl

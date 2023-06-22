@@ -14,6 +14,11 @@ services:
   gateway:
     image: bridle-gateway:latest
     build: ../.
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+          cpus: '1'
     environment:
       - SPRING_CONFIG=/app/config/application.yml
     volumes:

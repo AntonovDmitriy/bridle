@@ -18,7 +18,7 @@ gateway:
 main-scheduler:
   poolSize: "1"
   endpoint-properties:
-    delay: "100"
+    delay: "1000"
 main-freemarker:
   resourceUri: "file://app/load.tmpl"
 kafka-out:
