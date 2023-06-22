@@ -4,7 +4,6 @@ import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.RouteBuilder;
 
-import static com.bridle.configuration.LoadFreemarkerHttpConfiguration.LOAD_FREEMARKER_HTTP;
 import static com.bridle.configuration.LoadFreemarkerKafkaConfiguration.LOAD_FREEMARKER_KAFKA;
 
 public class LoadFreemarkerKafkaRoute extends RouteBuilder {
