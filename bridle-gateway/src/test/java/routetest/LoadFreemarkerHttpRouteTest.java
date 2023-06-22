@@ -36,6 +36,7 @@ public class LoadFreemarkerHttpRouteTest {
 
     @Autowired
     private CamelContext context;
+
     @Container
     public static MockServerContainer mockServer = new MockServerContainer(DockerImageName
             .parse("mockserver/mockserver")
