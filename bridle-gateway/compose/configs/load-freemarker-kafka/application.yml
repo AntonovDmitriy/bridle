@@ -1,0 +1,26 @@
+spring:
+  output:
+    ansi:
+      enabled: always
+camel:
+  component:
+    kafka:
+      enabled: false
+    http:
+      enabled: false
+    scheduler:
+      enabled: false
+    freemarker:
+      enabled: false
+
+gateway:
+  type: "load-freemarker-kafka"
+main-scheduler:
+  poolSize: "1"
+  endpoint-properties:
+    delay: "100"
+main-freemarker:
+  resourceUri: "file://app/load.tmpl"
+kafka-out:
+  brokers: "kafka:9092"
+  topic: "routetest_request"
