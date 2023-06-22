@@ -10,18 +10,20 @@ camel:
       enabled: false
     scheduler:
       enabled: false
+    freemarker:
+      enabled: false
 
 gateway:
-  type: "http-poll-kafka"
+  type: "load-freemarker-http"
 main-scheduler:
+  poolSize: "1"
   endpoint-properties:
     delay: "1000"
-rest-poll:
-  host: "localhost"
-  resource-path: "salary"
-  port: "80"
+main-freemarker:
+  resourceUri: "file://app/load.tmpl"
+rest-call:
+  host: "gateway"
+  resource-path: "/camel/api"
+  port: "8080"
   endpoint-properties:
-    httpMethod: "GET"
-kafka-out:
-  brokers: "localhost:9090"
-  topic: "routetest"
+    httpMethod: "POST"

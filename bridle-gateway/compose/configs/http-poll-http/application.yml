@@ -12,16 +12,19 @@ camel:
       enabled: false
 
 gateway:
-  type: "http-poll-kafka"
+  type: "http-poll-http"
 main-scheduler:
   endpoint-properties:
     delay: "1000"
 rest-poll:
-  host: "localhost"
+  host: "nginx-poll"
   resource-path: "salary"
   port: "80"
   endpoint-properties:
     httpMethod: "GET"
-kafka-out:
-  brokers: "localhost:9090"
-  topic: "routetest"
+rest-call:
+  host: "nginx-call"
+  resource-path: "person"
+  port: "80"
+  endpoint-properties:
+    httpMethod: "POST"

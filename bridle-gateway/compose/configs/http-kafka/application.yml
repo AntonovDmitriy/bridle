@@ -20,7 +20,7 @@ rest-in:
   component: "servlet"
   routes:
     -
-      path: "/myapi"
+      path: "/api"
       consumes: "text/plain"
       produces: "text/plain"
       httpMethod: "POST"
@@ -28,5 +28,5 @@ rest-in:
       to:
         uri: "direct:process"
 kafka-out:
-  brokers: "localhost:9090"
+  brokers: "kafka:9092"
   topic: "routetest"

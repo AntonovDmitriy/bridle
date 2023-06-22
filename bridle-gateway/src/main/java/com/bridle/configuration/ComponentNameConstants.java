@@ -14,6 +14,8 @@ public final class ComponentNameConstants {
 
     public static final String REST_POLL_COMPONENT_NAME = "rest-poll";
 
+    public static final String FREEMARKER_COMPONENT_NAME = "main-freemarker";
+
     private ComponentNameConstants() {
         throw new IllegalStateException("Utility class");
     }

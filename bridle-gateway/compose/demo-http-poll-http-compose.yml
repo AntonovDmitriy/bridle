@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+
+  nginx-poll:
+    image: nginx:latest
+    ports:
+      - '80'
+    volumes:
+      - ./configs/http-poll-http/nginx-poll.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - gateway-network
+
+  nginx-call:
+    image: nginx:latest
+    ports:
+      - '80'
+    volumes:
+      - ./configs/http-poll-http/nginx-call.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - gateway-network
+
+  gateway:
+    image: bridle-gateway:latest
+    build: ../.
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+          cpus: '1'
+    environment:
+      - SPRING_CONFIG=/app/config/application.yml
+    volumes:
+      - ./configs/http-poll-http/application.yml:/app/config/application.yml
+    depends_on:
+      - nginx-call
+      - nginx-poll
+    networks:
+      - gateway-network
+
+networks:
+  gateway-network:
