@@ -38,5 +38,35 @@ services:
     networks:
       - gateway-network
 
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - '9090:9090'
+    volumes:
+      - ./configs/metrics/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    depends_on:
+      - gateway
+    networks:
+      - gateway-network
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - '3000:3000'
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./configs/metrics/grafana/datasources:/etc/grafana/provisioning/datasources
+      - ./configs/metrics/grafana/dashboards:/etc/grafana/provisioning/dashboards
+    depends_on:
+      - prometheus
+    networks:
+      - gateway-network
+
+volumes:
+  grafana_data: {}
+
 networks:
   gateway-network:

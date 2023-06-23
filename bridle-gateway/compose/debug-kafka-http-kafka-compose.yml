@@ -7,22 +7,26 @@ services:
     ports:
       - '80'
     volumes:
-      - ./configs/kafka-http/nginx-call.conf:/etc/nginx/nginx.conf:ro
+      - ./configs/kafka-http-kafka/nginx-call.conf:/etc/nginx/nginx.conf:ro
     networks:
       - gateway-network
 
   gateway:
     image: bridle-gateway:latest
     build: ../.
+    ports:
+      - '8080:8080'
+      - '5005:5005'
     deploy:
       resources:
         limits:
           memory: 512m
           cpus: '1'
     environment:
+      - JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,address=*:5005,server=y,suspend=n"
       - SPRING_CONFIG=/app/config/application.yml
     volumes:
-      - ./configs/kafka-http/application.yml:/app/config/application.yml
+      - ./configs/kafka-http-kafka/application.yml:/app/config/application.yml
     depends_on:
       - nginx-call
       - kafka-topic
@@ -61,7 +65,8 @@ services:
       - kafka
     command: >
       bash -c "sleep 10 &&
-      kafka-topics --create --topic routetest_request --partitions 1 --replication-factor 1 --bootstrap-server kafka:9092"
+      kafka-topics --create --topic routetest_request --partitions 1 --replication-factor 1 --bootstrap-server kafka:9092 &&
+      kafka-topics --create --topic routetest_response --partitions 1 --replication-factor 1 --bootstrap-server kafka:9092"
     restart: "no"
     networks:
       - gateway-network

@@ -13,6 +13,12 @@ camel:
     freemarker:
       enabled: false
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,prometheus"
+
 gateway:
   type: "load-freemarker-kafka"
 main-scheduler:

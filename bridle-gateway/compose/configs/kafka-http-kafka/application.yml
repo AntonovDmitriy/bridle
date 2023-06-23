@@ -11,6 +11,12 @@ camel:
     scheduler:
       enabled: false
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,prometheus"
+
 gateway:
   type: "kafka-http-kafka"
 kafka-in:
