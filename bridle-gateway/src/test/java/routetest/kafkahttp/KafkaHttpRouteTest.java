@@ -1,4 +1,4 @@
-package routetest;
+package routetest.kafkahttp;
 
 import com.bridle.App;
 import org.apache.camel.CamelContext;
