@@ -1,12 +1,12 @@
 package com.bridle.routes;
 
+import org.apache.camel.ErrorHandlerFactory;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
-import org.apache.camel.builder.RouteBuilder;
 
-import static com.bridle.configuration.LoadFreemarkerKafkaConfiguration.LOAD_FREEMARKER_KAFKA;
+import static com.bridle.configuration.routes.LoadFreemarkerKafkaConfiguration.LOAD_FREEMARKER_KAFKA;
 
-public class LoadFreemarkerKafkaRoute extends RouteBuilder {
+public class LoadFreemarkerKafkaRoute extends BaseRouteBuilder {
 
     private final EndpointConsumerBuilder scheduler;
 
@@ -15,9 +15,11 @@ public class LoadFreemarkerKafkaRoute extends RouteBuilder {
     private final EndpointProducerBuilder kafkaOut;
 
 
-    public LoadFreemarkerKafkaRoute(EndpointConsumerBuilder scheduler,
+    public LoadFreemarkerKafkaRoute(ErrorHandlerFactory errorHandlerFactory,
+            EndpointConsumerBuilder scheduler,
                                     EndpointProducerBuilder freemarker,
                                     EndpointProducerBuilder kafkaOut){
+        super(errorHandlerFactory);
         this.scheduler = scheduler;
         this.freemarker = freemarker;
         this.kafkaOut = kafkaOut;
@@ -25,6 +27,8 @@ public class LoadFreemarkerKafkaRoute extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
+        super.configure();
+
         from(scheduler)
                 .routeId(LOAD_FREEMARKER_KAFKA)
                 .to(freemarker)

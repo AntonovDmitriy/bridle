@@ -1,4 +1,4 @@
-package com.bridle.configuration;
+package com.bridle.configuration.common;
 
 import com.bridle.properties.ValidatedKafkaConsumerConfiguration;
 import com.bridle.utils.ComponentCustomizerImpl;

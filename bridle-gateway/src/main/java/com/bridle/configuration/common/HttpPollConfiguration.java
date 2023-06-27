@@ -1,4 +1,4 @@
-package com.bridle.configuration;
+package com.bridle.configuration.common;
 
 import com.bridle.properties.HttpProducerConfiguration;
 import com.bridle.utils.ComponentCustomizerImpl;
@@ -10,7 +10,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 
-import static com.bridle.configuration.ComponentNameConstants.REST_POLL_COMPONENT_NAME;
+import static com.bridle.configuration.common.ComponentNameConstants.REST_POLL_COMPONENT_NAME;
 
 public class HttpPollConfiguration {
 

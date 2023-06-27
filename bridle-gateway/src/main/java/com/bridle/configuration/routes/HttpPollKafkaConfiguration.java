@@ -1,9 +1,14 @@
-package com.bridle.configuration;
+package com.bridle.configuration.routes;
 
+import com.bridle.configuration.common.ErrorHandlerConfiguration;
+import com.bridle.configuration.common.HttpPollConfiguration;
+import com.bridle.configuration.common.KafkaOutConfiguration;
+import com.bridle.configuration.common.SchedulerConfiguration;
 import com.bridle.properties.HttpProducerConfiguration;
 import com.bridle.properties.SchedulerConsumerConfiguration;
 import com.bridle.properties.ValidatedKafkaProducerConfiguration;
 import com.bridle.routes.HttpPollKafkaRoute;
+import org.apache.camel.ErrorHandlerFactory;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.RouteBuilder;
@@ -13,21 +18,25 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import static com.bridle.configuration.ComponentNameConstants.KAFKA_OUT_COMPONENT_NAME;
-import static com.bridle.configuration.ComponentNameConstants.REST_POLL_COMPONENT_NAME;
-import static com.bridle.configuration.ComponentNameConstants.SCHEDULER_COMPONENT_NAME;
-import static com.bridle.configuration.HttpPollKafkaConfiguration.GATEWAY_TYPE_HTTP_POLL_KAFKA;
+import static com.bridle.configuration.common.ComponentNameConstants.KAFKA_OUT_COMPONENT_NAME;
+import static com.bridle.configuration.common.ComponentNameConstants.REST_POLL_COMPONENT_NAME;
+import static com.bridle.configuration.common.ComponentNameConstants.SCHEDULER_COMPONENT_NAME;
+import static com.bridle.configuration.routes.HttpPollKafkaConfiguration.GATEWAY_TYPE_HTTP_POLL_KAFKA;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.http;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.kafka;
 
 @Configuration
-@Import({SchedulerConfiguration.class, HttpPollConfiguration.class, KafkaOutConfiguration.class})
+@Import({SchedulerConfiguration.class,
+        HttpPollConfiguration.class,
+        KafkaOutConfiguration.class,
+        ErrorHandlerConfiguration.class})
 @ConditionalOnProperty(name = "gateway.type", havingValue = GATEWAY_TYPE_HTTP_POLL_KAFKA)
 public class HttpPollKafkaConfiguration {
     public static final String GATEWAY_TYPE_HTTP_POLL_KAFKA = "http-poll-kafka";
 
     @Bean
-    public RouteBuilder httpPollHttpRoute(SchedulerConsumerConfiguration schedulerConfiguration,
+    public RouteBuilder httpPollHttpRoute(ErrorHandlerFactory errorHandlerFactory,
+                                          SchedulerConsumerConfiguration schedulerConfiguration,
                                           HttpProducerConfiguration restPollConfiguration,
                                           ValidatedKafkaProducerConfiguration kafkaOutConfiguration) {
 
@@ -44,6 +53,6 @@ public class HttpPollKafkaConfiguration {
         kafkaOutConfiguration.getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(kafka::doSetProperty));
 
-        return new HttpPollKafkaRoute(scheduler, restPoll, kafka);
+        return new HttpPollKafkaRoute(errorHandlerFactory, scheduler, restPoll, kafka);
     }
 }

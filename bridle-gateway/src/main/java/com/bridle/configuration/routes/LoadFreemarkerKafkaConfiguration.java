@@ -1,9 +1,14 @@
-package com.bridle.configuration;
+package com.bridle.configuration.routes;
 
+import com.bridle.configuration.common.ErrorHandlerConfiguration;
+import com.bridle.configuration.common.FreemarkerConfiguration;
+import com.bridle.configuration.common.KafkaOutConfiguration;
+import com.bridle.configuration.common.SchedulerConfiguration;
 import com.bridle.properties.FreemarkerProducerConfiguration;
 import com.bridle.properties.SchedulerConsumerConfiguration;
 import com.bridle.properties.ValidatedKafkaProducerConfiguration;
 import com.bridle.routes.LoadFreemarkerKafkaRoute;
+import org.apache.camel.ErrorHandlerFactory;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.RouteBuilder;
@@ -13,21 +18,25 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import static com.bridle.configuration.ComponentNameConstants.FREEMARKER_COMPONENT_NAME;
-import static com.bridle.configuration.ComponentNameConstants.KAFKA_OUT_COMPONENT_NAME;
-import static com.bridle.configuration.ComponentNameConstants.SCHEDULER_COMPONENT_NAME;
-import static com.bridle.configuration.LoadFreemarkerKafkaConfiguration.LOAD_FREEMARKER_KAFKA;
+import static com.bridle.configuration.common.ComponentNameConstants.FREEMARKER_COMPONENT_NAME;
+import static com.bridle.configuration.common.ComponentNameConstants.KAFKA_OUT_COMPONENT_NAME;
+import static com.bridle.configuration.common.ComponentNameConstants.SCHEDULER_COMPONENT_NAME;
+import static com.bridle.configuration.routes.LoadFreemarkerKafkaConfiguration.LOAD_FREEMARKER_KAFKA;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.kafka;
 
 @Configuration
-@Import({SchedulerConfiguration.class, KafkaOutConfiguration.class, FreemarkerConfiguration.class})
+@Import({SchedulerConfiguration.class,
+        KafkaOutConfiguration.class,
+        FreemarkerConfiguration.class,
+        ErrorHandlerConfiguration.class})
 @ConditionalOnProperty(name = "gateway.type", havingValue = LOAD_FREEMARKER_KAFKA)
 public class LoadFreemarkerKafkaConfiguration {
 
     public static final String LOAD_FREEMARKER_KAFKA = "load-freemarker-kafka";
 
     @Bean
-    public RouteBuilder dataSetHttpRoute(ValidatedKafkaProducerConfiguration kafkaProducerConfiguration,
+    public RouteBuilder dataSetHttpRoute(ErrorHandlerFactory errorHandlerFactory,
+                                         ValidatedKafkaProducerConfiguration kafkaProducerConfiguration,
                                          FreemarkerProducerConfiguration freemarkerConfiguration,
                                          SchedulerConsumerConfiguration schedulerConfiguration) {
 
@@ -45,6 +54,6 @@ public class LoadFreemarkerKafkaConfiguration {
         kafkaProducerConfiguration.getEndpointProperties().
                 ifPresent(additional -> additional.forEach(kafkaOut::doSetProperty));
 
-        return new LoadFreemarkerKafkaRoute(scheduler, freemarker, kafkaOut);
+        return new LoadFreemarkerKafkaRoute(errorHandlerFactory, scheduler, freemarker, kafkaOut);
     }
 }

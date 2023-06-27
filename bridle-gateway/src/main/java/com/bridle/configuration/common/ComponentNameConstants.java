@@ -1,4 +1,4 @@
-package com.bridle.configuration;
+package com.bridle.configuration.common;
 
 public final class ComponentNameConstants {
 
@@ -15,6 +15,8 @@ public final class ComponentNameConstants {
     public static final String REST_POLL_COMPONENT_NAME = "rest-poll";
 
     public static final String FREEMARKER_COMPONENT_NAME = "main-freemarker";
+
+    public static final String ERROR_HANDLER_NAME = "error-handler";
 
     private ComponentNameConstants() {
         throw new IllegalStateException("Utility class");
