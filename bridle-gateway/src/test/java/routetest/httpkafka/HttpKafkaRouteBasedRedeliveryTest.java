@@ -136,7 +136,7 @@ public class HttpKafkaRouteBasedRedeliveryTest {
         assertEquals(200, httpResponseEntity.getStatusCode().value());
         assertEquals("Success!", httpResponseEntity.getBody());
         assertEquals(3, notifierRedeliveredSuccess.getCounter());
-        assertEquals(REQUEST_BODY, readMessage().stdOut().strip());a
+        assertEquals(REQUEST_BODY, readMessage().stdOut().strip());
         assertEquals(1, countMessages());
     }
 
