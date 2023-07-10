@@ -1,0 +1,39 @@
+spring:
+  output:
+    ansi:
+      enabled: always
+camel:
+  component:
+    kafka:
+      enabled: false
+    http:
+      enabled: false
+    servlet:
+      enabled: false
+    rest:
+      enabled: false
+
+gateway:
+  type: "http-kafka"
+error-handler:
+  redelivery-policy:
+    maximum-redeliveries: 2
+    redelivery-delay: 100
+rest-in:
+  clientRequestValidation: "true"
+  component: "servlet"
+  routes:
+    -
+      path: "/myapi"
+      consumes: "text/plain"
+      produces: "text/plain"
+      httpMethod: "POST"
+      id: "rest-in"
+      to:
+        uri: "direct:process"
+kafka-out:
+  brokers: "localhost:9090"
+  topic: "routetest"
+  delivery-timeout-ms: 1000
+  request-timeout-ms: 500
+  maxBlockMs: 1000

@@ -37,6 +37,16 @@ public class ValidatedKafkaProducerConfiguration extends KafkaComponentConfigura
         return result;
     }
 
+    @AssertTrue(message = "if retries is not null then use positive number")
+    public boolean isRetriesConsistent() {
+        boolean result = true;
+        Integer retries = getRetries();
+        if (retries != null && retries <= 0) {
+            result = false;
+        }
+        return result;
+    }
+
     public Optional<Map<String, Object>> getEndpointProperties() {
         return Optional.ofNullable(endpointProperties);
     }

@@ -1,11 +1,13 @@
-package routetest;
+package routetest.httpkafka;
 
 import com.bridle.App;
+import org.apache.camel.component.kafka.KafkaProducer;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -29,6 +31,7 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
 public class HttpKafkaRouteTest {
 
     private static final String TOPIC_NAME = "routetest";
+
 
     @Container
     private static final KafkaContainer kafka = new KafkaContainer(
