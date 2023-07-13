@@ -2,6 +2,7 @@ package routetest.httpkafka;
 
 import com.bridle.App;
 import org.apache.camel.CamelContext;
+import org.apache.camel.builder.NotifyBuilder;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
@@ -14,8 +15,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 import org.testcontainers.containers.KafkaContainer;
@@ -23,6 +26,9 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 import routetest.utils.EndpointSendEventNotifier;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import static com.bridle.configuration.common.ComponentNameConstants.KAFKA_OUT_COMPONENT_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,7 +39,7 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
 @CamelSpringBootTest
 @Testcontainers
 @DirtiesContext
-public class HttpKafkaRouteBasedRedeliveryTest {
+public class HttpKafkaClientTimeoutTest {
 
     private static final String TOPIC_NAME = "routetest";
 
@@ -54,38 +60,35 @@ public class HttpKafkaRouteBasedRedeliveryTest {
     }
 
     @Test
-    void verifySuccessMessageWithRedeliverySettings() throws Exception {
+    void verifySuccessMessageWithClientTimeout() throws Exception {
         KafkaContainerUtils.createTopic(kafka, TOPIC_NAME);
-        EndpointSendEventNotifier eventNotifierSuccessMessage = new EndpointSendEventNotifier(KAFKA_OUT_COMPONENT_NAME);
-        context.getManagementStrategy().addEventNotifier(eventNotifierSuccessMessage);
+        NotifyBuilder notifier = new NotifyBuilder(context).whenDone(1).create();
 
-        ResponseEntity<String> httpResponseEntity = sendValidHttpRequest();
+        Assertions.assertThrows(ResourceAccessException.class,
+                HttpKafkaClientTimeoutTest::sendValidHttpRequestWithTinyTimeout);
+        notifier.matches(10, TimeUnit.SECONDS);
 
-        assertEquals(200, httpResponseEntity.getStatusCode().value());
-        assertEquals("Success!", httpResponseEntity.getBody());
-        assertEquals(1, eventNotifierSuccessMessage.getCounter());
         assertEquals(REQUEST_BODY, KafkaContainerUtils.readMessage(kafka, TOPIC_NAME).stdOut().strip());
         assertEquals(1, KafkaContainerUtils.countMessages(kafka, TOPIC_NAME));
-        context.getManagementStrategy().removeEventNotifier(eventNotifierSuccessMessage);
         KafkaContainerUtils.deleteTopic(kafka, TOPIC_NAME);
     }
 
     @Test
-    void verifyRedeliveryWithFinalError() throws Exception {
+    void verifyRedeliveryWithClientTimeoutAndFinalError() throws Exception {
         EndpointSendEventNotifier notifierRedeliveredMessage = new EndpointSendEventNotifier(KAFKA_OUT_COMPONENT_NAME);
         context.getManagementStrategy().addEventNotifier(notifierRedeliveredMessage);
+        NotifyBuilder notifier = new NotifyBuilder(context).whenFailed(1).create();
 
-        RestClientResponseException exception = Assertions.assertThrows(RestClientResponseException.class,
-                HttpKafkaRouteBasedRedeliveryTest::sendValidHttpRequest);
+        Assertions.assertThrows(ResourceAccessException.class,
+                HttpKafkaClientTimeoutTest::sendValidHttpRequestWithTinyTimeout);
+        notifier.matches(10, TimeUnit.SECONDS);
 
-//        assertEquals(501, exception.getRawStatusCode());
         assertEquals(3, notifierRedeliveredMessage.getCounter());
-
         context.getManagementStrategy().removeEventNotifier(notifierRedeliveredMessage);
     }
 
     @Test
-    void verifyRedeliveryWithFinalSuccess() throws Exception {
+    void verifyRedeliveryWithClientTimeoutAndFinalSuccess() throws Exception {
         EndpointSendEventNotifier notifierRedeliveredSuccess = new EndpointSendEventNotifier(KAFKA_OUT_COMPONENT_NAME);
         notifierRedeliveredSuccess.runActionWhenCounterExactlyEquals(2, e -> {
             try {
@@ -94,11 +97,12 @@ public class HttpKafkaRouteBasedRedeliveryTest {
             }
         });
         context.getManagementStrategy().addEventNotifier(notifierRedeliveredSuccess);
+        NotifyBuilder notifier = new NotifyBuilder(context).whenFailed(1).create();
 
-        ResponseEntity<String> httpResponseEntity = sendValidHttpRequest();
+        Assertions.assertThrows(ResourceAccessException.class,
+                HttpKafkaClientTimeoutTest::sendValidHttpRequestWithTinyTimeout);
+        notifier.matches(10, TimeUnit.SECONDS);
 
-        assertEquals(200, httpResponseEntity.getStatusCode().value());
-        assertEquals("Success!", httpResponseEntity.getBody());
         assertEquals(3, notifierRedeliveredSuccess.getCounter());
         assertEquals(REQUEST_BODY, KafkaContainerUtils.readMessage(kafka, TOPIC_NAME).stdOut().strip());
         assertEquals(1, KafkaContainerUtils.countMessages(kafka, TOPIC_NAME));
@@ -106,11 +110,16 @@ public class HttpKafkaRouteBasedRedeliveryTest {
     }
 
     @NotNull
-    private static ResponseEntity<String> sendValidHttpRequest() {
+    private static ResponseEntity<String> sendValidHttpRequestWithTinyTimeout() {
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> requestEntity = new HttpEntity<>(REQUEST_BODY, headers);
-        RestTemplate restTemplate = new RestTemplate();
+
+        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+        requestFactory.setReadTimeout(1); // Set the read timeout to 5 seconds
+
+        RestTemplate restTemplate = new RestTemplate(requestFactory);
         return restTemplate.exchange(
                 HTTP_SERVER_URL,
                 HttpMethod.POST,

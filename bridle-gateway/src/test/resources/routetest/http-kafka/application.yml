@@ -12,12 +12,20 @@ camel:
       enabled: false
     rest:
       enabled: false
+    freemarker:
+      enabled: false
 
 gateway:
   type: "http-kafka"
+error-response-freemarker:
+  resource-uri: "/routetest/http-kafka/error.tmpl"
+success-response-freemarker:
+  resource-uri: "/routetest/http-kafka/success.tmpl"
 rest-in:
   clientRequestValidation: "true"
   component: "servlet"
+  content-type: "application/json"
+  error-http-response-code: 501
   routes:
     -
       path: "/myapi"
@@ -27,6 +35,10 @@ rest-in:
       id: "rest-in"
       to:
         uri: "direct:process"
+
 kafka-out:
   brokers: "localhost:9090"
   topic: "routetest"
+  delivery-timeout-ms: 1000
+  request-timeout-ms: 500
+  max-block-ms: 1000

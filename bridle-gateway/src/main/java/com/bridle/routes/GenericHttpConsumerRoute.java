@@ -6,7 +6,7 @@ import org.apache.camel.builder.RouteBuilder;
 
 public class GenericHttpConsumerRoute extends BaseRouteBuilder {
 
-    private final HttpConsumerConfiguration restConfiguration;
+    protected final HttpConsumerConfiguration restConfiguration;
 
     public GenericHttpConsumerRoute(ErrorHandlerFactory errorHandlerFactory, HttpConsumerConfiguration restConfiguration) {
         super(errorHandlerFactory);

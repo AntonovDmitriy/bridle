@@ -16,6 +16,11 @@ public final class ComponentNameConstants {
 
     public static final String FREEMARKER_COMPONENT_NAME = "main-freemarker";
 
+    public static final String ERROR_RESPONSE_FREEMARKER_COMPONENT_NAME = "error-response-freemarker";
+
+    public static final String SUCCESS_RESPONSE_FREEMARKER_COMPONENT_NAME = "success-response-freemarker";
+
+
     public static final String ERROR_HANDLER_NAME = "error-handler";
 
     private ComponentNameConstants() {

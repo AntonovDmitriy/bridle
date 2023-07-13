@@ -5,7 +5,6 @@ import org.apache.camel.builder.RouteBuilder;
 
 public class BaseRouteBuilder extends RouteBuilder {
 
-
     private final ErrorHandlerFactory errorHandlerFactory;
 
     public BaseRouteBuilder(ErrorHandlerFactory errorHandlerFactory) {
@@ -14,6 +13,6 @@ public class BaseRouteBuilder extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
-        errorHandler(errorHandlerFactory);
+//        errorHandler(errorHandlerFactory);
     }
 }

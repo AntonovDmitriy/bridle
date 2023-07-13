@@ -21,6 +21,10 @@ management:
 
 gateway:
   type: "http-kafka"
+error-handler:
+  redelivery-policy:
+    maximum-redeliveries: 2
+    redelivery-delay: 100
 rest-in:
   clientRequestValidation: "true"
   component: "servlet"
@@ -36,3 +40,6 @@ rest-in:
 kafka-out:
   brokers: "kafka:9092"
   topic: "routetest"
+  delivery-timeout-ms: 1000
+  request-timeout-ms: 500
+  max-block-ms: 1000

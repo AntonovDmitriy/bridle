@@ -3,6 +3,7 @@ package routetest.httpkafka;
 import com.bridle.App;
 import org.apache.camel.component.kafka.KafkaProducer;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -15,12 +16,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
 
 @SpringBootTest(classes = {App.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -31,41 +34,52 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
 public class HttpKafkaRouteTest {
 
     private static final String TOPIC_NAME = "routetest";
-
+    public static final String HTTP_SERVER_URL = "http://localhost:8080/camel/myapi";
+    public static final String REQUEST_BODY = "Request Body";
 
     @Container
     private static final KafkaContainer kafka = new KafkaContainer(
-            DockerImageName.parse("confluentinc/cp-kafka:6.2.1"));
+            DockerImageName.parse("confluentinc/cp-kafka:6.2.1"))
+            .withEnv("KAFKA_DELETE_TOPIC_ENABLE", "true")
+            .withEnv("KAFKA_AUTO_CREATE_TOPICS_ENABLE", "false");
 
     @BeforeAll
     public static void setUp() throws Exception {
-        kafka.start();
-        System.setProperty("kafka-out.brokers", "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
-        kafka.execInContainer("/bin/bash", "-c",
-                String.format("kafka-topics --create --bootstrap-server localhost:9092" +
-                        " --topic %s --partitions 1 --replication-factor 1", TOPIC_NAME));
+        KafkaContainerUtils.setupKafka(kafka, KAFKA_PORT);
     }
 
     @Test
     void verifySuccessHttpKafkaScenario() throws Exception {
+        KafkaContainerUtils.createTopic(kafka, TOPIC_NAME);
 
-        String uri = "http://" + "localhost" + ":" + "8080" + "/camel/myapi";
-        String requestBody = "Request Body";
+        ResponseEntity<String> httpResponseEntity = sendValidHttpRequest();
+
+        assertEquals(200, httpResponseEntity.getStatusCode().value());
+        assertEquals("Success!", httpResponseEntity.getBody());
+        KafkaContainerUtils.deleteTopic(kafka, TOPIC_NAME);
+    }
+
+    @Test
+    void verifyErrorHttpKafkaScenarioWhenTopicDoesNotExist() throws Exception {
+        RestClientResponseException exception = Assertions.assertThrows(RestClientResponseException.class,
+                HttpKafkaRouteTest::sendValidHttpRequest);
+
+        assertEquals(501, exception.getRawStatusCode());
+        assertEquals("Internal server Error", exception.getResponseBodyAsString());
+    }
+
+    @NotNull
+    private static ResponseEntity<String> sendValidHttpRequest() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, headers);
+        HttpEntity<String> requestEntity = new HttpEntity<>(REQUEST_BODY, headers);
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.exchange(
-                uri,
+        return restTemplate.exchange(
+                HTTP_SERVER_URL,
                 HttpMethod.POST,
                 requestEntity,
                 String.class
         );
-
-        String responseBody = response.getBody();
-
-        Assertions.assertEquals(200, response.getStatusCode().value());
-        Assertions.assertEquals("Success!", responseBody);
     }
 }
 
