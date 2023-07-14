@@ -13,6 +13,6 @@ public class BaseRouteBuilder extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
-//        errorHandler(errorHandlerFactory);
+        errorHandler(errorHandlerFactory);
     }
 }

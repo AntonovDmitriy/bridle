@@ -50,6 +50,8 @@ services:
       - SPRING_CONFIG=/app/config/application.yml
     volumes:
       - ./configs/http-kafka/application.yml:/app/config/application.yml
+      - ./configs/http-kafka/error.tmpl:/app/config/error.tmpl
+      - ./configs/http-kafka/success.tmpl:/app/config/success.tmpl
     depends_on:
       - kafka-topic
     networks:

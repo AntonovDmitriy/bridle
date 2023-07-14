@@ -15,8 +15,20 @@ camel:
     freemarker:
       enabled: false
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,prometheus"
+
 gateway:
   type: "http-kafka"
+redelivery-policy:
+  maximum-redeliveries: 2
+  redelivery-delay: 100
+  retry-attempted-log-level: "WARN"
+error-handler:
+  redelivery-policy-ref: "redelivery-policy"
 error-response-freemarker:
   resource-uri: "/routetest/http-kafka/error.tmpl"
 success-response-freemarker:
@@ -35,7 +47,6 @@ rest-in:
       id: "rest-in"
       to:
         uri: "direct:process"
-
 kafka-out:
   brokers: "localhost:9090"
   topic: "routetest"

@@ -17,10 +17,11 @@ public class HttpConsumerConfiguration extends RestConfiguration {
     @NotEmpty
     private List<GenericVerbDefinition> routes;
 
-    private String contentType;
+    @NotEmpty
+    private String contentType = "application/json";
 
     @Positive
-    private int errorHttpResponseCode;
+    private int errorHttpResponseCode = 500;
 
     @Validated
     public static class GenericVerbDefinition extends VerbDefinition {

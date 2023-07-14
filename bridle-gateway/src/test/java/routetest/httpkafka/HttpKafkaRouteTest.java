@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.actuate.metrics.AutoConfigureMetrics;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpEntity;
@@ -23,14 +24,17 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
+import static com.bridle.configuration.routes.HttpKafkaConfiguration.GATEWAY_TYPE_HTTP_KAFKA;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
+import static routetest.httpkafka.TestUtils.PROMETHEUS_URI;
 
 @SpringBootTest(classes = {App.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(properties = {"spring.config.location=classpath:routetest/http-kafka/application.yml"})
 @CamelSpringBootTest
 @Testcontainers
 @DirtiesContext
+@AutoConfigureMetrics
 public class HttpKafkaRouteTest {
 
     private static final String TOPIC_NAME = "routetest";
@@ -56,7 +60,16 @@ public class HttpKafkaRouteTest {
 
         assertEquals(200, httpResponseEntity.getStatusCode().value());
         assertEquals("Success!", httpResponseEntity.getBody());
+//        verifyMetrics(GATEWAY_TYPE_HTTP_KAFKA, 1);
         KafkaContainerUtils.deleteTopic(kafka, TOPIC_NAME);
+    }
+
+    private void verifyMetrics(String routeName, int messageCount) {
+        ResponseEntity<String> metricsResponse =
+                TestUtils.sendHttpRequest(PROMETHEUS_URI, String.class, HttpMethod.GET, null);
+        int receivedSuccessMessageCount =
+                MetricsTestUtils.parseSuccessMessagesAmount(metricsResponse.getBody(), routeName);
+        assertEquals(messageCount, receivedSuccessMessageCount);
     }
 
     @Test
