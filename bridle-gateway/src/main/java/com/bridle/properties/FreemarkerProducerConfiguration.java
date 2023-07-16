@@ -22,7 +22,6 @@ public class FreemarkerProducerConfiguration extends FreemarkerComponentConfigur
         this.endpointProperties = endpointProperties;
     }
 
-    @NotEmpty
     public String getResourceUri() {
         return resourceUri;
     }

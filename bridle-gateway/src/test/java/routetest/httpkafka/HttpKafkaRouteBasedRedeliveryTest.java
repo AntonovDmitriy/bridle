@@ -78,7 +78,7 @@ public class HttpKafkaRouteBasedRedeliveryTest {
         RestClientResponseException exception = Assertions.assertThrows(RestClientResponseException.class,
                 HttpKafkaRouteBasedRedeliveryTest::sendValidHttpRequest);
 
-//        assertEquals(501, exception.getRawStatusCode());
+        assertEquals(501, exception.getRawStatusCode());
         assertEquals(3, notifierRedeliveredMessage.getCounter());
 
         context.getManagementStrategy().removeEventNotifier(notifierRedeliveredMessage);

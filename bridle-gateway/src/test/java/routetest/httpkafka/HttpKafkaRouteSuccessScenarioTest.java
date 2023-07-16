@@ -4,7 +4,6 @@ import com.bridle.App;
 import org.apache.camel.CamelContext;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,17 +16,20 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
+import java.io.IOException;
+
 import static com.bridle.configuration.routes.HttpKafkaConfiguration.GATEWAY_TYPE_HTTP_KAFKA;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
-import static routetest.httpkafka.TestUtils.PROMETHEUS_URI;
+import static routetest.httpkafka.KafkaContainerUtils.readMessage;
+import static routetest.httpkafka.MetricsTestUtils.verifyMetrics;
+import static routetest.httpkafka.TestUtils.getStringResources;
 
 @SpringBootTest(classes = {App.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(properties = {"spring.config.location=classpath:routetest/http-kafka/application.yml"})
@@ -63,30 +65,17 @@ public class HttpKafkaRouteSuccessScenarioTest {
 
         assertEquals(200, httpResponseEntity.getStatusCode().value());
         assertEquals("Success!", httpResponseEntity.getBody());
+        String messageInTopic = readMessage(kafka, TOPIC_NAME).stdOut();
         verifyMetrics(GATEWAY_TYPE_HTTP_KAFKA, 1, 0, 0);
         KafkaContainerUtils.deleteTopic(kafka, TOPIC_NAME);
     }
 
-    private void verifyMetrics(String routeName, int successCount, int failedCount, int handledErrors) {
-        ResponseEntity<String> metricsResponse =
-                TestUtils.sendHttpRequest(PROMETHEUS_URI, String.class, HttpMethod.GET, null);
-        int receivedFailedMessageCount =
-                MetricsTestUtils.parseFailedMessagesAmount(context, metricsResponse.getBody(), routeName);
-        assertEquals(failedCount, receivedFailedMessageCount);
-        int handledErrorsCount =
-                MetricsTestUtils.parseMessagesWithHandledErrorAmount(context, metricsResponse.getBody(), routeName);
-        assertEquals(handledErrors, handledErrorsCount);
-        int receivedSuccessMessageCount =
-                MetricsTestUtils.parseSuccessMessagesAmount(context, metricsResponse.getBody(), routeName);
-        assertEquals(successCount, receivedSuccessMessageCount - handledErrorsCount);
-
-    }
-
     @NotNull
-    private static ResponseEntity<String> sendValidHttpRequest() {
+    private static ResponseEntity<String> sendValidHttpRequest() throws IOException {
+        String textMessage = getStringResources("routetest/http-kafka/test.json");
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> requestEntity = new HttpEntity<>(REQUEST_BODY, headers);
+        HttpEntity<String> requestEntity = new HttpEntity<>(textMessage, headers);
         RestTemplate restTemplate = new RestTemplate();
         return restTemplate.exchange(
                 HTTP_SERVER_URL,

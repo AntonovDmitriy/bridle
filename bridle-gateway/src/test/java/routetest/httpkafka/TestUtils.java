@@ -1,9 +1,13 @@
 package routetest.httpkafka;
 
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
+import java.nio.file.Files;
 
 public class TestUtils {
 
@@ -19,5 +23,9 @@ public class TestUtils {
                 httpMethod,
                 requestEntity,
                 responseType);
+    }
+
+    public static String getStringResources(String path) throws IOException {
+        return new String(Files.readAllBytes(new ClassPathResource(path).getFile().toPath()));
     }
 }

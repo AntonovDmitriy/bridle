@@ -1,0 +1,66 @@
+{
+  "company": {
+    "name": "XYZ Corp",
+    "founded": 1995,
+    "locations": [
+      {
+        "country": "USA",
+        "city": "San Francisco",
+        "address": "1234 Pine St",
+        "postalCode": "94101"
+      },
+      {
+        "country": "Canada",
+        "city": "Vancouver",
+        "address": "5678 Maple Rd",
+        "postalCode": "V5K 0A1"
+      }
+    ],
+    "executives": [
+      {
+        "name": "John Doe",
+        "title": "CEO",
+        "email": "jdoe@xyzcorp.com",
+        "startDate": "2005-06-01"
+      },
+      {
+        "name": "Jane Smith",
+        "title": "CFO",
+        "email": "jsmith@xyzcorp.com",
+        "startDate": "2007-10-15"
+      }
+    ],
+    "products": [
+      {
+        "name": "Product A",
+        "category": "Software",
+        "price": 199.99,
+        "versions": [
+          {
+            "version": "1.0",
+            "releaseDate": "2010-05-20"
+          },
+          {
+            "version": "2.0",
+            "releaseDate": "2013-04-15"
+          }
+        ]
+      },
+      {
+        "name": "Product B",
+        "category": "Hardware",
+        "price": 99.99,
+        "versions": [
+          {
+            "version": "1.0",
+            "releaseDate": "2012-11-30"
+          },
+          {
+            "version": "1.1",
+            "releaseDate": "2014-02-28"
+          }
+        ]
+      }
+    ]
+  }
+}

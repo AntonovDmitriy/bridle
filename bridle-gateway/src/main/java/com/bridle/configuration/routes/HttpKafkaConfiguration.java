@@ -2,13 +2,14 @@ package com.bridle.configuration.routes;
 
 import com.bridle.configuration.common.ErrorHandlerConfiguration;
 import com.bridle.configuration.common.ErrorResponseConfiguration;
+import com.bridle.configuration.common.FreemarkerConfiguration;
 import com.bridle.configuration.common.HeaderCollectorConfiguration;
 import com.bridle.configuration.common.KafkaOutConfiguration;
 import com.bridle.configuration.common.SuccessResponseConfiguration;
 import com.bridle.properties.FreemarkerProducerConfiguration;
 import com.bridle.properties.HttpConsumerConfiguration;
 import com.bridle.properties.ValidatedKafkaProducerConfiguration;
-import com.bridle.routes.HttpKafkaRoute;
+import com.bridle.routes.HttpToProducerRoute;
 import org.apache.camel.ErrorHandlerFactory;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.EndpointProducerBuilder;
@@ -21,6 +22,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 import static com.bridle.configuration.common.ComponentNameConstants.ERROR_RESPONSE_FREEMARKER_COMPONENT_NAME;
+import static com.bridle.configuration.common.ComponentNameConstants.FREEMARKER_COMPONENT_NAME;
 import static com.bridle.configuration.common.ComponentNameConstants.HEADER_COLLECTOR_COMPONENT_NAME;
 import static com.bridle.configuration.common.ComponentNameConstants.KAFKA_OUT_COMPONENT_NAME;
 import static com.bridle.configuration.common.ComponentNameConstants.REST_IN_COMPONENT_NAME;
@@ -33,6 +35,7 @@ import static com.bridle.configuration.common.EndpointBuilders.buildKafkaProduce
         ErrorHandlerConfiguration.class,
         SuccessResponseConfiguration.class,
         ErrorResponseConfiguration.class,
+        FreemarkerConfiguration.class,
         HeaderCollectorConfiguration.class})
 @ConditionalOnProperty(name = "gateway.type", havingValue = HttpKafkaConfiguration.GATEWAY_TYPE_HTTP_KAFKA)
 public class HttpKafkaConfiguration {
@@ -53,20 +56,27 @@ public class HttpKafkaConfiguration {
                                             FreemarkerProducerConfiguration successResponseConfiguration,
                                             @Qualifier("errorResponseConfiguration")
                                             FreemarkerProducerConfiguration errorResponseConfiguration,
+                                            @Qualifier("freemarkerConfiguration")
+                                            FreemarkerProducerConfiguration transformConfiguration,
                                             @Qualifier(HEADER_COLLECTOR_COMPONENT_NAME)
                                             Processor headerCollector) {
 
-        EndpointProducerBuilder kafkaOut = buildKafkaProducer(KAFKA_OUT_COMPONENT_NAME, kafkaOutConfiguration);
+        EndpointProducerBuilder mainProducer = buildKafkaProducer(KAFKA_OUT_COMPONENT_NAME, kafkaOutConfiguration);
         EndpointProducerBuilder successResponseBuilder = buildFreemarker(SUCCESS_RESPONSE_FREEMARKER_COMPONENT_NAME,
-                successResponseConfiguration) ;
+                successResponseConfiguration);
         EndpointProducerBuilder errorResponseBuilder = buildFreemarker(ERROR_RESPONSE_FREEMARKER_COMPONENT_NAME,
                 errorResponseConfiguration);
+        EndpointProducerBuilder transform = buildFreemarker(FREEMARKER_COMPONENT_NAME, transformConfiguration);
 
-        return new HttpKafkaRoute(errorHandlerFactory,
+        return new HttpToProducerRoute(errorHandlerFactory,
                 httpConsumerConfiguration,
-                kafkaOut,
+                mainProducer,
                 successResponseBuilder,
                 errorResponseBuilder,
-                headerCollector);
+                transform,
+                headerCollector,
+                null,
+                null,
+                null);
     }
 }
