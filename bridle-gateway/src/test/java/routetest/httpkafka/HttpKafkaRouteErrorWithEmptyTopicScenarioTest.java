@@ -1,15 +1,15 @@
 package routetest.httpkafka;
 
 import com.bridle.App;
-import org.apache.camel.component.kafka.KafkaProducer;
+import org.apache.camel.CamelContext;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.actuate.metrics.AutoConfigureMetrics;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -35,11 +35,14 @@ import static routetest.httpkafka.TestUtils.PROMETHEUS_URI;
 @Testcontainers
 @DirtiesContext
 @AutoConfigureMetrics
-public class HttpKafkaRouteTest {
+public class HttpKafkaRouteErrorWithEmptyTopicScenarioTest {
 
     private static final String TOPIC_NAME = "routetest";
     public static final String HTTP_SERVER_URL = "http://localhost:8080/camel/myapi";
     public static final String REQUEST_BODY = "Request Body";
+
+    @Autowired
+    private CamelContext context;
 
     @Container
     private static final KafkaContainer kafka = new KafkaContainer(
@@ -53,32 +56,27 @@ public class HttpKafkaRouteTest {
     }
 
     @Test
-    void verifySuccessHttpKafkaScenario() throws Exception {
-        KafkaContainerUtils.createTopic(kafka, TOPIC_NAME);
-
-        ResponseEntity<String> httpResponseEntity = sendValidHttpRequest();
-
-        assertEquals(200, httpResponseEntity.getStatusCode().value());
-        assertEquals("Success!", httpResponseEntity.getBody());
-//        verifyMetrics(GATEWAY_TYPE_HTTP_KAFKA, 1);
-        KafkaContainerUtils.deleteTopic(kafka, TOPIC_NAME);
-    }
-
-    private void verifyMetrics(String routeName, int messageCount) {
-        ResponseEntity<String> metricsResponse =
-                TestUtils.sendHttpRequest(PROMETHEUS_URI, String.class, HttpMethod.GET, null);
-        int receivedSuccessMessageCount =
-                MetricsTestUtils.parseSuccessMessagesAmount(metricsResponse.getBody(), routeName);
-        assertEquals(messageCount, receivedSuccessMessageCount);
-    }
-
-    @Test
     void verifyErrorHttpKafkaScenarioWhenTopicDoesNotExist() throws Exception {
         RestClientResponseException exception = Assertions.assertThrows(RestClientResponseException.class,
-                HttpKafkaRouteTest::sendValidHttpRequest);
-
+                HttpKafkaRouteErrorWithEmptyTopicScenarioTest::sendValidHttpRequest);
         assertEquals(501, exception.getRawStatusCode());
         assertEquals("Internal server Error", exception.getResponseBodyAsString());
+        verifyMetrics(GATEWAY_TYPE_HTTP_KAFKA, 0, 0, 1);
+    }
+
+    private void verifyMetrics(String routeName, int successCount, int failedCount, int handledErrors) {
+        ResponseEntity<String> metricsResponse =
+                TestUtils.sendHttpRequest(PROMETHEUS_URI, String.class, HttpMethod.GET, null);
+        int receivedFailedMessageCount =
+                MetricsTestUtils.parseFailedMessagesAmount(context, metricsResponse.getBody(), routeName);
+        assertEquals(failedCount, receivedFailedMessageCount);
+        int handledErrorsCount =
+                MetricsTestUtils.parseMessagesWithHandledErrorAmount(context, metricsResponse.getBody(), routeName);
+        assertEquals(handledErrors, handledErrorsCount);
+        int receivedSuccessMessageCount =
+                MetricsTestUtils.parseSuccessMessagesAmount(context, metricsResponse.getBody(), routeName);
+        assertEquals(successCount, receivedSuccessMessageCount - handledErrorsCount);
+
     }
 
     @NotNull
