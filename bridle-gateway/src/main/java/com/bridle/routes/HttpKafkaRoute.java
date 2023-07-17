@@ -79,16 +79,20 @@ public class HttpKafkaRoute extends GenericHttpConsumerRoute {
         if (beforeTransformDataFormatDefinition != null) {
             route.unmarshal(beforeTransformDataFormatDefinition);
         }
-        route.to(transform)
-                .to(kafkaOut)
+
+        if (transform != null) {
+            route.to(transform);
+        }
+
+        route.to(kafkaOut)
                 .to(successResponseBuilder)
                 .log("Response: ${body}");
     }
 
-    // change long success test
-    // change compose with validation and transformation via header collector
+    // info about timings to dashboard
     // load testing with timings every step of route (test jsonpath efficiency)
     // headers filtering
+    // default yml with disabling starters
     // journalling
     // kafka headers
     // kafka metrics

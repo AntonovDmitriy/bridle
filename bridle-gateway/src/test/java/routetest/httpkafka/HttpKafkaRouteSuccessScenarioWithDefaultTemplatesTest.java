@@ -30,6 +30,7 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
 import static routetest.httpkafka.KafkaContainerUtils.readMessage;
 import static routetest.httpkafka.MetricsTestUtils.verifyMetrics;
 import static routetest.httpkafka.TestUtils.getStringResources;
+import static routetest.httpkafka.TestUtils.sendPostHttpRequest;
 
 @SpringBootTest(classes = {App.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(properties = {"spring.config.location=classpath:routetest/http-kafka/application-with-default-templates.yml"})
@@ -61,28 +62,14 @@ public class HttpKafkaRouteSuccessScenarioWithDefaultTemplatesTest {
     void verifySuccessHttpKafkaScenario() throws Exception {
         KafkaContainerUtils.createTopic(kafka, TOPIC_NAME);
 
-        ResponseEntity<String> httpResponseEntity = sendValidHttpRequest();
+        String textMessage = getStringResources("routetest/http-kafka/test.json");
+        ResponseEntity<String> httpResponseEntity = sendPostHttpRequest(HTTP_SERVER_URL, textMessage);
 
         assertEquals(200, httpResponseEntity.getStatusCode().value());
         assertEquals("Success!", httpResponseEntity.getBody());
-        String messageInTopic = readMessage(kafka, TOPIC_NAME).stdOut();
+        assertEquals(textMessage, readMessage(kafka, TOPIC_NAME).stdOut().strip());
         verifyMetrics(GATEWAY_TYPE_HTTP_KAFKA, 1, 0, 0);
         KafkaContainerUtils.deleteTopic(kafka, TOPIC_NAME);
-    }
-
-    @NotNull
-    private static ResponseEntity<String> sendValidHttpRequest() throws IOException {
-        String textMessage = getStringResources("routetest/http-kafka/test.json");
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> requestEntity = new HttpEntity<>(textMessage, headers);
-        RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.exchange(
-                HTTP_SERVER_URL,
-                HttpMethod.POST,
-                requestEntity,
-                String.class
-        );
     }
 }
 

@@ -57,6 +57,7 @@ public class HttpKafkaConfiguration {
                                             EndpointProducerBuilder successResponseBuilder,
                                             @Qualifier("errorResponseBuilder")
                                             EndpointProducerBuilder errorResponseBuilder,
+                                            @Autowired(required = false)
                                             @Qualifier("freemarkerTransformBuilder")
                                             EndpointProducerBuilder transform,
                                             @Qualifier(HEADER_COLLECTOR_COMPONENT_NAME)
