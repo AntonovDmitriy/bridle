@@ -1,6 +1,6 @@
-package routetest.httpkafka;
+package utils;
 
-public class MetricsHolder <T> {
+public class MetricsHolder<T> {
 
     private final T value;
     private final String metricRow;

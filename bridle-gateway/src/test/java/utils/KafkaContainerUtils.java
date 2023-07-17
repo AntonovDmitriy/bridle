@@ -1,4 +1,4 @@
-package routetest.httpkafka;
+package utils;
 
 import org.testcontainers.containers.KafkaContainer;
 

@@ -24,7 +24,7 @@ public class SingletonHeaderCollectorsFactory implements ValuesCollectorFactory 
         if (result == null) {
             synchronized (this) {
                 result = collectorsByMessageFormat.get(messageFormat);
-                if(result == null) {
+                if (result == null) {
                     result = collectorsByMessageFormat.computeIfAbsent(messageFormat,
                             format -> createValuesCollectorForMessageFormat(format, queryExpressionsByHeaderName));
                 }

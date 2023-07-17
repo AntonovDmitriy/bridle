@@ -10,7 +10,7 @@ import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.kafka;
 public class EndpointBuilders {
 
     public static EndpointProducerBuilder buildKafkaProducer(String componentName,
-                                                             ValidatedKafkaProducerConfiguration kafkaOutConfiguration){
+                                                             ValidatedKafkaProducerConfiguration kafkaOutConfiguration) {
         EndpointProducerBuilder result = kafka(componentName, kafkaOutConfiguration.getTopic());
         kafkaOutConfiguration.getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(result::doSetProperty));
@@ -18,7 +18,7 @@ public class EndpointBuilders {
     }
 
     public static EndpointProducerBuilder buildFreemarker(String componentName,
-                                                     FreemarkerProducerConfiguration freemarkerProducerConfiguration){
+                                                          FreemarkerProducerConfiguration freemarkerProducerConfiguration) {
         EndpointProducerBuilder result = freemarker(componentName, freemarkerProducerConfiguration.getResourceUri());
         freemarkerProducerConfiguration.getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(result::doSetProperty));

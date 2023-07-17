@@ -23,6 +23,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 import routetest.utils.EndpointSendEventNotifier;
+import utils.KafkaContainerUtils;
 
 import static com.bridle.configuration.common.ComponentNameConstants.KAFKA_OUT_COMPONENT_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;

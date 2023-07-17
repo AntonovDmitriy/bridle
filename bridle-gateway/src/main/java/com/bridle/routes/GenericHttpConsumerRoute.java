@@ -2,7 +2,6 @@ package com.bridle.routes;
 
 import com.bridle.properties.HttpConsumerConfiguration;
 import org.apache.camel.ErrorHandlerFactory;
-import org.apache.camel.builder.RouteBuilder;
 
 public class GenericHttpConsumerRoute extends BaseRouteBuilder {
 

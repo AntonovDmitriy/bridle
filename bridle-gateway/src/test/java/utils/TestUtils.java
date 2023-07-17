@@ -1,4 +1,4 @@
-package routetest.httpkafka;
+package utils;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
@@ -16,9 +16,9 @@ public class TestUtils {
     public static final String PROMETHEUS_URI = "http://localhost:8080/actuator/prometheus";
 
     public static <T> ResponseEntity<T> sendHttpRequest(String uri,
-                                                 Class<T> responseType,
-                                                 HttpMethod httpMethod,
-                                                 HttpEntity<?> requestEntity) {
+                                                        Class<T> responseType,
+                                                        HttpMethod httpMethod,
+                                                        HttpEntity<?> requestEntity) {
         RestTemplate restTemplate = new RestTemplate();
         return restTemplate.exchange(
                 uri,

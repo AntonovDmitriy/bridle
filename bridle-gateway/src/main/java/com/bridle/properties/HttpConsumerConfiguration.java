@@ -3,7 +3,6 @@ package com.bridle.properties;
 import org.apache.camel.model.rest.VerbDefinition;
 import org.apache.camel.spi.RestConfiguration;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotEmpty;

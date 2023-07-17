@@ -69,7 +69,7 @@ public class HttpKafkaConfiguration {
                                             @Qualifier("validatorBuilder")
                                             EndpointProducerBuilder inboundValidator,
                                             @Qualifier("validationErrorResponseBuilder")
-                                                EndpointProducerBuilder validationErrorResponseBuilder) {
+                                            EndpointProducerBuilder validationErrorResponseBuilder) {
         return new HttpKafkaRoute(errorHandlerFactory,
                 httpConsumerConfiguration,
                 kafkaProducerBuilder,

@@ -16,9 +16,9 @@ public class LoadFreemarkerKafkaRoute extends BaseRouteBuilder {
 
 
     public LoadFreemarkerKafkaRoute(ErrorHandlerFactory errorHandlerFactory,
-            EndpointConsumerBuilder scheduler,
+                                    EndpointConsumerBuilder scheduler,
                                     EndpointProducerBuilder freemarker,
-                                    EndpointProducerBuilder kafkaOut){
+                                    EndpointProducerBuilder kafkaOut) {
         super(errorHandlerFactory);
         this.scheduler = scheduler;
         this.freemarker = freemarker;

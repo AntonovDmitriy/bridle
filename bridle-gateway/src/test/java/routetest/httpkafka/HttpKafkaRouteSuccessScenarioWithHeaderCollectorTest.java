@@ -21,15 +21,16 @@ import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
+import utils.KafkaContainerUtils;
 
 import java.io.IOException;
 
 import static com.bridle.configuration.routes.HttpKafkaConfiguration.GATEWAY_TYPE_HTTP_KAFKA;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
-import static routetest.httpkafka.KafkaContainerUtils.readMessage;
-import static routetest.httpkafka.MetricsTestUtils.verifyMetrics;
-import static routetest.httpkafka.TestUtils.getStringResources;
+import static utils.KafkaContainerUtils.readMessage;
+import static utils.MetricsTestUtils.verifyMetrics;
+import static utils.TestUtils.getStringResources;
 
 @SpringBootTest(classes = {App.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(properties = {"spring.config.location=classpath:routetest/http-kafka/application-with-header-collector.yml"})

@@ -12,7 +12,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 
-import static com.bridle.configuration.common.ComponentNameConstants.ERROR_RESPONSE_FREEMARKER_COMPONENT_NAME;
 import static com.bridle.configuration.common.ComponentNameConstants.VALIDATION_RESPONSE_FREEMARKER_COMPONENT_NAME;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.freemarker;
 
@@ -35,7 +34,7 @@ public class ValidationErrorResponseConfiguration {
 
     @Bean
     public EndpointProducerBuilder validationErrorResponseBuilder(@Qualifier("validationErrorResponseConfiguration")
-                                                        FreemarkerProducerConfiguration errorResponseConfiguration) {
+                                                                  FreemarkerProducerConfiguration errorResponseConfiguration) {
         EndpointProducerBuilder result = freemarker(VALIDATION_RESPONSE_FREEMARKER_COMPONENT_NAME,
                 errorResponseConfiguration.getResourceUri());
         errorResponseConfiguration.getEndpointProperties()
@@ -46,8 +45,8 @@ public class ValidationErrorResponseConfiguration {
     @Lazy
     @Bean
     public ComponentCustomizer configureValidationErrorResponseComponent(CamelContext context,
-                                                               @Qualifier("validationErrorResponseConfiguration")
-                                                               FreemarkerProducerConfiguration componentConfiguration) {
+                                                                         @Qualifier("validationErrorResponseConfiguration")
+                                                                         FreemarkerProducerConfiguration componentConfiguration) {
         return new ComponentCustomizerImpl(context, componentConfiguration, VALIDATION_RESPONSE_FREEMARKER_COMPONENT_NAME);
     }
 

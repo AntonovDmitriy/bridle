@@ -89,6 +89,8 @@ public class HttpKafkaRoute extends GenericHttpConsumerRoute {
                 .log("Response: ${body}");
     }
 
+    // test refactoring
+    // next routes
     // info about timings to dashboard
     // load testing with timings every step of route (test jsonpath efficiency)
     // headers filtering

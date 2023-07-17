@@ -61,7 +61,7 @@ public class HttpPollHttpRouteTest {
     }
 
     @AfterAll
-    public static void afterAll() throws Exception{
+    public static void afterAll() throws Exception {
         mockPollServer.stop();
         mockCallServer.stop();
     }

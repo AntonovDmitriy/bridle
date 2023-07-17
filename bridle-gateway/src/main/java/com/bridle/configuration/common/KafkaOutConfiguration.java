@@ -28,7 +28,7 @@ public class KafkaOutConfiguration {
 
 
     @Bean
-    public EndpointProducerBuilder kafkaProducerBuilder(ValidatedKafkaProducerConfiguration kafkaOutConfiguration){
+    public EndpointProducerBuilder kafkaProducerBuilder(ValidatedKafkaProducerConfiguration kafkaOutConfiguration) {
         EndpointProducerBuilder result = kafka(KAFKA_OUT_COMPONENT_NAME, kafkaOutConfiguration.getTopic());
         kafkaOutConfiguration.getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(result::doSetProperty));

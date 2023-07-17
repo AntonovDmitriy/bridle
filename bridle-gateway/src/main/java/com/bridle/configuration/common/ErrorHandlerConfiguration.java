@@ -16,12 +16,12 @@ public class ErrorHandlerConfiguration {
 
     @ConfigurationProperties(prefix = REDELIVERY_POLICY)
     @Bean
-    public RedeliveryPolicyDefinition customRedeliveryPolicyDefinition(){
+    public RedeliveryPolicyDefinition customRedeliveryPolicyDefinition() {
         return new RedeliveryPolicyDefinition();
     }
 
     @Bean(name = REDELIVERY_POLICY)
-    public RedeliveryPolicy customRedeliveryPolicy(RedeliveryPolicyDefinition myRedeliveryPolicyDefinition, CamelContext context){
+    public RedeliveryPolicy customRedeliveryPolicy(RedeliveryPolicyDefinition myRedeliveryPolicyDefinition, CamelContext context) {
         return ErrorHandlerReifier.createRedeliveryPolicy(myRedeliveryPolicyDefinition, context);
     }
 

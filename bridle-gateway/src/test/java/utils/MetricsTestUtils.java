@@ -1,22 +1,16 @@
-package routetest.httpkafka;
+package utils;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
-import org.apache.camel.CamelContext;
-import org.apache.camel.builder.NotifyBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static routetest.httpkafka.TestUtils.PROMETHEUS_URI;
+import static utils.TestUtils.PROMETHEUS_URI;
 
 public class MetricsTestUtils {
 
@@ -50,7 +44,7 @@ public class MetricsTestUtils {
                 .getValue().intValue();
     }
 
-    public static int parseMessagesWithHandledErrorAmount( String metricsInfo, String routeName) {
+    public static int parseMessagesWithHandledErrorAmount(String metricsInfo, String routeName) {
         return extractDecimalMetric(metricsInfo, routeName, "CamelExchangesFailuresHandled_total")
                 .getValue().intValue();
     }

@@ -13,8 +13,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 
 import static com.bridle.configuration.common.ComponentNameConstants.ERROR_RESPONSE_FREEMARKER_COMPONENT_NAME;
-import static com.bridle.configuration.common.ComponentNameConstants.FREEMARKER_COMPONENT_NAME;
-import static com.bridle.configuration.common.ComponentNameConstants.SUCCESS_RESPONSE_FREEMARKER_COMPONENT_NAME;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.freemarker;
 
 public class ErrorResponseConfiguration {

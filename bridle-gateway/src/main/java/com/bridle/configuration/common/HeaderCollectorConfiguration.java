@@ -4,15 +4,9 @@ import com.bridle.component.collector.FacadeHeaderCollectorConfiguration;
 import com.bridle.component.collector.FacadeHeadersCollector;
 import com.bridle.component.collector.SingletonHeaderCollectorsFactory;
 import com.bridle.component.collector.ValuesCollectorFactory;
-import com.bridle.properties.ValidatedKafkaConsumerConfiguration;
-import com.bridle.utils.ComponentCustomizerImpl;
-import org.apache.camel.CamelContext;
 import org.apache.camel.Processor;
-import org.apache.camel.component.kafka.KafkaComponent;
-import org.apache.camel.spi.ComponentCustomizer;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Lazy;
 
 public class HeaderCollectorConfiguration {
 
@@ -23,7 +17,7 @@ public class HeaderCollectorConfiguration {
     }
 
     @Bean
-    public ValuesCollectorFactory headerCollectorFactory(){
+    public ValuesCollectorFactory headerCollectorFactory() {
         return new SingletonHeaderCollectorsFactory();
     }
 

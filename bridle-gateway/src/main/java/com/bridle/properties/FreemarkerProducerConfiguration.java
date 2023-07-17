@@ -3,7 +3,6 @@ package com.bridle.properties;
 import org.apache.camel.component.freemarker.springboot.FreemarkerComponentConfiguration;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.constraints.NotEmpty;
 import java.util.Map;
 import java.util.Optional;
 
