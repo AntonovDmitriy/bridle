@@ -1,0 +1,37 @@
+{
+  "system": {
+    "name": "cool customer"
+  },
+  "company": {
+    "name": "XYZ Corp",
+    "founded": 1995,
+    "locations": [
+      {
+        "country": "USA",
+        "city": "San Francisco",
+        "address": "1234 Pine St",
+        "postalCode": "94101"
+      },
+      {
+        "country": "Canada",
+        "city": "Vancouver",
+        "address": "5678 Maple Rd",
+        "postalCode": "V5K 0A1"
+      }
+    ],
+    "executives": [
+      {
+        "name": "John Doe",
+        "title": "CEO",
+        "email": "jdoe@xyzcorp.com",
+        "startDate": "2005-06-01"
+      },
+      {
+        "name": "Jane Smith",
+        "title": "CFO",
+        "email": "jsmith@xyzcorp.com",
+        "startDate": "2007-10-15"
+      }
+    ]
+  }
+}

@@ -18,9 +18,13 @@ public final class ComponentNameConstants {
 
     public static final String ERROR_RESPONSE_FREEMARKER_COMPONENT_NAME = "error-response-freemarker";
 
+    public static final String VALIDATION_RESPONSE_FREEMARKER_COMPONENT_NAME = "validation-error-response-freemarker";
+
     public static final String SUCCESS_RESPONSE_FREEMARKER_COMPONENT_NAME = "success-response-freemarker";
 
     public static final String HEADER_COLLECTOR_COMPONENT_NAME = "header-collector";
+
+    public static final String JSON_VALIDATOR_COMPONENT_NAME = "validator";
 
     public static final String ERROR_HANDLER_NAME = "error-handler";
     public static final String REDELIVERY_POLICY = "redelivery-policy";

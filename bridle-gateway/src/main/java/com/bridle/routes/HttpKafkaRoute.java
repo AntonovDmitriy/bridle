@@ -2,8 +2,10 @@ package com.bridle.routes;
 
 import com.bridle.properties.HttpConsumerConfiguration;
 import org.apache.camel.ErrorHandlerFactory;
+import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.Processor;
+import org.apache.camel.ValidationException;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.model.DataFormatDefinition;
 import org.apache.camel.model.RouteDefinition;
@@ -21,6 +23,8 @@ public class HttpKafkaRoute extends GenericHttpConsumerRoute {
     private final EndpointProducerBuilder transform;
     private final Processor headerCollector;
     private final DataFormatDefinition beforeTransformDataFormatDefinition;
+    private final EndpointProducerBuilder inboundValidator;
+    private final EndpointProducerBuilder validationErrorResponseBuilder;
 
     public HttpKafkaRoute(ErrorHandlerFactory errorHandlerFactory,
                           HttpConsumerConfiguration restConfiguration,
@@ -29,7 +33,9 @@ public class HttpKafkaRoute extends GenericHttpConsumerRoute {
                           EndpointProducerBuilder errorResponseBuilder,
                           EndpointProducerBuilder transform,
                           Processor headerCollector,
-                          DataFormatDefinition beforeTransformDataFormatDefinition) {
+                          DataFormatDefinition beforeTransformDataFormatDefinition,
+                          EndpointProducerBuilder inboundValidator,
+                          EndpointProducerBuilder validationErrorResponseBuilder) {
         super(errorHandlerFactory, restConfiguration);
         this.kafkaOut = mainProducer;
         this.successResponseBuilder = successResponseBuilder;
@@ -37,6 +43,8 @@ public class HttpKafkaRoute extends GenericHttpConsumerRoute {
         this.transform = transform;
         this.headerCollector = headerCollector;
         this.beforeTransformDataFormatDefinition = beforeTransformDataFormatDefinition;
+        this.inboundValidator = inboundValidator;
+        this.validationErrorResponseBuilder = validationErrorResponseBuilder;
     }
 
     @Override
@@ -49,13 +57,25 @@ public class HttpKafkaRoute extends GenericHttpConsumerRoute {
                 .redeliveryPolicyRef(REDELIVERY_POLICY)
                 .setHeader(HTTP_RESPONSE_CODE, constant(restConfiguration.getErrorHttpResponseCode()))
                 .to(errorResponseBuilder)
-                .log("Respongitse: ${body}");
+                .log("Response: ${body}");
+
+        onException(ValidationException.class)
+                .log(LoggingLevel.ERROR, "Validation exception occurred: ${exception.stacktrace}")
+                .handled(true)
+                .setHeader(HTTP_RESPONSE_CODE, constant(restConfiguration.getValidationErrorHttpResponseCode()))
+                .setHeader(Exchange.EXCEPTION_CAUGHT).exchangeProperty(Exchange.EXCEPTION_CAUGHT)
+                .to(validationErrorResponseBuilder)
+                .log("Response: ${body}");
 
         RouteDefinition route = from("direct:process")
                 .routeId(GATEWAY_TYPE_HTTP_KAFKA)
                 .setHeader(CONTENT_TYPE, constant(restConfiguration.getContentType()))
-                .convertBodyTo(String.class)
-                .process(headerCollector);
+                .convertBodyTo(String.class);
+
+        if (inboundValidator != null) {
+            route.to(inboundValidator);
+        }
+        route.process(headerCollector);
         if (beforeTransformDataFormatDefinition != null) {
             route.unmarshal(beforeTransformDataFormatDefinition);
         }
@@ -65,11 +85,10 @@ public class HttpKafkaRoute extends GenericHttpConsumerRoute {
                 .log("Response: ${body}");
     }
 
-    // validation
+    // change long success test
+    // change compose with validation and transformation via header collector
     // load testing with timings every step of route (test jsonpath efficiency)
-    // check metrics error
     // headers filtering
-    // logging erros, f e freemarker or validation, or header collector
     // journalling
     // kafka headers
     // kafka metrics

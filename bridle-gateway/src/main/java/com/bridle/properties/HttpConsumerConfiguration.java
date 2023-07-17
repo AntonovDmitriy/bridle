@@ -22,6 +22,8 @@ public class HttpConsumerConfiguration extends RestConfiguration {
 
     @Positive
     private int errorHttpResponseCode = 500;
+    @Positive
+    private int validationErrorHttpResponseCode = 400;
 
     @Validated
     public static class GenericVerbDefinition extends VerbDefinition {
@@ -71,5 +73,13 @@ public class HttpConsumerConfiguration extends RestConfiguration {
 
     public void setErrorHttpResponseCode(int errorHttpResponseCode) {
         this.errorHttpResponseCode = errorHttpResponseCode;
+    }
+
+    public int getValidationErrorHttpResponseCode() {
+        return validationErrorHttpResponseCode;
+    }
+
+    public void setValidationErrorHttpResponseCode(int validationErrorHttpResponseCode) {
+        this.validationErrorHttpResponseCode = validationErrorHttpResponseCode;
     }
 }

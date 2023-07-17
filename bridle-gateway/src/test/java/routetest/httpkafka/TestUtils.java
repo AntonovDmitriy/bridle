@@ -2,7 +2,9 @@ package routetest.httpkafka;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -23,6 +25,13 @@ public class TestUtils {
                 httpMethod,
                 requestEntity,
                 responseType);
+    }
+
+    public static ResponseEntity<String> sendPostHttpRequest(String uri, String textMessage) throws IOException {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> requestEntity = new HttpEntity<>(textMessage, headers);
+        return sendHttpRequest(uri, String.class, HttpMethod.POST, requestEntity);
     }
 
     public static String getStringResources(String path) throws IOException {

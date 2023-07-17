@@ -5,8 +5,10 @@ import com.bridle.configuration.common.ErrorResponseConfiguration;
 import com.bridle.configuration.common.FreemarkerConfiguration;
 import com.bridle.configuration.common.HeaderCollectorConfiguration;
 import com.bridle.configuration.common.InboundDataFormatConfiguration;
+import com.bridle.configuration.common.InboundValidationConfiguration;
 import com.bridle.configuration.common.KafkaOutConfiguration;
 import com.bridle.configuration.common.SuccessResponseConfiguration;
+import com.bridle.configuration.common.ValidationErrorResponseConfiguration;
 import com.bridle.properties.HttpConsumerConfiguration;
 import com.bridle.routes.HttpKafkaRoute;
 import org.apache.camel.ErrorHandlerFactory;
@@ -32,7 +34,10 @@ import static com.bridle.configuration.common.ComponentNameConstants.REST_IN_COM
         ErrorResponseConfiguration.class,
         FreemarkerConfiguration.class,
         HeaderCollectorConfiguration.class,
-        InboundDataFormatConfiguration.class})
+        InboundDataFormatConfiguration.class,
+        InboundValidationConfiguration.class,
+        ValidationErrorResponseConfiguration.class
+})
 @ConditionalOnProperty(name = "gateway.type", havingValue = HttpKafkaConfiguration.GATEWAY_TYPE_HTTP_KAFKA)
 public class HttpKafkaConfiguration {
 
@@ -58,7 +63,12 @@ public class HttpKafkaConfiguration {
                                             Processor headerCollector,
                                             @Autowired(required = false)
                                             @Qualifier("inboundDataFormat")
-                                            DataFormatDefinition inboundDataFormat) {
+                                            DataFormatDefinition inboundDataFormat,
+                                            @Autowired(required = false)
+                                            @Qualifier("validatorBuilder")
+                                            EndpointProducerBuilder inboundValidator,
+                                            @Qualifier("validationErrorResponseBuilder")
+                                                EndpointProducerBuilder validationErrorResponseBuilder) {
         return new HttpKafkaRoute(errorHandlerFactory,
                 httpConsumerConfiguration,
                 kafkaProducerBuilder,
@@ -66,6 +76,8 @@ public class HttpKafkaConfiguration {
                 errorResponseBuilder,
                 transform,
                 headerCollector,
-                inboundDataFormat);
+                inboundDataFormat,
+                inboundValidator,
+                validationErrorResponseBuilder);
     }
 }

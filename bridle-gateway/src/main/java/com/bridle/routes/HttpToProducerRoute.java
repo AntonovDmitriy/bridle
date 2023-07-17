@@ -2,8 +2,10 @@ package com.bridle.routes;
 
 import com.bridle.properties.HttpConsumerConfiguration;
 import org.apache.camel.ErrorHandlerFactory;
+import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.Processor;
+import org.apache.camel.ValidationException;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.model.ConvertBodyDefinition;
 import org.apache.camel.model.DataFormatDefinition;
@@ -24,6 +26,8 @@ public class HttpToProducerRoute extends GenericHttpConsumerRoute {
     private final ConvertBodyDefinition convertBodyDefinition;
     private final DataFormatDefinition beforeTransformDataFormatDefinition;
     private final DataFormatDefinition afterTransformDataFormatDefinition;
+    private final EndpointProducerBuilder inboundValidator;
+    private final EndpointProducerBuilder validationErrorResponseBuilder;
 
     public HttpToProducerRoute(ErrorHandlerFactory errorHandlerFactory,
                                HttpConsumerConfiguration restConfiguration,
@@ -34,7 +38,9 @@ public class HttpToProducerRoute extends GenericHttpConsumerRoute {
                                Processor headerCollector,
                                ConvertBodyDefinition convertBody,
                                DataFormatDefinition beforeTransformDataFormatDefinition,
-                               DataFormatDefinition afterTransformDataFormatDefinition) {
+                               DataFormatDefinition afterTransformDataFormatDefinition,
+                               EndpointProducerBuilder inboundValidator,
+                               EndpointProducerBuilder validationErrorResponseBuilder) {
         super(errorHandlerFactory, restConfiguration);
         this.mainProducer = mainProducer;
         this.successResponseBuilder = successResponseBuilder;
@@ -44,6 +50,8 @@ public class HttpToProducerRoute extends GenericHttpConsumerRoute {
         this.convertBodyDefinition = convertBody;
         this.beforeTransformDataFormatDefinition = beforeTransformDataFormatDefinition;
         this.afterTransformDataFormatDefinition = afterTransformDataFormatDefinition;
+        this.inboundValidator = inboundValidator;
+        this.validationErrorResponseBuilder = validationErrorResponseBuilder;
     }
 
     @Override
@@ -58,12 +66,24 @@ public class HttpToProducerRoute extends GenericHttpConsumerRoute {
                 .to(errorResponseBuilder)
                 .log("Response: ${body}");
 
+        onException(ValidationException.class)
+                .log(LoggingLevel.ERROR, "Validation exception occurred: ${exception.stacktrace}")
+                .handled(true)
+                .setHeader(HTTP_RESPONSE_CODE, constant(restConfiguration.getValidationErrorHttpResponseCode()))
+                .setHeader(Exchange.EXCEPTION_CAUGHT).exchangeProperty(Exchange.EXCEPTION_CAUGHT)
+                .to(validationErrorResponseBuilder)
+                .log("Response: ${body}");
+
         RouteDefinition routeDefinition = from("direct:process")
                 .routeId(GATEWAY_TYPE_HTTP_KAFKA)
                 .setHeader(CONTENT_TYPE, constant(restConfiguration.getContentType()));
 
         if (convertBodyDefinition != null) {
             routeDefinition.addOutput(convertBodyDefinition);
+        }
+
+        if (inboundValidator != null) {
+            routeDefinition.to(inboundValidator);
         }
 
         if (headerCollector != null) {
