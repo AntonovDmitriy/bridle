@@ -17,6 +17,7 @@ import static org.apache.camel.component.rest.RestConstants.HTTP_RESPONSE_CODE;
 
 public class HttpKafkaRoute extends GenericHttpConsumerRoute {
 
+    public static final String LOG_BODY = "Response: ${body}";
     private final EndpointProducerBuilder kafkaOut;
     private final EndpointProducerBuilder successResponseBuilder;
     private final EndpointProducerBuilder errorResponseBuilder;
@@ -57,7 +58,7 @@ public class HttpKafkaRoute extends GenericHttpConsumerRoute {
                 .redeliveryPolicyRef(REDELIVERY_POLICY)
                 .setHeader(HTTP_RESPONSE_CODE, constant(restConfiguration.getErrorHttpResponseCode()))
                 .to(errorResponseBuilder)
-                .log("Response: ${body}");
+                .log(LOG_BODY);
 
         onException(ValidationException.class)
                 .log(LoggingLevel.ERROR, "Validation exception occurred: ${exception.stacktrace}")
@@ -65,7 +66,7 @@ public class HttpKafkaRoute extends GenericHttpConsumerRoute {
                 .setHeader(HTTP_RESPONSE_CODE, constant(restConfiguration.getValidationErrorHttpResponseCode()))
                 .setHeader(Exchange.EXCEPTION_CAUGHT).exchangeProperty(Exchange.EXCEPTION_CAUGHT)
                 .to(validationErrorResponseBuilder)
-                .log("Response: ${body}");
+                .log(LOG_BODY);
 
         RouteDefinition route = from("direct:process")
                 .routeId(GATEWAY_TYPE_HTTP_KAFKA)
@@ -86,7 +87,7 @@ public class HttpKafkaRoute extends GenericHttpConsumerRoute {
 
         route.to(kafkaOut)
                 .to(successResponseBuilder)
-                .log("Response: ${body}");
+                .log(LOG_BODY);
     }
 
     // test refactoring
