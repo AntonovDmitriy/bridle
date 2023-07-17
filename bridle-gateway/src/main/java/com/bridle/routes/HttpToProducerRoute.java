@@ -75,7 +75,6 @@ public class HttpToProducerRoute extends GenericHttpConsumerRoute {
         }
 
         if (transform != null) {
-            routeDefinition.convertBodyTo(String.class);
             routeDefinition.to(transform);
         }
 
@@ -83,7 +82,7 @@ public class HttpToProducerRoute extends GenericHttpConsumerRoute {
             routeDefinition.marshal(afterTransformDataFormatDefinition);
         }
 
-        if(mainProducer !=null){
+        if (mainProducer != null) {
             routeDefinition.to(mainProducer);
         }
 
@@ -91,15 +90,4 @@ public class HttpToProducerRoute extends GenericHttpConsumerRoute {
                 .to(successResponseBuilder)
                 .log("Response: ${body}");
     }
-
-    // builder
-    // idea to decide marshalling or header collector
-    // marshalling example
-    // check metrics error
-    // validation
-    // transformation
-    // error transformation
-    // journalling
-    // kafka headers
-    // kafka metrics
 }

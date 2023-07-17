@@ -35,8 +35,8 @@ public class FacadeHeadersCollector implements Processor {
     }
 
     private void initValuesCollectorForMessageFormat() {
-        if (configuration.getMessageFormat() != null) {
-            collector = collectorFactory.createValuesCollector(configuration.getMessageFormat(),
+        if (configuration.getExpressionFormat() != null) {
+            collector = collectorFactory.createValuesCollector(configuration.getExpressionFormat(),
                     configuration.getQueryExpressionsByHeaderName());
         }
     }

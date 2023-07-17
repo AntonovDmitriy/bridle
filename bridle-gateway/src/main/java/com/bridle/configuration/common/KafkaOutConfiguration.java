@@ -3,6 +3,7 @@ package com.bridle.configuration.common;
 import com.bridle.properties.ValidatedKafkaProducerConfiguration;
 import com.bridle.utils.ComponentCustomizerImpl;
 import org.apache.camel.CamelContext;
+import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.component.kafka.KafkaComponent;
 import org.apache.camel.spi.ComponentCustomizer;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 
 import static com.bridle.configuration.common.ComponentNameConstants.KAFKA_OUT_COMPONENT_NAME;
+import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.kafka;
 
 public class KafkaOutConfiguration {
 
@@ -22,6 +24,15 @@ public class KafkaOutConfiguration {
     @Bean(name = KAFKA_OUT_COMPONENT_NAME)
     public KafkaComponent kafkaOutComponent() {
         return new KafkaComponent();
+    }
+
+
+    @Bean
+    public EndpointProducerBuilder kafkaProducerBuilder(ValidatedKafkaProducerConfiguration kafkaOutConfiguration){
+        EndpointProducerBuilder result = kafka(KAFKA_OUT_COMPONENT_NAME, kafkaOutConfiguration.getTopic());
+        kafkaOutConfiguration.getEndpointProperties()
+                .ifPresent(additional -> additional.forEach(result::doSetProperty));
+        return result;
     }
 
     @Lazy

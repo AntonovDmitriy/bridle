@@ -1,23 +1,23 @@
 package com.bridle.component.collector;
 
 
-import com.bridle.component.collector.enums.MessageFormat;
+import com.bridle.component.collector.enums.ExpressionFormat;
 
 import java.util.EnumMap;
 import java.util.Map;
 
 /**
- * Фабрика для {@link ValuesCollector} по заданному {@link MessageFormat}
+ * Фабрика для {@link ValuesCollector} по заданному {@link ExpressionFormat}
  * и соответствия заголовков к выражениям, требуемых для поиска значений.
  */
 public class SingletonHeaderCollectorsFactory implements ValuesCollectorFactory {
 
     @SuppressWarnings("rawtypes")
-    private final Map<MessageFormat, ValuesCollector> collectorsByMessageFormat = new EnumMap<>(MessageFormat.class);
+    private final Map<ExpressionFormat, ValuesCollector> collectorsByMessageFormat = new EnumMap<>(ExpressionFormat.class);
 
     @SuppressWarnings("rawtypes")
     @Override
-    public ValuesCollector createValuesCollector(MessageFormat messageFormat,
+    public ValuesCollector createValuesCollector(ExpressionFormat messageFormat,
                                                  Map<String, String> queryExpressionsByHeaderName) {
         checkMessageFormat(messageFormat);
         ValuesCollector result = collectorsByMessageFormat.get(messageFormat);
@@ -33,19 +33,20 @@ public class SingletonHeaderCollectorsFactory implements ValuesCollectorFactory 
         return result;
     }
 
-    private void checkMessageFormat(MessageFormat messageFormat) {
-        if (messageFormat == null) {
+    private void checkMessageFormat(ExpressionFormat expressionFormat) {
+        if (expressionFormat == null) {
             throw new IllegalArgumentException("Error while creating values collector. Message format is null");
         }
     }
 
     @SuppressWarnings("rawtypes")
-    private ValuesCollector createValuesCollectorForMessageFormat(MessageFormat messageFormat,
+    private ValuesCollector createValuesCollectorForMessageFormat(ExpressionFormat expressionFormat,
                                                                   Map<String, String> queryExpressionsByHeaderName) {
-        return switch (messageFormat) {
-            case XML -> new XpathXmlValuesCollector(queryExpressionsByHeaderName);
+        return switch (expressionFormat) {
+            case XPATH -> new XpathXmlValuesCollector(queryExpressionsByHeaderName);
             case JSON -> new JsonValuesCollector(queryExpressionsByHeaderName);
-            default -> throw new IllegalArgumentException("Unknown format " + messageFormat.name());
+            case JSON_PATH -> new JsonPathValuesCollector(queryExpressionsByHeaderName);
+            default -> throw new IllegalArgumentException("Unknown format " + expressionFormat.name());
         };
     }
 }

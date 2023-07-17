@@ -1,6 +1,6 @@
 package com.bridle.component.collector;
 
-import com.bridle.component.collector.enums.MessageFormat;
+import com.bridle.component.collector.enums.ExpressionFormat;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.Map;
@@ -9,7 +9,7 @@ import java.util.Map;
 public class FacadeHeaderCollectorConfiguration {
 
     private Map<String, String> queryExpressionsByHeaderName;
-    private MessageFormat messageFormat;
+    private ExpressionFormat expressionFormat;
 
     public Map<String, String> getQueryExpressionsByHeaderName() {
         return queryExpressionsByHeaderName;
@@ -19,11 +19,11 @@ public class FacadeHeaderCollectorConfiguration {
         this.queryExpressionsByHeaderName = queryExpressionsByHeaderName;
     }
 
-    public MessageFormat getMessageFormat() {
-        return messageFormat;
+    public ExpressionFormat getExpressionFormat() {
+        return expressionFormat;
     }
 
-    public void setMessageFormat(MessageFormat messageFormat) {
-        this.messageFormat = messageFormat;
+    public void setExpressionFormat(ExpressionFormat expressionFormat) {
+        this.expressionFormat = expressionFormat;
     }
 }

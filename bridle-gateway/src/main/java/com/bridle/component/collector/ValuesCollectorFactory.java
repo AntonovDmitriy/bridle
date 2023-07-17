@@ -1,13 +1,13 @@
 package com.bridle.component.collector;
 
 
-import com.bridle.component.collector.enums.MessageFormat;
+import com.bridle.component.collector.enums.ExpressionFormat;
 
 import java.util.Map;
 
 /**
  * Интерфейс для фабрики сборщика значений.
- * <p>см. {@link ValuesCollector}, {@link MessageFormat}.
+ * <p>см. {@link ValuesCollector}, {@link ExpressionFormat}.
  * <p>Пример реализации фабрики: {@link SingletonHeaderCollectorsFactory}.
  */
 public interface ValuesCollectorFactory {
@@ -19,6 +19,6 @@ public interface ValuesCollectorFactory {
      * @return
      */
     @SuppressWarnings("rawtypes")
-    ValuesCollector createValuesCollector(MessageFormat messageFormat,
+    ValuesCollector createValuesCollector(ExpressionFormat messageFormat,
                                           Map<String, String> queryExpressionsByHeaderName);
 }

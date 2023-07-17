@@ -1,4 +1,8 @@
 {
+  "system": {
+    "name": "cool customer",
+    "stream": "new system stream"
+  },
   "company": {
     "name": "XYZ Corp",
     "founded": 1995,
