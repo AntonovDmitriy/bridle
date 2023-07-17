@@ -29,6 +29,7 @@ import static com.bridle.configuration.routes.HttpKafkaConfiguration.GATEWAY_TYP
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
 import static utils.MetricsTestUtils.verifyMetrics;
+import static utils.TestUtils.sendPostHttpRequest;
 
 @SpringBootTest(classes = {App.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(properties = {"spring.config.location=classpath:routetest/http-kafka/application.yml"})
@@ -58,24 +59,9 @@ public class HttpKafkaRouteErrorWithEmptyTopicScenarioTest {
     @Test
     void verifyErrorHttpKafkaScenarioWhenTopicDoesNotExist() throws Exception {
         RestClientResponseException exception = Assertions.assertThrows(RestClientResponseException.class,
-                HttpKafkaRouteErrorWithEmptyTopicScenarioTest::sendValidHttpRequest);
+                () -> sendPostHttpRequest(HTTP_SERVER_URL, REQUEST_BODY));
         assertEquals(501, exception.getRawStatusCode());
         assertEquals("Internal server Error", exception.getResponseBodyAsString());
         verifyMetrics(GATEWAY_TYPE_HTTP_KAFKA, 0, 0, 1);
     }
-
-    @NotNull
-    private static ResponseEntity<String> sendValidHttpRequest() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> requestEntity = new HttpEntity<>(REQUEST_BODY, headers);
-        RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.exchange(
-                HTTP_SERVER_URL,
-                HttpMethod.POST,
-                requestEntity,
-                String.class
-        );
-    }
 }
-

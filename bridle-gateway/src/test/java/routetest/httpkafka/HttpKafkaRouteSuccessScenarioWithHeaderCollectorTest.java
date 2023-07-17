@@ -31,6 +31,7 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
 import static utils.KafkaContainerUtils.readMessage;
 import static utils.MetricsTestUtils.verifyMetrics;
 import static utils.TestUtils.getStringResources;
+import static utils.TestUtils.sendPostHttpRequest;
 
 @SpringBootTest(classes = {App.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(properties = {"spring.config.location=classpath:routetest/http-kafka/application-with-header-collector.yml"})
@@ -42,7 +43,6 @@ public class HttpKafkaRouteSuccessScenarioWithHeaderCollectorTest {
 
     private static final String TOPIC_NAME = "routetest";
     public static final String HTTP_SERVER_URL = "http://localhost:8080/camel/myapi";
-    public static final String REQUEST_BODY = "Request Body";
 
     public static final String EXPECTED_TRANSFORMED_MESSAGE = """
             {
@@ -72,8 +72,6 @@ public class HttpKafkaRouteSuccessScenarioWithHeaderCollectorTest {
               }
             }
             """;
-    @Autowired
-    private CamelContext context;
 
     @Container
     private static final KafkaContainer kafka = new KafkaContainer(
@@ -87,10 +85,11 @@ public class HttpKafkaRouteSuccessScenarioWithHeaderCollectorTest {
     }
 
     @Test
-    void verifySuccessHttpKafkaScenario() throws Exception {
+    void verifySuccessHttpKafkaScenarioWithTransformAndHeaderCollector() throws Exception {
         KafkaContainerUtils.createTopic(kafka, TOPIC_NAME);
         String textMessage = getStringResources("routetest/http-kafka/test.json");
-        ResponseEntity<String> httpResponseEntity = sendValidHttpRequest(textMessage);
+
+        ResponseEntity<String> httpResponseEntity = sendPostHttpRequest(HTTP_SERVER_URL, textMessage);
 
         assertEquals(200, httpResponseEntity.getStatusCode().value());
         assertEquals("Success!", httpResponseEntity.getBody());
@@ -99,18 +98,4 @@ public class HttpKafkaRouteSuccessScenarioWithHeaderCollectorTest {
         KafkaContainerUtils.deleteTopic(kafka, TOPIC_NAME);
     }
 
-    @NotNull
-    private static ResponseEntity<String> sendValidHttpRequest(String textMessage) throws IOException {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> requestEntity = new HttpEntity<>(textMessage, headers);
-        RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.exchange(
-                HTTP_SERVER_URL,
-                HttpMethod.POST,
-                requestEntity,
-                String.class
-        );
-    }
 }
-

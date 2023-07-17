@@ -28,6 +28,7 @@ import utils.KafkaContainerUtils;
 import static com.bridle.configuration.common.ComponentNameConstants.KAFKA_OUT_COMPONENT_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
+import static utils.TestUtils.sendPostHttpRequest;
 
 @SpringBootTest(classes = {App.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(properties = {"spring.config.location=classpath:routetest/http-kafka/application-redelivery.yml"})
@@ -60,7 +61,7 @@ public class HttpKafkaRouteBasedRedeliveryTest {
         EndpointSendEventNotifier eventNotifierSuccessMessage = new EndpointSendEventNotifier(KAFKA_OUT_COMPONENT_NAME);
         context.getManagementStrategy().addEventNotifier(eventNotifierSuccessMessage);
 
-        ResponseEntity<String> httpResponseEntity = sendValidHttpRequest();
+        ResponseEntity<String> httpResponseEntity = sendPostHttpRequest(HTTP_SERVER_URL, REQUEST_BODY);
 
         assertEquals(200, httpResponseEntity.getStatusCode().value());
         assertEquals("Success!", httpResponseEntity.getBody());
@@ -77,7 +78,7 @@ public class HttpKafkaRouteBasedRedeliveryTest {
         context.getManagementStrategy().addEventNotifier(notifierRedeliveredMessage);
 
         RestClientResponseException exception = Assertions.assertThrows(RestClientResponseException.class,
-                HttpKafkaRouteBasedRedeliveryTest::sendValidHttpRequest);
+                () -> sendPostHttpRequest(HTTP_SERVER_URL, REQUEST_BODY));
 
         assertEquals(501, exception.getRawStatusCode());
         assertEquals(3, notifierRedeliveredMessage.getCounter());
@@ -96,8 +97,8 @@ public class HttpKafkaRouteBasedRedeliveryTest {
         });
         context.getManagementStrategy().addEventNotifier(notifierRedeliveredSuccess);
 
-        ResponseEntity<String> httpResponseEntity = sendValidHttpRequest();
-
+        ResponseEntity<String> httpResponseEntity = sendPostHttpRequest(HTTP_SERVER_URL, REQUEST_BODY);
+        
         assertEquals(200, httpResponseEntity.getStatusCode().value());
         assertEquals("Success!", httpResponseEntity.getBody());
         assertEquals(3, notifierRedeliveredSuccess.getCounter());
@@ -105,20 +106,4 @@ public class HttpKafkaRouteBasedRedeliveryTest {
         assertEquals(1, KafkaContainerUtils.countMessages(kafka, TOPIC_NAME));
         KafkaContainerUtils.deleteTopic(kafka, TOPIC_NAME);
     }
-
-    @NotNull
-    private static ResponseEntity<String> sendValidHttpRequest() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> requestEntity = new HttpEntity<>(REQUEST_BODY, headers);
-        RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.exchange(
-                HTTP_SERVER_URL,
-                HttpMethod.POST,
-                requestEntity,
-                String.class
-        );
-    }
-
 }
-

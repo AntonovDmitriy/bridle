@@ -116,7 +116,7 @@ public class HttpKafkaClientTimeoutTest {
         HttpEntity<String> requestEntity = new HttpEntity<>(REQUEST_BODY, headers);
 
         HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-        requestFactory.setReadTimeout(1); // Set the read timeout to 5 seconds
+        requestFactory.setReadTimeout(1);
 
         RestTemplate restTemplate = new RestTemplate(requestFactory);
         return restTemplate.exchange(
@@ -126,6 +126,4 @@ public class HttpKafkaClientTimeoutTest {
                 String.class
         );
     }
-
 }
-

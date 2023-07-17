@@ -35,7 +35,6 @@ public class HttpKafkaRouteSuccessScenarioWithDefaultTemplatesTest {
 
     private static final String TOPIC_NAME = "routetest";
     public static final String HTTP_SERVER_URL = "http://localhost:8080/camel/myapi";
-    public static final String REQUEST_BODY = "Request Body";
 
     @Autowired
     private CamelContext context;
@@ -52,7 +51,7 @@ public class HttpKafkaRouteSuccessScenarioWithDefaultTemplatesTest {
     }
 
     @Test
-    void verifySuccessHttpKafkaScenario() throws Exception {
+    void verifySuccessHttpKafkaScenarioWithDefaultResponseTemplate() throws Exception {
         KafkaContainerUtils.createTopic(kafka, TOPIC_NAME);
 
         String textMessage = getStringResources("routetest/http-kafka/test.json");
@@ -65,4 +64,3 @@ public class HttpKafkaRouteSuccessScenarioWithDefaultTemplatesTest {
         KafkaContainerUtils.deleteTopic(kafka, TOPIC_NAME);
     }
 }
-

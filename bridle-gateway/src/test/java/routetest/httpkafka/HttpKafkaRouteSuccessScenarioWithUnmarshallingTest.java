@@ -31,6 +31,7 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
 import static utils.KafkaContainerUtils.readMessage;
 import static utils.MetricsTestUtils.verifyMetrics;
 import static utils.TestUtils.getStringResources;
+import static utils.TestUtils.sendPostHttpRequest;
 
 @SpringBootTest(classes = {App.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(properties = {"spring.config.location=classpath:routetest/http-kafka/application-with-unmarshalling.yml"})
@@ -86,10 +87,11 @@ public class HttpKafkaRouteSuccessScenarioWithUnmarshallingTest {
     }
 
     @Test
-    void verifySuccessHttpKafkaScenario() throws Exception {
+    void verifySuccessHttpKafkaScenarioWithTransformAndUnmarshalling() throws Exception {
         KafkaContainerUtils.createTopic(kafka, TOPIC_NAME);
         String textMessage = getStringResources("routetest/http-kafka/test.json");
-        ResponseEntity<String> httpResponseEntity = sendValidHttpRequest(textMessage);
+
+        ResponseEntity<String> httpResponseEntity = sendPostHttpRequest(HTTP_SERVER_URL, textMessage);
 
         assertEquals(200, httpResponseEntity.getStatusCode().value());
         assertEquals("Success!", httpResponseEntity.getBody());
@@ -97,19 +99,4 @@ public class HttpKafkaRouteSuccessScenarioWithUnmarshallingTest {
         verifyMetrics(GATEWAY_TYPE_HTTP_KAFKA, 1, 0, 0);
         KafkaContainerUtils.deleteTopic(kafka, TOPIC_NAME);
     }
-
-    @NotNull
-    private static ResponseEntity<String> sendValidHttpRequest(String textMessage) throws IOException {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> requestEntity = new HttpEntity<>(textMessage, headers);
-        RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.exchange(
-                HTTP_SERVER_URL,
-                HttpMethod.POST,
-                requestEntity,
-                String.class
-        );
-    }
 }
-
