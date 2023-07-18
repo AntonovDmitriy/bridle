@@ -5,10 +5,7 @@ import com.bridle.properties.HttpConsumerConfiguration;
 import org.apache.camel.ErrorHandlerFactory;
 import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
-import org.apache.camel.Processor;
 import org.apache.camel.ValidationException;
-import org.apache.camel.builder.EndpointProducerBuilder;
-import org.apache.camel.model.DataFormatDefinition;
 import org.apache.camel.model.RouteDefinition;
 
 import static com.bridle.configuration.common.ComponentNameConstants.REDELIVERY_POLICY;
