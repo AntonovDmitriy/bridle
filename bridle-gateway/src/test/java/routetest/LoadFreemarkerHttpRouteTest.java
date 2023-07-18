@@ -31,16 +31,14 @@ import static org.mockserver.model.HttpResponse.response;
 @Testcontainers
 public class LoadFreemarkerHttpRouteTest {
 
-    @Autowired
-    private ProducerTemplate producerTemplate;
-
-    @Autowired
-    private CamelContext context;
-
     @Container
     public static MockServerContainer mockServer = new MockServerContainer(DockerImageName
             .parse("mockserver/mockserver")
             .withTag("mockserver-" + MockServerClient.class.getPackage().getImplementationVersion()));
+    @Autowired
+    private ProducerTemplate producerTemplate;
+    @Autowired
+    private CamelContext context;
 
     @BeforeAll
     public static void setUp() throws Exception {

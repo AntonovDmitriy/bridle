@@ -33,18 +33,15 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
 public class HttpPollKafkaRouteTest {
 
     private static final String TOPIC_NAME = "routetest";
-
-    @Autowired
-    private CamelContext context;
-
+    @Container
+    private static final KafkaContainer kafka =
+            new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"));
     @Container
     public static MockServerContainer mockPollServer = new MockServerContainer(DockerImageName
             .parse("mockserver/mockserver")
             .withTag("mockserver-" + MockServerClient.class.getPackage().getImplementationVersion()));
-
-    @Container
-    private static final KafkaContainer kafka =
-            new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"));
+    @Autowired
+    private CamelContext context;
 
     @BeforeAll
     public static void setUp() throws Exception {

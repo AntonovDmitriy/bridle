@@ -8,7 +8,7 @@
     </appender>
 
     <root level="INFO">
-        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="CONSOLE"/>
     </root>
 
     <logger name="org.apache.camel" level="INFO"/>

@@ -1,12 +1,12 @@
 package com.bridle.routes;
 
+import org.apache.camel.ErrorHandlerFactory;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
-import org.apache.camel.builder.RouteBuilder;
 
-import static com.bridle.configuration.KafkaHttpKafkaConfiguration.GATEWAY_TYPE_KAFKA_HTTP_KAFKA;
+import static com.bridle.configuration.routes.KafkaHttpKafkaConfiguration.GATEWAY_TYPE_KAFKA_HTTP_KAFKA;
 
-public class KafkaHttpKafkaRoute extends RouteBuilder {
+public class KafkaHttpKafkaRoute extends BaseRouteBuilder {
 
 
     private final EndpointConsumerBuilder kafkaIn;
@@ -16,9 +16,11 @@ public class KafkaHttpKafkaRoute extends RouteBuilder {
     private final EndpointProducerBuilder kafkaOut;
 
 
-    public KafkaHttpKafkaRoute(EndpointConsumerBuilder kafkaIn,
+    public KafkaHttpKafkaRoute(ErrorHandlerFactory errorHandlerFactory,
+                               EndpointConsumerBuilder kafkaIn,
                                EndpointProducerBuilder restCall,
                                EndpointProducerBuilder kafkaOut) {
+        super(errorHandlerFactory);
         this.kafkaIn = kafkaIn;
         this.restCall = restCall;
         this.kafkaOut = kafkaOut;
@@ -26,11 +28,15 @@ public class KafkaHttpKafkaRoute extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
+        super.configure();
+
         from(kafkaIn)
                 .routeId(GATEWAY_TYPE_KAFKA_HTTP_KAFKA)
                 .log("Request: ${body}")
                 .to(restCall)
                 .log("Response ${body}")
                 .to(kafkaOut);
+
+
     }
 }

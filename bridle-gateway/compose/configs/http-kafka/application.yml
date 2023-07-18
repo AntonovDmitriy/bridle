@@ -12,6 +12,10 @@ camel:
       enabled: false
     rest:
       enabled: false
+    freemarker:
+      enabled: false
+    json-validator:
+      enabled: false
 
 management:
   endpoints:
@@ -24,15 +28,47 @@ gateway:
 rest-in:
   clientRequestValidation: "true"
   component: "servlet"
+  content-type: "application/json"
+  error-http-response-code: 500
   routes:
-    -
-      path: "/api"
+    - path: "/api"
       consumes: "text/plain"
       produces: "text/plain"
       httpMethod: "POST"
       id: "rest-in"
       to:
         uri: "direct:process"
+redelivery-policy:
+  maximum-redeliveries: 2
+  redelivery-delay: 100
+  retry-attempted-log-level: "WARN"
+error-handler:
+  redelivery-policy-ref: "redelivery-policy"
+error-response-freemarker:
+  resource-uri: "file://app/config/error.tmpl"
+success-response-freemarker:
+  resource-uri: "file://app/config/success.tmpl"
+validation-error-response-freemarker:
+  resource-uri: "file://app/config/validation-error-response.tmpl"
+inbound-validation:
+  format: "json-schema"
+  validator:
+    resource-uri: "file:/app/config/test.schema.json"
+header-collector:
+  expression-format: "JSON_PATH"
+  query-expressions-by-header-name:
+    systemName: "$.system.name"
+    systemStream: "$.system.stream"
+    companyName: "$.company.name"
+    companyFounded: "$.company.founded"
+    locationCount: "$.company.locations.length()"
+    executiveCount: "$.company.executives.length()"
+    products: "$.company.products[*]"
+main-freemarker:
+  resource-uri: "file://app/config/transform-with-headers.tmpl"
 kafka-out:
   brokers: "kafka:9092"
   topic: "routetest"
+  delivery-timeout-ms: 1000
+  request-timeout-ms: 500
+  max-block-ms: 1000

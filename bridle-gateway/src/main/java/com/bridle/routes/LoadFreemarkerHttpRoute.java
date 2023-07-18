@@ -1,12 +1,12 @@
 package com.bridle.routes;
 
+import org.apache.camel.ErrorHandlerFactory;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
-import org.apache.camel.builder.RouteBuilder;
 
-import static com.bridle.configuration.LoadFreemarkerHttpConfiguration.LOAD_FREEMARKER_HTTP;
+import static com.bridle.configuration.routes.LoadFreemarkerHttpConfiguration.LOAD_FREEMARKER_HTTP;
 
-public class LoadFreemarkerHttpRoute extends RouteBuilder {
+public class LoadFreemarkerHttpRoute extends BaseRouteBuilder {
 
     private final EndpointConsumerBuilder scheduler;
 
@@ -15,9 +15,11 @@ public class LoadFreemarkerHttpRoute extends RouteBuilder {
     private final EndpointProducerBuilder restCall;
 
 
-    public LoadFreemarkerHttpRoute(EndpointConsumerBuilder scheduler,
+    public LoadFreemarkerHttpRoute(ErrorHandlerFactory errorHandlerFactory,
+                                   EndpointConsumerBuilder scheduler,
                                    EndpointProducerBuilder freemarker,
-                                   EndpointProducerBuilder restCall){
+                                   EndpointProducerBuilder restCall) {
+        super(errorHandlerFactory);
         this.scheduler = scheduler;
         this.freemarker = freemarker;
         this.restCall = restCall;
@@ -25,6 +27,8 @@ public class LoadFreemarkerHttpRoute extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
+        super.configure();
+
         from(scheduler)
                 .routeId(LOAD_FREEMARKER_HTTP)
                 .to(freemarker)

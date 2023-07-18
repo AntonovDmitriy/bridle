@@ -118,7 +118,7 @@ services:
       - gateway-network
 
 volumes:
-  grafana_data: {}
+  grafana_data: { }
 
 networks:
   gateway-network:

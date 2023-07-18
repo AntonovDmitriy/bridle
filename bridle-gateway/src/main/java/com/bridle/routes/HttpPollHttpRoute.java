@@ -1,12 +1,12 @@
 package com.bridle.routes;
 
+import org.apache.camel.ErrorHandlerFactory;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
-import org.apache.camel.builder.RouteBuilder;
 
-import static com.bridle.configuration.HttpPollHttpConfiguration.GATEWAY_TYPE_HTTP_POLL_HTTP;
+import static com.bridle.configuration.routes.HttpPollHttpConfiguration.GATEWAY_TYPE_HTTP_POLL_HTTP;
 
-public class HttpPollHttpRoute extends RouteBuilder {
+public class HttpPollHttpRoute extends BaseRouteBuilder {
 
     private final EndpointConsumerBuilder scheduler;
 
@@ -14,9 +14,11 @@ public class HttpPollHttpRoute extends RouteBuilder {
 
     private final EndpointProducerBuilder restCall;
 
-    public HttpPollHttpRoute(EndpointConsumerBuilder scheduler,
+    public HttpPollHttpRoute(ErrorHandlerFactory errorHandlerFactory,
+                             EndpointConsumerBuilder scheduler,
                              EndpointProducerBuilder restPoll,
                              EndpointProducerBuilder restCall) {
+        super(errorHandlerFactory);
         this.scheduler = scheduler;
         this.restPoll = restPoll;
         this.restCall = restCall;
@@ -24,6 +26,8 @@ public class HttpPollHttpRoute extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
+        super.configure();
+
         from(scheduler)
                 .routeId(GATEWAY_TYPE_HTTP_POLL_HTTP)
                 .to(restPoll)
