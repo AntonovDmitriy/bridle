@@ -1,5 +1,6 @@
 package com.bridle.routes;
 
+import com.bridle.configuration.routes.RouteParams;
 import com.bridle.properties.HttpConsumerConfiguration;
 import org.apache.camel.ErrorHandlerFactory;
 import org.apache.camel.Exchange;
@@ -19,40 +20,14 @@ import static org.apache.camel.component.rest.RestConstants.HTTP_RESPONSE_CODE;
 public class HttpToProducerRoute extends GenericHttpConsumerRoute {
 
     public static final String LOG_BODY = "Response: ${body}";
-    private final EndpointProducerBuilder mainProducer;
-    private final EndpointProducerBuilder successResponseBuilder;
-    private final EndpointProducerBuilder errorResponseBuilder;
-    private final EndpointProducerBuilder transform;
-    private final Processor headerCollector;
-    private final ConvertBodyDefinition convertBodyDefinition;
-    private final DataFormatDefinition beforeTransformDataFormatDefinition;
-    private final DataFormatDefinition afterTransformDataFormatDefinition;
-    private final EndpointProducerBuilder inboundValidator;
-    private final EndpointProducerBuilder validationErrorResponseBuilder;
+    private final RouteParams routeParams;
+
 
     public HttpToProducerRoute(ErrorHandlerFactory errorHandlerFactory,
                                HttpConsumerConfiguration restConfiguration,
-                               EndpointProducerBuilder mainProducer,
-                               EndpointProducerBuilder successResponseBuilder,
-                               EndpointProducerBuilder errorResponseBuilder,
-                               EndpointProducerBuilder transform,
-                               Processor headerCollector,
-                               ConvertBodyDefinition convertBody,
-                               DataFormatDefinition beforeTransformDataFormatDefinition,
-                               DataFormatDefinition afterTransformDataFormatDefinition,
-                               EndpointProducerBuilder inboundValidator,
-                               EndpointProducerBuilder validationErrorResponseBuilder) {
+                               RouteParams routeParams) {
         super(errorHandlerFactory, restConfiguration);
-        this.mainProducer = mainProducer;
-        this.successResponseBuilder = successResponseBuilder;
-        this.errorResponseBuilder = errorResponseBuilder;
-        this.transform = transform;
-        this.headerCollector = headerCollector;
-        this.convertBodyDefinition = convertBody;
-        this.beforeTransformDataFormatDefinition = beforeTransformDataFormatDefinition;
-        this.afterTransformDataFormatDefinition = afterTransformDataFormatDefinition;
-        this.inboundValidator = inboundValidator;
-        this.validationErrorResponseBuilder = validationErrorResponseBuilder;
+        this.routeParams = routeParams;
     }
 
     @Override
@@ -64,7 +39,7 @@ public class HttpToProducerRoute extends GenericHttpConsumerRoute {
                 .handled(true)
                 .redeliveryPolicyRef(REDELIVERY_POLICY)
                 .setHeader(HTTP_RESPONSE_CODE, constant(restConfiguration.getErrorHttpResponseCode()))
-                .to(errorResponseBuilder)
+                .to(routeParams.errorResponseBuilder())
                 .log(LOG_BODY);
 
         onException(ValidationException.class)
@@ -72,43 +47,43 @@ public class HttpToProducerRoute extends GenericHttpConsumerRoute {
                 .handled(true)
                 .setHeader(HTTP_RESPONSE_CODE, constant(restConfiguration.getValidationErrorHttpResponseCode()))
                 .setHeader(Exchange.EXCEPTION_CAUGHT).exchangeProperty(Exchange.EXCEPTION_CAUGHT)
-                .to(validationErrorResponseBuilder)
+                .to(routeParams.validationErrorResponseBuilder())
                 .log(LOG_BODY);
 
         RouteDefinition routeDefinition = from("direct:process")
                 .routeId(GATEWAY_TYPE_HTTP_KAFKA)
                 .setHeader(CONTENT_TYPE, constant(restConfiguration.getContentType()));
 
-        if (convertBodyDefinition != null) {
-            routeDefinition.addOutput(convertBodyDefinition);
+        if (routeParams.convertBody() != null) {
+            routeDefinition.addOutput(routeParams.convertBody());
         }
 
-        if (inboundValidator != null) {
-            routeDefinition.to(inboundValidator);
+        if (routeParams.inboundValidator() != null) {
+            routeDefinition.to(routeParams.inboundValidator());
         }
 
-        if (headerCollector != null) {
-            routeDefinition.process(headerCollector);
+        if (routeParams.headerCollector() != null) {
+            routeDefinition.process(routeParams.headerCollector());
         }
 
-        if (beforeTransformDataFormatDefinition != null) {
-            routeDefinition.unmarshal(beforeTransformDataFormatDefinition);
+        if (routeParams.beforeTransformDataFormatDefinition() != null) {
+            routeDefinition.unmarshal(routeParams.beforeTransformDataFormatDefinition());
         }
 
-        if (transform != null) {
-            routeDefinition.to(transform);
+        if (routeParams.transform() != null) {
+            routeDefinition.to(routeParams.transform());
         }
 
-        if (afterTransformDataFormatDefinition != null) {
-            routeDefinition.marshal(afterTransformDataFormatDefinition);
+        if (routeParams.afterTransformDataFormatDefinition() != null) {
+            routeDefinition.marshal(routeParams.afterTransformDataFormatDefinition());
         }
 
-        if (mainProducer != null) {
-            routeDefinition.to(mainProducer);
+        if (routeParams.mainProducer() != null) {
+            routeDefinition.to(routeParams.mainProducer());
         }
 
         routeDefinition
-                .to(successResponseBuilder)
+                .to(routeParams.successResponseBuilder())
                 .log(LOG_BODY);
     }
 }

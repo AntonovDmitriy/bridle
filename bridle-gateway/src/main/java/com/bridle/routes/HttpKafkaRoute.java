@@ -1,5 +1,6 @@
 package com.bridle.routes;
 
+import com.bridle.configuration.routes.RouteParams;
 import com.bridle.properties.HttpConsumerConfiguration;
 import org.apache.camel.ErrorHandlerFactory;
 import org.apache.camel.Exchange;
@@ -18,34 +19,14 @@ import static org.apache.camel.component.rest.RestConstants.HTTP_RESPONSE_CODE;
 public class HttpKafkaRoute extends GenericHttpConsumerRoute {
 
     public static final String LOG_BODY = "Response: ${body}";
-    private final EndpointProducerBuilder kafkaOut;
-    private final EndpointProducerBuilder successResponseBuilder;
-    private final EndpointProducerBuilder errorResponseBuilder;
-    private final EndpointProducerBuilder transform;
-    private final Processor headerCollector;
-    private final DataFormatDefinition beforeTransformDataFormatDefinition;
-    private final EndpointProducerBuilder inboundValidator;
-    private final EndpointProducerBuilder validationErrorResponseBuilder;
+
+    private final RouteParams routeParams;
 
     public HttpKafkaRoute(ErrorHandlerFactory errorHandlerFactory,
                           HttpConsumerConfiguration restConfiguration,
-                          EndpointProducerBuilder mainProducer,
-                          EndpointProducerBuilder successResponseBuilder,
-                          EndpointProducerBuilder errorResponseBuilder,
-                          EndpointProducerBuilder transform,
-                          Processor headerCollector,
-                          DataFormatDefinition beforeTransformDataFormatDefinition,
-                          EndpointProducerBuilder inboundValidator,
-                          EndpointProducerBuilder validationErrorResponseBuilder) {
+                          RouteParams routeParams) {
         super(errorHandlerFactory, restConfiguration);
-        this.kafkaOut = mainProducer;
-        this.successResponseBuilder = successResponseBuilder;
-        this.errorResponseBuilder = errorResponseBuilder;
-        this.transform = transform;
-        this.headerCollector = headerCollector;
-        this.beforeTransformDataFormatDefinition = beforeTransformDataFormatDefinition;
-        this.inboundValidator = inboundValidator;
-        this.validationErrorResponseBuilder = validationErrorResponseBuilder;
+        this.routeParams = routeParams;
     }
 
     @Override
@@ -57,7 +38,7 @@ public class HttpKafkaRoute extends GenericHttpConsumerRoute {
                 .handled(true)
                 .redeliveryPolicyRef(REDELIVERY_POLICY)
                 .setHeader(HTTP_RESPONSE_CODE, constant(restConfiguration.getErrorHttpResponseCode()))
-                .to(errorResponseBuilder)
+                .to(routeParams.errorResponseBuilder())
                 .log(LOG_BODY);
 
         onException(ValidationException.class)
@@ -65,7 +46,7 @@ public class HttpKafkaRoute extends GenericHttpConsumerRoute {
                 .handled(true)
                 .setHeader(HTTP_RESPONSE_CODE, constant(restConfiguration.getValidationErrorHttpResponseCode()))
                 .setHeader(Exchange.EXCEPTION_CAUGHT).exchangeProperty(Exchange.EXCEPTION_CAUGHT)
-                .to(validationErrorResponseBuilder)
+                .to(routeParams.validationErrorResponseBuilder())
                 .log(LOG_BODY);
 
         RouteDefinition route = from("direct:process")
@@ -73,24 +54,23 @@ public class HttpKafkaRoute extends GenericHttpConsumerRoute {
                 .setHeader(CONTENT_TYPE, constant(restConfiguration.getContentType()))
                 .convertBodyTo(String.class);
 
-        if (inboundValidator != null) {
-            route.to(inboundValidator);
+        if (routeParams.inboundValidator() != null) {
+            route.to(routeParams.inboundValidator());
         }
-        route.process(headerCollector);
-        if (beforeTransformDataFormatDefinition != null) {
-            route.unmarshal(beforeTransformDataFormatDefinition);
-        }
-
-        if (transform != null) {
-            route.to(transform);
+        route.process(routeParams.headerCollector());
+        if (routeParams.beforeTransformDataFormatDefinition() != null) {
+            route.unmarshal(routeParams.beforeTransformDataFormatDefinition());
         }
 
-        route.to(kafkaOut)
-                .to(successResponseBuilder)
+        if (routeParams.transform() != null) {
+            route.to(routeParams.transform());
+        }
+
+        route.to(routeParams.mainProducer())
+                .to(routeParams.successResponseBuilder())
                 .log(LOG_BODY);
     }
 
-    // test refactoring
     // next routes
     // info about timings to dashboard
     // load testing with timings every step of route (test jsonpath efficiency)
