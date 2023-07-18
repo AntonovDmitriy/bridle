@@ -11,7 +11,6 @@ import java.util.Map;
 public class FacadeHeaderCollectorConfiguration {
 
     private Map<String, String> queryExpressionsByHeaderName = new HashMap<>();
-    @NotNull
     private ExpressionFormat expressionFormat;
 
     public Map<String, String> getQueryExpressionsByHeaderName() {
