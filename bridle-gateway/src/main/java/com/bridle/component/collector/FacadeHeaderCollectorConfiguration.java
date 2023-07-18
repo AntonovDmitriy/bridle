@@ -3,7 +3,6 @@ package com.bridle.component.collector;
 import com.bridle.component.collector.enums.ExpressionFormat;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
