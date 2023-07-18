@@ -24,32 +24,6 @@ public class HttpConsumerConfiguration extends RestConfiguration {
     @Positive
     private int validationErrorHttpResponseCode = 400;
 
-    @Validated
-    public static class GenericVerbDefinition extends VerbDefinition {
-
-        private HttpMethod httpMethod;
-
-        @NotNull
-        public HttpMethod getHttpMethod() {
-            return httpMethod;
-        }
-
-        public void setHttpMethod(HttpMethod httpMethod) {
-            this.httpMethod = httpMethod;
-        }
-
-        @Override
-        public String asVerb() {
-            return getHttpMethod().name();
-        }
-
-        @NotEmpty
-        @Override
-        public String getPath() {
-            return super.getPath();
-        }
-    }
-
     public List<GenericVerbDefinition> getRoutes() {
         return routes;
     }
@@ -80,5 +54,31 @@ public class HttpConsumerConfiguration extends RestConfiguration {
 
     public void setValidationErrorHttpResponseCode(int validationErrorHttpResponseCode) {
         this.validationErrorHttpResponseCode = validationErrorHttpResponseCode;
+    }
+
+    @Validated
+    public static class GenericVerbDefinition extends VerbDefinition {
+
+        private HttpMethod httpMethod;
+
+        @NotNull
+        public HttpMethod getHttpMethod() {
+            return httpMethod;
+        }
+
+        public void setHttpMethod(HttpMethod httpMethod) {
+            this.httpMethod = httpMethod;
+        }
+
+        @Override
+        public String asVerb() {
+            return getHttpMethod().name();
+        }
+
+        @NotEmpty
+        @Override
+        public String getPath() {
+            return super.getPath();
+        }
     }
 }

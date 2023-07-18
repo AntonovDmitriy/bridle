@@ -40,22 +40,39 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
 @DirtiesContext
 public class HttpKafkaClientTimeoutTest {
 
+    public static final String HTTP_SERVER_URL = "http://localhost:8080/camel/myapi";
+    public static final String REQUEST_BODY = "Request Body";
     private static final String TOPIC_NAME = "routetest";
-
     @Container
     private static final KafkaContainer kafka = new KafkaContainer(
             DockerImageName.parse("confluentinc/cp-kafka:6.2.1"))
             .withEnv("KAFKA_DELETE_TOPIC_ENABLE", "true")
             .withEnv("KAFKA_AUTO_CREATE_TOPICS_ENABLE", "false");
-    public static final String HTTP_SERVER_URL = "http://localhost:8080/camel/myapi";
-    public static final String REQUEST_BODY = "Request Body";
-
     @Autowired
     private CamelContext context;
 
     @BeforeAll
     public static void setUp() throws Exception {
         KafkaContainerUtils.setupKafka(kafka, KAFKA_PORT);
+    }
+
+    @NotNull
+    private static ResponseEntity<String> sendValidHttpRequestWithTinyTimeout() {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> requestEntity = new HttpEntity<>(REQUEST_BODY, headers);
+
+        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+        requestFactory.setReadTimeout(1);
+
+        RestTemplate restTemplate = new RestTemplate(requestFactory);
+        return restTemplate.exchange(
+                HTTP_SERVER_URL,
+                HttpMethod.POST,
+                requestEntity,
+                String.class
+        );
     }
 
     @Test
@@ -106,24 +123,5 @@ public class HttpKafkaClientTimeoutTest {
         assertEquals(REQUEST_BODY, KafkaContainerUtils.readMessage(kafka, TOPIC_NAME).stdOut().strip());
         assertEquals(1, KafkaContainerUtils.countMessages(kafka, TOPIC_NAME));
         KafkaContainerUtils.deleteTopic(kafka, TOPIC_NAME);
-    }
-
-    @NotNull
-    private static ResponseEntity<String> sendValidHttpRequestWithTinyTimeout() {
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> requestEntity = new HttpEntity<>(REQUEST_BODY, headers);
-
-        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-        requestFactory.setReadTimeout(1);
-
-        RestTemplate restTemplate = new RestTemplate(requestFactory);
-        return restTemplate.exchange(
-                HTTP_SERVER_URL,
-                HttpMethod.POST,
-                requestEntity,
-                String.class
-        );
     }
 }

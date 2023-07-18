@@ -31,9 +31,7 @@ import static utils.TestUtils.sendPostHttpRequest;
 @AutoConfigureMetrics
 public class HttpKafkaRouteSuccessScenarioWithHeaderCollectorTest {
 
-    private static final String TOPIC_NAME = "routetest";
     public static final String HTTP_SERVER_URL = "http://localhost:8080/camel/myapi";
-
     public static final String EXPECTED_TRANSFORMED_MESSAGE = """
             {
               "system": {
@@ -62,7 +60,7 @@ public class HttpKafkaRouteSuccessScenarioWithHeaderCollectorTest {
               }
             }
             """;
-
+    private static final String TOPIC_NAME = "routetest";
     @Container
     private static final KafkaContainer kafka = new KafkaContainer(
             DockerImageName.parse("confluentinc/cp-kafka:6.2.1"))

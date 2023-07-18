@@ -36,21 +36,17 @@ public class KafkaHttpKafkaRouteTest {
     private static final String TOPIC_NAME_REQUST = "routetest_request";
 
     private static final String TOPIC_NAME_RESPONSE = "routetest_response";
-
-    @Autowired
-    private ProducerTemplate producerTemplate;
-
-    @Autowired
-    private CamelContext context;
-
     @Container
     private static final KafkaContainer kafka = new KafkaContainer(DockerImageName
             .parse("confluentinc/cp-kafka:6.2.1"));
-
     @Container
     public static MockServerContainer mockServer = new MockServerContainer(DockerImageName
             .parse("mockserver/mockserver")
             .withTag("mockserver-" + MockServerClient.class.getPackage().getImplementationVersion()));
+    @Autowired
+    private ProducerTemplate producerTemplate;
+    @Autowired
+    private CamelContext context;
 
     @BeforeAll
     public static void setUp() throws Exception {

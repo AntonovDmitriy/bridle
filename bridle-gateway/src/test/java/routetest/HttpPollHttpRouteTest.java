@@ -30,18 +30,16 @@ import static org.mockserver.model.HttpResponse.response;
 @Testcontainers
 public class HttpPollHttpRouteTest {
 
-    @Autowired
-    private CamelContext context;
-
     @Container
     public static MockServerContainer mockPollServer = new MockServerContainer(DockerImageName
             .parse("mockserver/mockserver")
             .withTag("mockserver-" + MockServerClient.class.getPackage().getImplementationVersion()));
-
     @Container
     public static MockServerContainer mockCallServer = new MockServerContainer(DockerImageName
             .parse("mockserver/mockserver")
             .withTag("mockserver-" + MockServerClient.class.getPackage().getImplementationVersion()));
+    @Autowired
+    private CamelContext context;
 
     @BeforeAll
     public static void setUp() throws Exception {

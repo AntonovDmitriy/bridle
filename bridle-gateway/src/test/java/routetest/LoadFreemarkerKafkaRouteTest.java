@@ -28,17 +28,14 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
 @Testcontainers
 public class LoadFreemarkerKafkaRouteTest {
 
-    @Autowired
-    private ProducerTemplate producerTemplate;
-
-    @Autowired
-    private CamelContext context;
-
     private static final String TOPIC_NAME = "routetest";
-
     @Container
     private static final KafkaContainer kafka = new KafkaContainer(
             DockerImageName.parse("confluentinc/cp-kafka:6.2.1"));
+    @Autowired
+    private ProducerTemplate producerTemplate;
+    @Autowired
+    private CamelContext context;
 
     @BeforeAll
     public static void setUp() throws Exception {

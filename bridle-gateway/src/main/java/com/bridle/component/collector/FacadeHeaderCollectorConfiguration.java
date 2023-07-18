@@ -3,12 +3,15 @@ package com.bridle.component.collector;
 import com.bridle.component.collector.enums.ExpressionFormat;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.NotNull;
+import java.util.HashMap;
 import java.util.Map;
 
 @Validated
 public class FacadeHeaderCollectorConfiguration {
 
-    private Map<String, String> queryExpressionsByHeaderName;
+    private Map<String, String> queryExpressionsByHeaderName = new HashMap<>();
+    @NotNull
     private ExpressionFormat expressionFormat;
 
     public Map<String, String> getQueryExpressionsByHeaderName() {
