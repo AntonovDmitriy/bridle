@@ -6,6 +6,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.component.jsonvalidator.JsonValidatorComponent;
 import org.apache.camel.spi.ComponentCustomizer;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -25,13 +26,13 @@ public class JsonSchemaValidationConfiguration {
     }
 
     @Bean(name = JSON_VALIDATOR_COMPONENT_NAME)
-    @ConditionalOnProperty(value = "inbound-validation.format", havingValue = "json-schema")
+    @ConditionalOnBean(name = "jsonValidatorConfiguration")
     public JsonValidatorComponent jsonValidatorComponent() {
         return new JsonValidatorComponent();
     }
 
     @Bean
-    @ConditionalOnProperty(value = "inbound-validation.format", havingValue = "json-schema")
+    @ConditionalOnBean(name = "jsonValidatorConfiguration")
     public EndpointProducerBuilder validatorBuilder(JsonSchemaValidatorConfiguration validatorConfiguration) {
         EndpointProducerBuilder result = jsonValidator(JSON_VALIDATOR_COMPONENT_NAME, validatorConfiguration.getResourceUri());
         validatorConfiguration.getEndpointProperties()
@@ -41,7 +42,7 @@ public class JsonSchemaValidationConfiguration {
 
     @Lazy
     @Bean
-    @ConditionalOnProperty(value = "inbound-validation.format", havingValue = "json-schema")
+    @ConditionalOnBean(name = "jsonValidatorConfiguration")
     public ComponentCustomizer configureJsonValidatorComponent(CamelContext context,
                                                                JsonSchemaValidatorConfiguration componentConfiguration) {
         return new ComponentCustomizerImpl(context, componentConfiguration, JSON_VALIDATOR_COMPONENT_NAME);

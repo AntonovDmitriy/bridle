@@ -1,4 +1,4 @@
-package routetest;
+package routetest.httppollhttp;
 
 import com.bridle.App;
 import org.apache.camel.CamelContext;

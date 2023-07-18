@@ -10,7 +10,8 @@ import com.bridle.configuration.common.KafkaOutConfiguration;
 import com.bridle.configuration.common.SuccessResponseConfiguration;
 import com.bridle.configuration.common.ValidationErrorResponseConfiguration;
 import com.bridle.properties.HttpConsumerConfiguration;
-import com.bridle.routes.HttpToProducerRoute;
+import com.bridle.routes.HttpConsumerToProducerRoute;
+import com.bridle.routes.HttpConsumerToProducerRouteParams;
 import org.apache.camel.ErrorHandlerFactory;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.EndpointProducerBuilder;
@@ -71,9 +72,9 @@ public class HttpKafkaConfiguration {
                                             @Qualifier("validationErrorResponseBuilder")
                                             EndpointProducerBuilder validationErrorResponseBuilder) {
 
-        return new HttpToProducerRoute(errorHandlerFactory,
+        return new HttpConsumerToProducerRoute(errorHandlerFactory,
                 httpConsumerConfiguration,
-                new RouteParams(GATEWAY_TYPE_HTTP_KAFKA,
+                new HttpConsumerToProducerRouteParams(GATEWAY_TYPE_HTTP_KAFKA,
                         kafkaProducerBuilder,
                         successResponseBuilder,
                         errorResponseBuilder,

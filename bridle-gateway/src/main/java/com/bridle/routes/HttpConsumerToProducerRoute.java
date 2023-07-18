@@ -1,6 +1,5 @@
 package com.bridle.routes;
 
-import com.bridle.configuration.routes.RouteParams;
 import com.bridle.properties.HttpConsumerConfiguration;
 import org.apache.camel.ErrorHandlerFactory;
 import org.apache.camel.Exchange;
@@ -12,15 +11,14 @@ import static com.bridle.configuration.common.ComponentNameConstants.REDELIVERY_
 import static org.apache.camel.component.rest.RestConstants.CONTENT_TYPE;
 import static org.apache.camel.component.rest.RestConstants.HTTP_RESPONSE_CODE;
 
-public class HttpToProducerRoute extends GenericHttpConsumerRoute {
+public class HttpConsumerToProducerRoute extends GenericHttpConsumerRoute {
 
-    public static final String LOG_BODY = "Response: ${body}";
-    private final RouteParams routeParams;
+    private final HttpConsumerToProducerRouteParams routeParams;
 
 
-    public HttpToProducerRoute(ErrorHandlerFactory errorHandlerFactory,
-                               HttpConsumerConfiguration restConfiguration,
-                               RouteParams routeParams) {
+    public HttpConsumerToProducerRoute(ErrorHandlerFactory errorHandlerFactory,
+                                       HttpConsumerConfiguration restConfiguration,
+                                       HttpConsumerToProducerRouteParams routeParams) {
         super(errorHandlerFactory, restConfiguration);
         this.routeParams = routeParams;
     }
