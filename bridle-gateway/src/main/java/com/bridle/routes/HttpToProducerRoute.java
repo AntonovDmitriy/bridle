@@ -9,7 +9,6 @@ import org.apache.camel.ValidationException;
 import org.apache.camel.model.RouteDefinition;
 
 import static com.bridle.configuration.common.ComponentNameConstants.REDELIVERY_POLICY;
-import static com.bridle.configuration.routes.HttpKafkaConfiguration.GATEWAY_TYPE_HTTP_KAFKA;
 import static org.apache.camel.component.rest.RestConstants.CONTENT_TYPE;
 import static org.apache.camel.component.rest.RestConstants.HTTP_RESPONSE_CODE;
 
@@ -47,7 +46,7 @@ public class HttpToProducerRoute extends GenericHttpConsumerRoute {
                 .log(LOG_BODY);
 
         RouteDefinition routeDefinition = from("direct:process")
-                .routeId(GATEWAY_TYPE_HTTP_KAFKA)
+                .routeId(routeParams.routeId())
                 .setHeader(CONTENT_TYPE, constant(restConfiguration.getContentType()));
 
         if (routeParams.convertBody() != null) {

@@ -31,8 +31,7 @@ rest-in:
   content-type: "application/json"
   error-http-response-code: 500
   routes:
-    -
-      path: "/api"
+    - path: "/api"
       consumes: "text/plain"
       produces: "text/plain"
       httpMethod: "POST"

@@ -6,7 +6,8 @@ import org.apache.camel.model.ConvertBodyDefinition;
 import org.apache.camel.model.DataFormatDefinition;
 import org.apache.commons.lang3.Validate;
 
-public record RouteParams(EndpointProducerBuilder mainProducer,
+public record RouteParams(String routeId,
+                          EndpointProducerBuilder mainProducer,
                           EndpointProducerBuilder successResponseBuilder,
                           EndpointProducerBuilder errorResponseBuilder,
                           EndpointProducerBuilder transform,
@@ -18,6 +19,7 @@ public record RouteParams(EndpointProducerBuilder mainProducer,
                           ConvertBodyDefinition convertBody) {
 
     public RouteParams {
+        Validate.notEmpty(routeId);
         Validate.notNull(mainProducer);
         Validate.notNull(successResponseBuilder);
         Validate.notNull(headerCollector);

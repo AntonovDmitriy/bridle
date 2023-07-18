@@ -47,8 +47,7 @@ rest-in:
   content-type: "application/json"
   error-http-response-code: 501
   routes:
-    -
-      path: "/myapi"
+    - path: "/myapi"
       consumes: "text/plain"
       produces: "text/plain"
       httpMethod: "POST"

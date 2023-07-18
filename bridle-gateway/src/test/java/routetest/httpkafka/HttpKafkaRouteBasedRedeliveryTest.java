@@ -92,7 +92,7 @@ public class HttpKafkaRouteBasedRedeliveryTest {
         context.getManagementStrategy().addEventNotifier(notifierRedeliveredSuccess);
 
         ResponseEntity<String> httpResponseEntity = sendPostHttpRequest(HTTP_SERVER_URL, REQUEST_BODY);
-        
+
         assertEquals(200, httpResponseEntity.getStatusCode().value());
         assertEquals("Success!", httpResponseEntity.getBody());
         assertEquals(3, notifierRedeliveredSuccess.getCounter());
