@@ -1,5 +1,6 @@
-package com.bridle.configuration.common;
+package com.bridle.configuration.common.consumer;
 
+import com.bridle.configuration.common.ComponentNameConstants;
 import com.bridle.properties.ValidatedKafkaConsumerConfiguration;
 import com.bridle.utils.ComponentCustomizerImpl;
 import org.apache.camel.CamelContext;

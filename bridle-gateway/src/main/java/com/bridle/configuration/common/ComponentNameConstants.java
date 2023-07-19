@@ -24,7 +24,7 @@ public final class ComponentNameConstants {
 
     public static final String HEADER_COLLECTOR_COMPONENT_NAME = "header-collector";
 
-    public static final String JSON_VALIDATOR_COMPONENT_NAME = "validator";
+    public static final String VALIDATOR_COMPONENT_NAME = "validator";
 
     public static final String ERROR_HANDLER_NAME = "error-handler";
     public static final String REDELIVERY_POLICY = "redelivery-policy";

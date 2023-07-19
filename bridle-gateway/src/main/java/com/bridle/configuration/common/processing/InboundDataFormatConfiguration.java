@@ -1,4 +1,4 @@
-package com.bridle.configuration.common;
+package com.bridle.configuration.common.processing;
 
 import org.apache.camel.model.DataFormatDefinition;
 import org.apache.camel.model.dataformat.JacksonXMLDataFormat;

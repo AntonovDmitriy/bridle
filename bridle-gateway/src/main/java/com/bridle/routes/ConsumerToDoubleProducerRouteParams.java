@@ -6,9 +6,9 @@ import org.apache.commons.lang3.Validate;
 
 public record ConsumerToDoubleProducerRouteParams(String routeId,
                                                   EndpointConsumerBuilder consumer,
-                                                  ProcessingParams firstProcessingParams,
+                                                  ProcessingParams afterConsumerProcessingParams,
                                                   EndpointProducerBuilder firstProducer,
-                                                  ProcessingParams secondProcessingParams,
+                                                  ProcessingParams afterProducerProcessingParams,
                                                   EndpointProducerBuilder secondProducer
 ) {
 

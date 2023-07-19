@@ -1,4 +1,4 @@
-package com.bridle.configuration.common;
+package com.bridle.configuration.common.processing;
 
 import org.springframework.context.annotation.Import;
 

@@ -8,8 +8,15 @@ public class ProcessingBuilder {
     private ProcessingBuilder() {
     }
 
-    public static RouteDefinition addProcessing(RouteDefinition route, ProcessingParams processingParams) {
+    public static RouteDefinition addProcessing(RouteDefinition route,
+                                                ProcessingParams processingParams,
+                                                String routeId) {
         Validate.notNull(route);
+        Validate.notEmpty(routeId);
+
+        route.id(routeId);
+        route.process(exchange -> {
+        });
 
         if (processingParams != null) {
             if (processingParams.convertBody() != null) {

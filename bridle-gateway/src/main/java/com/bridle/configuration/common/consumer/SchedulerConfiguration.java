@@ -1,4 +1,4 @@
-package com.bridle.configuration.common;
+package com.bridle.configuration.common.consumer;
 
 import com.bridle.properties.SchedulerConsumerConfiguration;
 import com.bridle.properties.ValidatedKafkaProducerConfiguration;

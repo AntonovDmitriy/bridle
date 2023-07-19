@@ -1,9 +1,9 @@
 package com.bridle.configuration.routes;
 
-import com.bridle.configuration.common.ErrorHandlerConfiguration;
-import com.bridle.configuration.common.FreemarkerConfiguration;
-import com.bridle.configuration.common.KafkaOutConfiguration;
-import com.bridle.configuration.common.SchedulerConfiguration;
+import com.bridle.configuration.common.errorhandling.ErrorHandlerConfiguration;
+import com.bridle.configuration.common.processing.FreemarkerConfiguration;
+import com.bridle.configuration.common.producer.KafkaOutConfiguration;
+import com.bridle.configuration.common.consumer.SchedulerConfiguration;
 import com.bridle.properties.FreemarkerProducerConfiguration;
 import com.bridle.properties.SchedulerConsumerConfiguration;
 import com.bridle.properties.ValidatedKafkaProducerConfiguration;

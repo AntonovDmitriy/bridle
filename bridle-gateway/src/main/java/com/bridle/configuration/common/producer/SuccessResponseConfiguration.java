@@ -1,4 +1,4 @@
-package com.bridle.configuration.common;
+package com.bridle.configuration.common.producer;
 
 import com.bridle.properties.FreemarkerProducerConfiguration;
 import com.bridle.utils.ComponentCustomizerImpl;

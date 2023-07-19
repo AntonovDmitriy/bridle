@@ -1,4 +1,4 @@
-package com.bridle.configuration.common;
+package com.bridle.configuration.common.producer;
 
 import com.bridle.properties.HttpProducerConfiguration;
 import com.bridle.utils.ComponentCustomizerImpl;

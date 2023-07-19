@@ -1,14 +1,14 @@
 package com.bridle.configuration.routes;
 
-import com.bridle.configuration.common.ErrorHandlerConfiguration;
-import com.bridle.configuration.common.ErrorResponseConfiguration;
-import com.bridle.configuration.common.FreemarkerConfiguration;
-import com.bridle.configuration.common.HeaderCollectorConfiguration;
-import com.bridle.configuration.common.InboundDataFormatConfiguration;
-import com.bridle.configuration.common.InboundValidationConfiguration;
-import com.bridle.configuration.common.KafkaOutConfiguration;
-import com.bridle.configuration.common.SuccessResponseConfiguration;
-import com.bridle.configuration.common.ValidationErrorResponseConfiguration;
+import com.bridle.configuration.common.errorhandling.ErrorHandlerConfiguration;
+import com.bridle.configuration.common.errorhandling.ErrorResponseConfiguration;
+import com.bridle.configuration.common.processing.FreemarkerConfiguration;
+import com.bridle.configuration.common.processing.HeaderCollectorConfiguration;
+import com.bridle.configuration.common.processing.InboundDataFormatConfiguration;
+import com.bridle.configuration.common.processing.InboundValidationConfiguration;
+import com.bridle.configuration.common.producer.KafkaOutConfiguration;
+import com.bridle.configuration.common.producer.SuccessResponseConfiguration;
+import com.bridle.configuration.common.errorhandling.ValidationErrorResponseConfiguration;
 import com.bridle.properties.HttpConsumerConfiguration;
 import com.bridle.routes.HttpConsumerToProducerRoute;
 import com.bridle.routes.HttpConsumerToProducerRouteParams;
@@ -54,23 +54,13 @@ public class HttpKafkaConfiguration {
     public RouteBuilder kafkaHttpKafkaRoute(EndpointProducerBuilder kafkaProducerBuilder,
                                             ErrorHandlerFactory errorHandlerFactory,
                                             HttpConsumerConfiguration httpConsumerConfiguration,
-                                            @Qualifier("successResponseBuilder")
-                                            EndpointProducerBuilder successResponseBuilder,
-                                            @Qualifier("errorResponseBuilder")
-                                            EndpointProducerBuilder errorResponseBuilder,
-                                            @Autowired(required = false)
-                                            @Qualifier("freemarkerTransformBuilder")
-                                            EndpointProducerBuilder transform,
-                                            @Qualifier(HEADER_COLLECTOR_COMPONENT_NAME)
-                                            Processor headerCollector,
-                                            @Autowired(required = false)
-                                            @Qualifier("inboundDataFormat")
-                                            DataFormatDefinition inboundDataFormat,
-                                            @Autowired(required = false)
-                                            @Qualifier("validatorBuilder")
-                                            EndpointProducerBuilder inboundValidator,
-                                            @Qualifier("validationErrorResponseBuilder")
-                                            EndpointProducerBuilder validationErrorResponseBuilder) {
+                                            @Qualifier("successResponseBuilder") EndpointProducerBuilder successResponseBuilder,
+                                            @Qualifier("errorResponseBuilder") EndpointProducerBuilder errorResponseBuilder,
+                                            @Autowired(required = false) @Qualifier("freemarkerTransformBuilder") EndpointProducerBuilder transform,
+                                            @Qualifier(HEADER_COLLECTOR_COMPONENT_NAME) Processor headerCollector,
+                                            @Autowired(required = false) @Qualifier("inboundDataFormat") DataFormatDefinition inboundDataFormat,
+                                            @Autowired(required = false) @Qualifier("validatorBuilder") EndpointProducerBuilder inboundValidator,
+                                            @Qualifier("validationErrorResponseBuilder") EndpointProducerBuilder validationErrorResponseBuilder) {
 
         return new HttpConsumerToProducerRoute(errorHandlerFactory,
                 httpConsumerConfiguration,

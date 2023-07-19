@@ -34,7 +34,7 @@ import static utils.MetricsTestUtils.verifyMetrics;
 @DirtiesContext
 @Testcontainers
 @AutoConfigureMetrics
-public class HttpPollHttpRouteTest {
+public class HttpPollHttpWithConnectionErrorTest {
 
     public static final HttpRequest CALL_SERVER_REQUEST = request().withMethod("POST")
             .withPath("/person")
@@ -60,35 +60,24 @@ public class HttpPollHttpRouteTest {
         mockPollerverClient
                 .when(POLL_SERVER_REQUEST)
                 .respond(response().withBody("52.255").withStatusCode(200));
-
-        mockCallServer.start();
-        System.setProperty("rest-call.port", mockCallServer.getServerPort().toString());
-        var mockCallServerClient = new MockServerClient(mockCallServer.getHost(), mockCallServer.getServerPort());
-        mockCallServerClient
-                .when(CALL_SERVER_REQUEST)
-                .respond(response().withBody("OK").withStatusCode(200));
     }
 
     @AfterAll
     public static void afterAll() throws Exception {
         mockPollServer.stop();
-        mockCallServer.stop();
     }
 
     @Test
-    void verifySuccessHttpPollHttpScenario() throws Exception {
-
-        int messageCount = 3;
-        NotifyBuilder notify = new NotifyBuilder(context).whenExactlyCompleted(messageCount).create();
+    void verifyErrorHttpPollHttpScenarioWhenRestCallGetsConnectionError() throws Exception {
+        int messageCount = 1;
+        NotifyBuilder notify = new NotifyBuilder(context).whenFailed(messageCount).create();
         boolean done = notify.matches(10, TimeUnit.SECONDS);
 
         Assertions.assertTrue(done);
 
         var mockPollServerClient = new MockServerClient(mockPollServer.getHost(), mockPollServer.getServerPort());
         mockPollServerClient.verify(POLL_SERVER_REQUEST, VerificationTimes.exactly(messageCount));
-        var mockCallServerClient = new MockServerClient(mockCallServer.getHost(), mockCallServer.getServerPort());
-        mockCallServerClient.verify(CALL_SERVER_REQUEST, VerificationTimes.exactly(messageCount));
-        verifyMetrics(GATEWAY_TYPE_HTTP_POLL_HTTP, messageCount, 0, 0);
+        verifyMetrics(GATEWAY_TYPE_HTTP_POLL_HTTP, 0, messageCount, 0);
     }
 }
 

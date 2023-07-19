@@ -1,4 +1,4 @@
-package com.bridle.configuration.common;
+package com.bridle.configuration.common.errorhandling;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.ErrorHandlerFactory;

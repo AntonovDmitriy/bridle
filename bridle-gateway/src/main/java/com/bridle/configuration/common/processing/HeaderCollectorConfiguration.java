@@ -1,9 +1,10 @@
-package com.bridle.configuration.common;
+package com.bridle.configuration.common.processing;
 
 import com.bridle.component.collector.FacadeHeaderCollectorConfiguration;
 import com.bridle.component.collector.FacadeHeadersCollector;
 import com.bridle.component.collector.SingletonHeaderCollectorsFactory;
 import com.bridle.component.collector.ValuesCollectorFactory;
+import com.bridle.configuration.common.ComponentNameConstants;
 import org.apache.camel.Processor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
