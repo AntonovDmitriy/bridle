@@ -17,8 +17,6 @@ public class GenericHttpConsumerRoute extends BaseRouteBuilder {
     public void configure() throws Exception {
         super.configure();
         getContext().setRestConfiguration(restConfiguration);
-        rest()
-                .getVerbs()
-                .addAll(restConfiguration.getRoutes());
+        rest().getVerbs().addAll(restConfiguration.getRoutes());
     }
 }

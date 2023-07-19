@@ -45,18 +45,12 @@ public class KafkaContainerUtils {
                                                                                                                "kafka-run-class kafka.tools.GetOffsetShell --broker-list localhost:9092" +
                                                                                                                        " --topic %s --offsets -1",
                                                                                                                topicName));
-        return Integer.parseInt(execResult
-                                        .getStdout()
-                                        .strip()
-                                        .split(":")[2]);
+        return Integer.parseInt(execResult.getStdout().strip().split(":")[2]);
     }
 
     public static void setupKafka(KafkaContainer kafkaContainer,
             int kafkaPort) {
         kafkaContainer.start();
-        System.setProperty("kafka-out.brokers",
-                           "localhost:" + kafkaContainer
-                                   .getMappedPort(kafkaPort)
-                                   .toString());
+        System.setProperty("kafka-out.brokers", "localhost:" + kafkaContainer.getMappedPort(kafkaPort).toString());
     }
 }

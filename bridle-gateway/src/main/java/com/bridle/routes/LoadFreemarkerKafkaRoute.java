@@ -29,10 +29,6 @@ public class LoadFreemarkerKafkaRoute extends BaseRouteBuilder {
     public void configure() throws Exception {
         super.configure();
 
-        from(scheduler)
-                .routeId(LOAD_FREEMARKER_KAFKA)
-                .to(freemarker)
-                .log("Request: ${body}")
-                .to(kafkaOut);
+        from(scheduler).routeId(LOAD_FREEMARKER_KAFKA).to(freemarker).log("Request: ${body}").to(kafkaOut);
     }
 }

@@ -24,10 +24,6 @@ public class KafkaHttpRoute extends BaseRouteBuilder {
     public void configure() throws Exception {
         super.configure();
 
-        from(kafkaIn)
-                .routeId(GATEWAY_TYPE_KAFKA_HTTP)
-                .log("Request: ${body}")
-                .to(restCall)
-                .log("Response ${body}");
+        from(kafkaIn).routeId(GATEWAY_TYPE_KAFKA_HTTP).log("Request: ${body}").to(restCall).log("Response ${body}");
     }
 }

@@ -43,16 +43,12 @@ public class MetricsTestUtils {
 
     public static int parseSuccessMessagesAmount(String metricsInfo,
             String routeName) {
-        return extractDecimalMetric(metricsInfo, routeName, "CamelExchangesSucceeded_total")
-                .getValue()
-                .intValue();
+        return extractDecimalMetric(metricsInfo, routeName, "CamelExchangesSucceeded_total").getValue().intValue();
     }
 
     public static int parseFailedMessagesAmount(String metricsInfo,
             String routeName) {
-        return extractDecimalMetric(metricsInfo, routeName, "CamelExchangesFailed_total")
-                .getValue()
-                .intValue();
+        return extractDecimalMetric(metricsInfo, routeName, "CamelExchangesFailed_total").getValue().intValue();
     }
 
     public static int parseMessagesWithHandledErrorAmount(String metricsInfo,
@@ -89,15 +85,10 @@ public class MetricsTestUtils {
     }
 
     public static List<MetricsHolder<Double>> extractDecimalMetricsFromMetricRows(List<String> metricRows) {
-        return metricRows
-                .stream()
-                .map(metricRow -> {
-                    Double value = Double.parseDouble(StringUtils
-                                                              .substringAfterLast(metricRow, "}")
-                                                              .trim());
-                    return new MetricsHolder<>(metricRow, value);
-                })
-                .collect(Collectors.toList());
+        return metricRows.stream().map(metricRow -> {
+            Double value = Double.parseDouble(StringUtils.substringAfterLast(metricRow, "}").trim());
+            return new MetricsHolder<>(metricRow, value);
+        }).collect(Collectors.toList());
     }
 
 

@@ -9,7 +9,8 @@ import javax.validation.constraints.NotEmpty;
 import java.util.Map;
 import java.util.Optional;
 
-@Validated public class ValidatedKafkaProducerConfiguration extends KafkaComponentConfiguration {
+@Validated
+public class ValidatedKafkaProducerConfiguration extends KafkaComponentConfiguration {
 
     private Map<String, Object> endpointProperties;
 

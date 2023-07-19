@@ -19,7 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ExtendWith(MockitoExtension.class) class JsonValuesCollectorTest {
+@ExtendWith(MockitoExtension.class)
+class JsonValuesCollectorTest {
 
     private static final String BAD_JSON =
             "{" + "\"" + RQ_UID_KEY + "\": \"" + RQUID_VALUE + "\"," + "\"" + SYS_ID_KEY + "\": " + "\"" +
@@ -66,17 +67,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
         JsonValuesCollector collector = new JsonValuesCollector(createCorrectJsonExpressionsByName());
         Optional<Map<String, Object>> result = collector.collectValues(CORRECT_JSON);
         assertTrue(result.isPresent());
-        assertEquals(RQUID_VALUE,
-                     result
-                             .get()
-                             .get(RQ_UID_KEY));
-        assertEquals(SYS_ID_VALUE,
-                     result
-                             .get()
-                             .get(SYS_ID_KEY));
-        assertNull(result
-                           .get()
-                           .get(MSG_ID_KEY));
+        assertEquals(RQUID_VALUE, result.get().get(RQ_UID_KEY));
+        assertEquals(SYS_ID_VALUE, result.get().get(SYS_ID_KEY));
+        assertNull(result.get().get(MSG_ID_KEY));
     }
 
     @Test
@@ -87,13 +80,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
         JsonValuesCollector collector = new JsonValuesCollector(expressionsByName);
         Optional<Map<String, Object>> result = collector.collectValues(CORRECT_JSON);
         assertTrue(result.isPresent());
-        assertNull(result
-                           .get()
-                           .get(unknownKey));
-        assertEquals(1,
-                     result
-                             .get()
-                             .size());
+        assertNull(result.get().get(unknownKey));
+        assertEquals(1, result.get().size());
     }
 
     @Test
@@ -105,13 +93,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
         String jsonWithEmptyValue = "{" + "\"" + emptyKey + "\": \"\"}";
         Optional<Map<String, Object>> result = collector.collectValues(jsonWithEmptyValue);
         assertTrue(result.isPresent());
-        assertNull(result
-                           .get()
-                           .get(""));
-        assertEquals(1,
-                     result
-                             .get()
-                             .size());
+        assertNull(result.get().get(""));
+        assertEquals(1, result.get().size());
     }
 
     private Map<String, String> createIncorrectExpressionsByName() {

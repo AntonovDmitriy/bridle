@@ -12,7 +12,8 @@ import static com.bridle.component.collector.CollectorTestUtils.createCorrectJso
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@ExtendWith(MockitoExtension.class) class SingletonHeaderCollectorsFactoryTest {
+@ExtendWith(MockitoExtension.class)
+class SingletonHeaderCollectorsFactoryTest {
 
     @Test
     void createValuesCollectorThrowsExceptionWhenExpressionFormatArgumentIsNull() {

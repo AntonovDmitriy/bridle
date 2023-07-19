@@ -53,9 +53,7 @@ public class XpathXmlValuesCollector implements ValuesCollector<String> {
             try {
                 final Document document = createXmlDomDocument(body);
                 for (Map.Entry<String, XPathExpression> entry : xpathExpressionsByName.entrySet()) {
-                    Object xpathResultNode = entry
-                            .getValue()
-                            .evaluate(document, XPathConstants.NODE);
+                    Object xpathResultNode = entry.getValue().evaluate(document, XPathConstants.NODE);
                     valuesByName.put(entry.getKey(),
                                      xpathResultNode != null ? ((Node) xpathResultNode).getNodeValue() : null);
                 }

@@ -31,17 +31,16 @@ import static utils.MetricsTestUtils.verifyMetrics;
 @SpringBootTest(classes = {App.class},
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(properties = {"spring.config.location=classpath:routetest/http-poll-http/application.yml"})
-@CamelSpringBootTest @DirtiesContext @Testcontainers @AutoConfigureMetrics
+@CamelSpringBootTest
+@DirtiesContext
+@Testcontainers
+@AutoConfigureMetrics
 public class HttpPollHttpWithConnectionErrorTest {
 
-    public static final HttpRequest CALL_SERVER_REQUEST = request()
-            .withMethod("POST")
-            .withPath("/person")
-            .withBody("52.255");
+    public static final HttpRequest CALL_SERVER_REQUEST =
+            request().withMethod("POST").withPath("/person").withBody("52.255");
 
-    private static final HttpRequest POLL_SERVER_REQUEST = request()
-            .withMethod("GET")
-            .withPath("/salary");
+    private static final HttpRequest POLL_SERVER_REQUEST = request().withMethod("GET").withPath("/salary");
 
     @Container
     public static MockServerContainer mockPollServer = new MockServerContainer(DockerImageName
@@ -65,16 +64,9 @@ public class HttpPollHttpWithConnectionErrorTest {
     @BeforeAll
     public static void setUp() throws Exception {
         mockPollServer.start();
-        System.setProperty("rest-poll.port",
-                           mockPollServer
-                                   .getServerPort()
-                                   .toString());
+        System.setProperty("rest-poll.port", mockPollServer.getServerPort().toString());
         var mockPollerverClient = new MockServerClient(mockPollServer.getHost(), mockPollServer.getServerPort());
-        mockPollerverClient
-                .when(POLL_SERVER_REQUEST)
-                .respond(response()
-                                 .withBody("52.255")
-                                 .withStatusCode(200));
+        mockPollerverClient.when(POLL_SERVER_REQUEST).respond(response().withBody("52.255").withStatusCode(200));
     }
 
     @AfterAll
@@ -85,9 +77,7 @@ public class HttpPollHttpWithConnectionErrorTest {
     @Test
     void verifyErrorHttpPollHttpScenarioWhenRestCallGetsConnectionError() throws Exception {
         int messageCount = 1;
-        NotifyBuilder notify = new NotifyBuilder(context)
-                .whenFailed(messageCount)
-                .create();
+        NotifyBuilder notify = new NotifyBuilder(context).whenFailed(messageCount).create();
         boolean done = notify.matches(10, TimeUnit.SECONDS);
 
         Assertions.assertTrue(done);

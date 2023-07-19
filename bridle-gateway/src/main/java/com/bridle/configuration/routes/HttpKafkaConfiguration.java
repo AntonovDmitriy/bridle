@@ -28,7 +28,8 @@ import static com.bridle.configuration.common.ComponentNameConstants.REST_IN_COM
         SuccessResponseConfiguration.class, ErrorResponseConfiguration.class,
         ValidationErrorResponseConfiguration.class})
 @ConditionalOnProperty(name = "gateway.type",
-        havingValue = HttpKafkaConfiguration.GATEWAY_TYPE_HTTP_KAFKA) public class HttpKafkaConfiguration {
+        havingValue = HttpKafkaConfiguration.GATEWAY_TYPE_HTTP_KAFKA)
+public class HttpKafkaConfiguration {
 
     public static final String GATEWAY_TYPE_HTTP_KAFKA = "http-kafka";
 
@@ -42,11 +43,18 @@ import static com.bridle.configuration.common.ComponentNameConstants.REST_IN_COM
     public RouteBuilder kafkaHttpKafkaRoute(EndpointProducerBuilder kafkaProducerBuilder,
             ErrorHandlerFactory errorHandlerFactory,
             HttpConsumerConfiguration httpConsumerConfiguration,
-            @Autowired(required = false) @Qualifier("afterConsumer") ProcessingParams processingAfterConsumerParams,
-            @Autowired(required = false) @Qualifier("afterProducer") ProcessingParams processingAfterProducerParams,
-            @Qualifier("successResponseBuilder") EndpointProducerBuilder successResponseBuilder,
-            @Qualifier("errorResponseBuilder") EndpointProducerBuilder errorResponseBuilder,
-            @Qualifier("validationErrorResponseBuilder") EndpointProducerBuilder validationErrorResponseBuilder) {
+            @Autowired(required = false)
+            @Qualifier("afterConsumer")
+            ProcessingParams processingAfterConsumerParams,
+            @Autowired(required = false)
+            @Qualifier("afterProducer")
+            ProcessingParams processingAfterProducerParams,
+            @Qualifier("successResponseBuilder")
+            EndpointProducerBuilder successResponseBuilder,
+            @Qualifier("errorResponseBuilder")
+            EndpointProducerBuilder errorResponseBuilder,
+            @Qualifier("validationErrorResponseBuilder")
+            EndpointProducerBuilder validationErrorResponseBuilder) {
 
         return new HttpConsumerToProducerRoute(errorHandlerFactory,
                                                httpConsumerConfiguration,

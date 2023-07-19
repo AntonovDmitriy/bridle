@@ -34,7 +34,8 @@ public class SuccessResponseConfiguration {
 
     @Bean
     public EndpointProducerBuilder successResponseBuilder(
-            @Qualifier("successResponseConfiguration") FreemarkerProducerConfiguration successResponseConfiguration) {
+            @Qualifier("successResponseConfiguration")
+            FreemarkerProducerConfiguration successResponseConfiguration) {
         EndpointProducerBuilder result =
                 freemarker(SUCCESS_RESPONSE_FREEMARKER_COMPONENT_NAME, successResponseConfiguration.getResourceUri());
         successResponseConfiguration
@@ -46,7 +47,8 @@ public class SuccessResponseConfiguration {
     @Lazy
     @Bean
     public ComponentCustomizer configureSuccessResponseComponent(CamelContext context,
-            @Qualifier("successResponseConfiguration") FreemarkerProducerConfiguration componentConfiguration) {
+            @Qualifier("successResponseConfiguration")
+            FreemarkerProducerConfiguration componentConfiguration) {
         return new ComponentCustomizerImpl(context, componentConfiguration, SUCCESS_RESPONSE_FREEMARKER_COMPONENT_NAME);
     }
 

@@ -27,15 +27,6 @@ public class KafkaOutConfiguration {
         return new KafkaComponent();
     }
 
-    @Bean
-    public EndpointProducerBuilder kafkaProducerBuilder(ValidatedKafkaProducerConfiguration kafkaOutConfiguration) {
-        EndpointProducerBuilder result = kafka(KAFKA_OUT_COMPONENT_NAME, kafkaOutConfiguration.getTopic());
-        kafkaOutConfiguration
-                .getEndpointProperties()
-                .ifPresent(additional -> additional.forEach(result::doSetProperty));
-        return result;
-    }
-
     @Lazy
     @Bean
     public ComponentCustomizer configureKafkaOutComponent(CamelContext context,
@@ -45,12 +36,10 @@ public class KafkaOutConfiguration {
 
     @Bean
     public EndpointProducerBuilder kafkaOutBuilder(
-            @Qualifier("kafkaOutConfiguration") ValidatedKafkaProducerConfiguration configuration) {
-
+            @Qualifier("kafkaOutConfiguration")
+            ValidatedKafkaProducerConfiguration configuration) {
         EndpointProducerBuilder result = kafka(KAFKA_OUT_COMPONENT_NAME, configuration.getTopic());
-        configuration
-                .getEndpointProperties()
-                .ifPresent(additional -> additional.forEach(result::doSetProperty));
+        configuration.getEndpointProperties().ifPresent(additional -> additional.forEach(result::doSetProperty));
         return result;
     }
 }

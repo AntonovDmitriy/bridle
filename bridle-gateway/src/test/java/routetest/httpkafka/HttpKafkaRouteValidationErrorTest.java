@@ -27,8 +27,12 @@ import static utils.TestUtils.sendPostHttpRequest;
 @SpringBootTest(classes = {App.class},
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(properties = {
-        "spring.config.location=classpath:routetest/http-kafka/application-with-validation.yml"}) @CamelSpringBootTest
-@Testcontainers @DirtiesContext @AutoConfigureMetrics public class HttpKafkaRouteValidationErrorTest {
+        "spring.config.location=classpath:routetest/http-kafka/application-with-validation.yml"})
+@CamelSpringBootTest
+@Testcontainers
+@DirtiesContext
+@AutoConfigureMetrics
+public class HttpKafkaRouteValidationErrorTest {
 
     public static final String HTTP_SERVER_URL = "http://localhost:8080/camel/myapi";
 
@@ -53,9 +57,7 @@ import static utils.TestUtils.sendPostHttpRequest;
                                                                         () -> sendPostHttpRequest(HTTP_SERVER_URL,
                                                                                                   textMessage));
 
-        assertTrue(exception
-                           .getResponseBodyAsString()
-                           .contains("JSON validation error with 2 errors"));
+        assertTrue(exception.getResponseBodyAsString().contains("JSON validation error with 2 errors"));
         assertEquals(400, exception.getRawStatusCode());
         assertEquals(0, KafkaContainerUtils.countMessages(kafka, TOPIC_NAME));
         verifyMetrics(GATEWAY_TYPE_HTTP_KAFKA, 0, 0, 1);

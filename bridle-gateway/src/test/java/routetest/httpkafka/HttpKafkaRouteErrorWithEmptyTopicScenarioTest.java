@@ -27,7 +27,10 @@ import static utils.TestUtils.sendPostHttpRequest;
 @SpringBootTest(classes = {App.class},
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(properties = {"spring.config.location=classpath:routetest/http-kafka/application.yml"})
-@CamelSpringBootTest @Testcontainers @DirtiesContext @AutoConfigureMetrics
+@CamelSpringBootTest
+@Testcontainers
+@DirtiesContext
+@AutoConfigureMetrics
 public class HttpKafkaRouteErrorWithEmptyTopicScenarioTest {
 
     public static final String HTTP_SERVER_URL = "http://localhost:8080/camel/myapi";

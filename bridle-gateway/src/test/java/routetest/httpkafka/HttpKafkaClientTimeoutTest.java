@@ -36,7 +36,10 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
 @SpringBootTest(classes = {App.class},
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(properties = {"spring.config.location=classpath:routetest/http-kafka/application-redelivery.yml"})
-@CamelSpringBootTest @Testcontainers @DirtiesContext public class HttpKafkaClientTimeoutTest {
+@CamelSpringBootTest
+@Testcontainers
+@DirtiesContext
+public class HttpKafkaClientTimeoutTest {
 
     public static final String HTTP_SERVER_URL = "http://localhost:8080/camel/myapi";
 
@@ -74,19 +77,13 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
     @Test
     void verifySuccessMessageWithClientTimeout() throws Exception {
         KafkaContainerUtils.createTopic(kafka, TOPIC_NAME);
-        NotifyBuilder notifier = new NotifyBuilder(context)
-                .whenDone(1)
-                .create();
+        NotifyBuilder notifier = new NotifyBuilder(context).whenDone(1).create();
 
         Assertions.assertThrows(ResourceAccessException.class,
                                 HttpKafkaClientTimeoutTest::sendValidHttpRequestWithTinyTimeout);
         notifier.matches(10, TimeUnit.SECONDS);
 
-        assertEquals(REQUEST_BODY,
-                     KafkaContainerUtils
-                             .readMessage(kafka, TOPIC_NAME)
-                             .stdOut()
-                             .strip());
+        assertEquals(REQUEST_BODY, KafkaContainerUtils.readMessage(kafka, TOPIC_NAME).stdOut().strip());
         assertEquals(1, KafkaContainerUtils.countMessages(kafka, TOPIC_NAME));
         KafkaContainerUtils.deleteTopic(kafka, TOPIC_NAME);
     }
@@ -94,21 +91,15 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
     @Test
     void verifyRedeliveryWithClientTimeoutAndFinalError() throws Exception {
         EndpointSendEventNotifier notifierRedeliveredMessage = new EndpointSendEventNotifier(KAFKA_OUT_COMPONENT_NAME);
-        context
-                .getManagementStrategy()
-                .addEventNotifier(notifierRedeliveredMessage);
-        NotifyBuilder notifier = new NotifyBuilder(context)
-                .whenFailed(1)
-                .create();
+        context.getManagementStrategy().addEventNotifier(notifierRedeliveredMessage);
+        NotifyBuilder notifier = new NotifyBuilder(context).whenFailed(1).create();
 
         Assertions.assertThrows(ResourceAccessException.class,
                                 HttpKafkaClientTimeoutTest::sendValidHttpRequestWithTinyTimeout);
         notifier.matches(10, TimeUnit.SECONDS);
 
         assertEquals(3, notifierRedeliveredMessage.getCounter());
-        context
-                .getManagementStrategy()
-                .removeEventNotifier(notifierRedeliveredMessage);
+        context.getManagementStrategy().removeEventNotifier(notifierRedeliveredMessage);
     }
 
     @Test
@@ -120,23 +111,15 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
             } catch (Exception ignored) {
             }
         });
-        context
-                .getManagementStrategy()
-                .addEventNotifier(notifierRedeliveredSuccess);
-        NotifyBuilder notifier = new NotifyBuilder(context)
-                .whenFailed(1)
-                .create();
+        context.getManagementStrategy().addEventNotifier(notifierRedeliveredSuccess);
+        NotifyBuilder notifier = new NotifyBuilder(context).whenFailed(1).create();
 
         Assertions.assertThrows(ResourceAccessException.class,
                                 HttpKafkaClientTimeoutTest::sendValidHttpRequestWithTinyTimeout);
         notifier.matches(10, TimeUnit.SECONDS);
 
         assertEquals(3, notifierRedeliveredSuccess.getCounter());
-        assertEquals(REQUEST_BODY,
-                     KafkaContainerUtils
-                             .readMessage(kafka, TOPIC_NAME)
-                             .stdOut()
-                             .strip());
+        assertEquals(REQUEST_BODY, KafkaContainerUtils.readMessage(kafka, TOPIC_NAME).stdOut().strip());
         assertEquals(1, KafkaContainerUtils.countMessages(kafka, TOPIC_NAME));
         KafkaContainerUtils.deleteTopic(kafka, TOPIC_NAME);
     }

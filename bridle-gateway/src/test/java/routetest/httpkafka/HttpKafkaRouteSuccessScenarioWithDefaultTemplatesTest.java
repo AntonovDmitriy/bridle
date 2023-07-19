@@ -29,7 +29,10 @@ import static utils.TestUtils.sendPostHttpRequest;
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(properties = {
         "spring.config.location=classpath:routetest/http-kafka/application-with-default-templates.yml"})
-@CamelSpringBootTest @Testcontainers @DirtiesContext @AutoConfigureMetrics
+@CamelSpringBootTest
+@Testcontainers
+@DirtiesContext
+@AutoConfigureMetrics
 public class HttpKafkaRouteSuccessScenarioWithDefaultTemplatesTest {
 
     public static final String HTTP_SERVER_URL = "http://localhost:8080/camel/myapi";
@@ -56,15 +59,9 @@ public class HttpKafkaRouteSuccessScenarioWithDefaultTemplatesTest {
         String textMessage = getStringResources("routetest/http-kafka/test.json");
         ResponseEntity<String> httpResponseEntity = sendPostHttpRequest(HTTP_SERVER_URL, textMessage);
 
-        assertEquals(200,
-                     httpResponseEntity
-                             .getStatusCode()
-                             .value());
+        assertEquals(200, httpResponseEntity.getStatusCode().value());
         assertEquals("Success!", httpResponseEntity.getBody());
-        assertEquals(textMessage,
-                     readMessage(kafka, TOPIC_NAME)
-                             .stdOut()
-                             .strip());
+        assertEquals(textMessage, readMessage(kafka, TOPIC_NAME).stdOut().strip());
         verifyMetrics(GATEWAY_TYPE_HTTP_KAFKA, 1, 0, 0);
         KafkaContainerUtils.deleteTopic(kafka, TOPIC_NAME);
     }

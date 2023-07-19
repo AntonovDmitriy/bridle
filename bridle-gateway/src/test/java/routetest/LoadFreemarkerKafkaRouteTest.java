@@ -23,7 +23,10 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
 
 @SpringBootTest(classes = {App.class})
 @TestPropertySource(properties = {"spring.config.location=classpath:routetest/load-freemarker-kafka/application.yml"})
-@CamelSpringBootTest @DirtiesContext @Testcontainers public class LoadFreemarkerKafkaRouteTest {
+@CamelSpringBootTest
+@DirtiesContext
+@Testcontainers
+public class LoadFreemarkerKafkaRouteTest {
 
     private static final String TOPIC_NAME = "routetest";
 
@@ -40,10 +43,7 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
     @BeforeAll
     public static void setUp() throws Exception {
         kafka.start();
-        System.setProperty("kafka-out.brokers",
-                           "localhost:" + kafka
-                                   .getMappedPort(KAFKA_PORT)
-                                   .toString());
+        System.setProperty("kafka-out.brokers", "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
         kafka.execInContainer("/bin/bash",
                               "-c",
                               String.format("kafka-topics --create --bootstrap-server localhost:9092" +
@@ -53,9 +53,7 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
     @Test
     void verifySuccessLoadFreemarkerKafkaScenario() throws Exception {
 
-        NotifyBuilder notify = new NotifyBuilder(context)
-                .whenExactlyCompleted(5)
-                .create();
+        NotifyBuilder notify = new NotifyBuilder(context).whenExactlyCompleted(5).create();
 
         boolean done = notify.matches(10, TimeUnit.SECONDS);
         Assertions.assertTrue(done);

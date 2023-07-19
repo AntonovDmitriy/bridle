@@ -8,7 +8,8 @@ import javax.validation.constraints.Positive;
 import java.util.Map;
 import java.util.Optional;
 
-@Validated public class HttpProducerConfiguration extends HttpComponentConfiguration {
+@Validated
+public class HttpProducerConfiguration extends HttpComponentConfiguration {
     private String resourcePath = "";
 
     @NotEmpty

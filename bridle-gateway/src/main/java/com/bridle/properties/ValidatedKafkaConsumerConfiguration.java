@@ -13,7 +13,8 @@ import java.util.Optional;
 
 import static javax.validation.constraints.Pattern.Flag.CASE_INSENSITIVE;
 
-@Validated public class ValidatedKafkaConsumerConfiguration extends KafkaComponentConfiguration {
+@Validated
+public class ValidatedKafkaConsumerConfiguration extends KafkaComponentConfiguration {
 
     private Map<String, Object> endpointProperties;
 

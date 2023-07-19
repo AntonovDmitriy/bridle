@@ -28,10 +28,6 @@ public class HttpPollKafkaRoute extends BaseRouteBuilder {
     public void configure() throws Exception {
         super.configure();
 
-        from(scheduler)
-                .routeId(GATEWAY_TYPE_HTTP_POLL_KAFKA)
-                .to(restPoll)
-                .log("Response poll: ${body}")
-                .to(kafka);
+        from(scheduler).routeId(GATEWAY_TYPE_HTTP_POLL_KAFKA).to(restPoll).log("Response poll: ${body}").to(kafka);
     }
 }

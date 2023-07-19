@@ -27,7 +27,10 @@ import static utils.TestUtils.sendPostHttpRequest;
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(properties = {
         "spring.config.location=classpath:routetest/http-kafka/application-with-header-collector.yml"})
-@CamelSpringBootTest @Testcontainers @DirtiesContext @AutoConfigureMetrics
+@CamelSpringBootTest
+@Testcontainers
+@DirtiesContext
+@AutoConfigureMetrics
 public class HttpKafkaRouteSuccessScenarioWithHeaderCollectorTest {
 
     public static final String HTTP_SERVER_URL = "http://localhost:8080/camel/myapi";
@@ -80,10 +83,7 @@ public class HttpKafkaRouteSuccessScenarioWithHeaderCollectorTest {
 
         ResponseEntity<String> httpResponseEntity = sendPostHttpRequest(HTTP_SERVER_URL, textMessage);
 
-        assertEquals(200,
-                     httpResponseEntity
-                             .getStatusCode()
-                             .value());
+        assertEquals(200, httpResponseEntity.getStatusCode().value());
         assertEquals("Success!", httpResponseEntity.getBody());
         assertEquals(EXPECTED_TRANSFORMED_MESSAGE, readMessage(kafka, TOPIC_NAME).stdOut());
         verifyMetrics(GATEWAY_TYPE_HTTP_KAFKA, 1, 0, 0);

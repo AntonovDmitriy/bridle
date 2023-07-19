@@ -29,13 +29,15 @@ import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.http;
 @Import({SchedulerConfiguration.class, RestCallConfiguration.class, FreemarkerConfiguration.class,
         ErrorHandlerConfiguration.class})
 @ConditionalOnProperty(name = "gateway.type",
-        havingValue = LOAD_FREEMARKER_HTTP) public class LoadFreemarkerHttpConfiguration {
+        havingValue = LOAD_FREEMARKER_HTTP)
+public class LoadFreemarkerHttpConfiguration {
 
     public static final String LOAD_FREEMARKER_HTTP = "load-freemarker-http";
 
     @Bean
     public RouteBuilder dataSetHttpRoute(ErrorHandlerFactory errorHandlerFactory,
-            @Qualifier("restCallConfiguration") HttpProducerConfiguration restCallConfiguration,
+            @Qualifier("restCallConfiguration")
+            HttpProducerConfiguration restCallConfiguration,
             FreemarkerProducerConfiguration freemarkerConfiguration,
             SchedulerConsumerConfiguration schedulerConfiguration) {
 

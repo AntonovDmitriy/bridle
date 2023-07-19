@@ -28,7 +28,8 @@ import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.kafka;
 @Import({SchedulerConfiguration.class, KafkaOutConfiguration.class, FreemarkerConfiguration.class,
         ErrorHandlerConfiguration.class})
 @ConditionalOnProperty(name = "gateway.type",
-        havingValue = LOAD_FREEMARKER_KAFKA) public class LoadFreemarkerKafkaConfiguration {
+        havingValue = LOAD_FREEMARKER_KAFKA)
+public class LoadFreemarkerKafkaConfiguration {
 
     public static final String LOAD_FREEMARKER_KAFKA = "load-freemarker-kafka";
 

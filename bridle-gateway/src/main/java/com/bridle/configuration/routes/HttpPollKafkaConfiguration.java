@@ -27,17 +27,25 @@ import static com.bridle.configuration.routes.HttpPollKafkaConfiguration.GATEWAY
         ErrorHandlerConfiguration.class, AfterConsumerProcessingConfiguration.class,
         AfterProducerProcessingConfiguration.class})
 @ConditionalOnProperty(name = "gateway.type",
-        havingValue = GATEWAY_TYPE_HTTP_POLL_KAFKA) public class HttpPollKafkaConfiguration {
+        havingValue = GATEWAY_TYPE_HTTP_POLL_KAFKA)
+public class HttpPollKafkaConfiguration {
 
     public static final String GATEWAY_TYPE_HTTP_POLL_KAFKA = "http-poll-kafka";
 
     @Bean
-    public RouteBuilder httpPollHttpRoute(ErrorHandlerFactory errorHandlerFactory,
+    public RouteBuilder httpPollKafkaRoute(ErrorHandlerFactory errorHandlerFactory,
+            @Qualifier("schedulerConsumerBuilder")
             EndpointConsumerBuilder scheduler,
-            @Qualifier("kafkaOutBuilder") EndpointProducerBuilder kafkaOut,
-            @Qualifier("restPollBuilder") EndpointProducerBuilder restPoll,
-            @Autowired(required = false) @Qualifier("afterConsumer") ProcessingParams processingAfterConsumerParams,
-            @Autowired(required = false) @Qualifier("afterProducer") ProcessingParams processingAfterProducerParams) {
+            @Qualifier("restPollBuilder")
+            EndpointProducerBuilder restPoll,
+            @Qualifier("kafkaOutBuilder")
+            EndpointProducerBuilder kafkaOut,
+            @Autowired(required = false)
+            @Qualifier("afterConsumer")
+            ProcessingParams processingAfterConsumerParams,
+            @Autowired(required = false)
+            @Qualifier("afterProducer")
+            ProcessingParams processingAfterProducerParams) {
         return new ConsumerToDoubleProducerRoute(errorHandlerFactory,
                                                  new ConsumerToDoubleProducerRouteParams(GATEWAY_TYPE_HTTP_POLL_KAFKA,
                                                                                          scheduler,

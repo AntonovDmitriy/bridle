@@ -33,9 +33,7 @@ public class FacadeHeadersCollector implements Processor {
     public void process(Exchange exchange) {
         if (collector != null) {
             collector
-                    .collectValues(exchange
-                                           .getIn()
-                                           .getBody(String.class))
+                    .collectValues(exchange.getIn().getBody(String.class))
                     .ifPresent(putValuesToExchangeHeaders(exchange));
         }
     }

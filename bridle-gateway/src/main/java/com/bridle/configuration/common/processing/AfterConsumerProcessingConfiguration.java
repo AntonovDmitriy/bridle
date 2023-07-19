@@ -100,8 +100,9 @@ public class AfterConsumerProcessingConfiguration {
 
     @Bean(VALIDATOR_AFTER_CONSUMER_BUILDER)
     @ConditionalOnBean(name = JSON_VALIDATOR_AFTER_CONSUMER_CONFIGURATION)
-    public EndpointProducerBuilder validatorBuilder(@Qualifier(JSON_VALIDATOR_AFTER_CONSUMER_CONFIGURATION)
-    JsonSchemaValidatorConfiguration validatorConfiguration) {
+    public EndpointProducerBuilder validatorBuilder(
+            @Qualifier(JSON_VALIDATOR_AFTER_CONSUMER_CONFIGURATION)
+            JsonSchemaValidatorConfiguration validatorConfiguration) {
         EndpointProducerBuilder result =
                 jsonValidator(VALIDATOR_AFTER_CONSUMER_COMPONENT_NAME, validatorConfiguration.getResourceUri());
         validatorConfiguration
@@ -146,7 +147,8 @@ public class AfterConsumerProcessingConfiguration {
     @Bean(name = HEADER_COLLECTOR_AFTER_CONSUMER_COMPONENT_NAME)
     @ConditionalOnBean(name = HEADER_COLLECTOR_AFTER_CONSUMER_CONFIGURATION)
     public Processor headerCollectorAfterConsumer(
-            @Qualifier(HEADER_COLLECTOR_AFTER_CONSUMER_CONFIGURATION) FacadeHeaderCollectorConfiguration configuration,
+            @Qualifier(HEADER_COLLECTOR_AFTER_CONSUMER_CONFIGURATION)
+            FacadeHeaderCollectorConfiguration configuration,
             ValuesCollectorFactory valuesCollectorFactory) {
         return new FacadeHeadersCollector(valuesCollectorFactory, configuration);
     }
@@ -186,12 +188,11 @@ public class AfterConsumerProcessingConfiguration {
     @Bean(FREEMARKER_AFTER_CONSUMER_BUILDER)
     @ConditionalOnBean(name = FREEMARKER_AFTER_CONSUMER_CONFIGURATION)
     public EndpointProducerBuilder freemarkerTransformBuilder(
-            @Qualifier(FREEMARKER_AFTER_CONSUMER_CONFIGURATION) FreemarkerProducerConfiguration configuration) {
+            @Qualifier(FREEMARKER_AFTER_CONSUMER_CONFIGURATION)
+            FreemarkerProducerConfiguration configuration) {
         EndpointProducerBuilder result =
                 freemarker(FREEMARKER_AFTER_CONSUMER_COMPONENT_NAME, configuration.getResourceUri());
-        configuration
-                .getEndpointProperties()
-                .ifPresent(additional -> additional.forEach(result::doSetProperty));
+        configuration.getEndpointProperties().ifPresent(additional -> additional.forEach(result::doSetProperty));
         return result;
     }
 
@@ -223,16 +224,23 @@ public class AfterConsumerProcessingConfiguration {
 
     @Bean(name = "afterConsumer")
     public ProcessingParams afterConsumerProcessing(
-            @Autowired(required = false) @Qualifier(VALIDATOR_AFTER_CONSUMER_BUILDER)
+            @Autowired(required = false)
+            @Qualifier(VALIDATOR_AFTER_CONSUMER_BUILDER)
             EndpointProducerBuilder validatorBuilder,
-            @Autowired(required = false) @Qualifier(CONVERT_BODY_NAME) ConvertBodyDefinition convertBody,
-            @Autowired(required = false) @Qualifier(HEADER_COLLECTOR_AFTER_CONSUMER_COMPONENT_NAME)
+            @Autowired(required = false)
+            @Qualifier(CONVERT_BODY_NAME)
+            ConvertBodyDefinition convertBody,
+            @Autowired(required = false)
+            @Qualifier(HEADER_COLLECTOR_AFTER_CONSUMER_COMPONENT_NAME)
             Processor headerCollector,
-            @Autowired(required = false) @Qualifier(UNMARSHALLING_FORMAT_AFTER_CONSUMER_NAME)
+            @Autowired(required = false)
+            @Qualifier(UNMARSHALLING_FORMAT_AFTER_CONSUMER_NAME)
             DataFormatDefinition unmarshallingFormat,
-            @Autowired(required = false) @Qualifier(FREEMARKER_AFTER_CONSUMER_BUILDER)
+            @Autowired(required = false)
+            @Qualifier(FREEMARKER_AFTER_CONSUMER_BUILDER)
             EndpointProducerBuilder transform,
-            @Autowired(required = false) @Qualifier(MARSHALLING_FORMAT_AFTER_CONSUMER_NAME)
+            @Autowired(required = false)
+            @Qualifier(MARSHALLING_FORMAT_AFTER_CONSUMER_NAME)
             DataFormatDefinition marshallingFormat) {
         return new ProcessingParams(validatorBuilder,
                                     convertBody,

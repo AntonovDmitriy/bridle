@@ -27,7 +27,10 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
 
 @SpringBootTest(classes = {App.class})
 @TestPropertySource(properties = {"spring.config.location=classpath:routetest/http-poll-kafka/application.yml"})
-@CamelSpringBootTest @Testcontainers @DirtiesContext public class HttpPollKafkaRouteTest {
+@CamelSpringBootTest
+@Testcontainers
+@DirtiesContext
+public class HttpPollKafkaRouteTest {
 
     private static final String TOPIC_NAME = "routetest";
 
@@ -49,24 +52,14 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
     @BeforeAll
     public static void setUp() throws Exception {
         mockPollServer.start();
-        System.setProperty("rest-poll.port",
-                           mockPollServer
-                                   .getServerPort()
-                                   .toString());
+        System.setProperty("rest-poll.port", mockPollServer.getServerPort().toString());
         var mockPollerverClient = new MockServerClient(mockPollServer.getHost(), mockPollServer.getServerPort());
         mockPollerverClient
-                .when(request()
-                              .withMethod("GET")
-                              .withPath("/salary"))
-                .respond(response()
-                                 .withBody("52.255")
-                                 .withStatusCode(200));
+                .when(request().withMethod("GET").withPath("/salary"))
+                .respond(response().withBody("52.255").withStatusCode(200));
 
         kafka.start();
-        System.setProperty("kafka-out.brokers",
-                           "localhost:" + kafka
-                                   .getMappedPort(KAFKA_PORT)
-                                   .toString());
+        System.setProperty("kafka-out.brokers", "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
         kafka.execInContainer("/bin/bash",
                               "-c",
                               String.format("kafka-topics --create --bootstrap-server localhost:9092 " +
@@ -81,9 +74,7 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
     @Test
     void verifySuccessHttpPollKafkaScenario() throws Exception {
 
-        NotifyBuilder notify = new NotifyBuilder(context)
-                .whenExactlyCompleted(3)
-                .create();
+        NotifyBuilder notify = new NotifyBuilder(context).whenExactlyCompleted(3).create();
         boolean done = notify.matches(10, TimeUnit.SECONDS);
         Assertions.assertTrue(done);
     }
