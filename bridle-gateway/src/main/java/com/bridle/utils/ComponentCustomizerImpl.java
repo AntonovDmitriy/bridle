@@ -14,9 +14,7 @@ public class ComponentCustomizerImpl implements ComponentCustomizer {
 
     private final String componentName;
 
-    public ComponentCustomizerImpl(CamelContext context,
-            Object propertySource,
-            String componentName) {
+    public ComponentCustomizerImpl(CamelContext context, Object propertySource, String componentName) {
         Objects.requireNonNull(context);
         Objects.requireNonNull(propertySource);
         Objects.requireNonNull(componentName);
@@ -27,14 +25,12 @@ public class ComponentCustomizerImpl implements ComponentCustomizer {
     }
 
     @Override
-    public void configure(String name,
-            Component target) {
+    public void configure(String name, Component target) {
         CamelPropertiesHelper.copyProperties(context, propertySource, target);
     }
 
     @Override
-    public boolean isEnabled(String name,
-            Component target) {
+    public boolean isEnabled(String name, Component target) {
         return componentName.equals(name);
     }
 }

@@ -147,8 +147,7 @@ public class AfterProducerProcessingConfiguration {
     @ConditionalOnBean(name = HEADER_COLLECTOR_AFTER_PRODUCER_CONFIGURATION)
     public Processor headerCollectorAfterProducer(
             @Qualifier(HEADER_COLLECTOR_AFTER_PRODUCER_CONFIGURATION)
-            FacadeHeaderCollectorConfiguration configuration,
-            ValuesCollectorFactory valuesCollectorFactory) {
+            FacadeHeaderCollectorConfiguration configuration, ValuesCollectorFactory valuesCollectorFactory) {
         return new FacadeHeadersCollector(valuesCollectorFactory, configuration);
     }
 

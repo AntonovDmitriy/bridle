@@ -148,11 +148,9 @@ public class AfterConsumerProcessingConfiguration {
     @ConditionalOnBean(name = HEADER_COLLECTOR_AFTER_CONSUMER_CONFIGURATION)
     public Processor headerCollectorAfterConsumer(
             @Qualifier(HEADER_COLLECTOR_AFTER_CONSUMER_CONFIGURATION)
-            FacadeHeaderCollectorConfiguration configuration,
-            ValuesCollectorFactory valuesCollectorFactory) {
+            FacadeHeaderCollectorConfiguration configuration, ValuesCollectorFactory valuesCollectorFactory) {
         return new FacadeHeadersCollector(valuesCollectorFactory, configuration);
     }
-
 
     // format for unmarshalling
     @ConfigurationProperties(prefix = UNMARSHALLING_FORMAT_AFTER_CONSUMER_CONFIGURATION_PATH)

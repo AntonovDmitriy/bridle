@@ -39,8 +39,7 @@ public class EndpointSendEventNotifier extends EventNotifierSupport {
         }
     }
 
-    public void runActionWhenCounterExactlyEquals(int counterValueToStartAction,
-            Consumer<CamelEvent> action) {
+    public void runActionWhenCounterExactlyEquals(int counterValueToStartAction, Consumer<CamelEvent> action) {
         this.counterValueToStartAction = counterValueToStartAction;
         this.action = action;
     }

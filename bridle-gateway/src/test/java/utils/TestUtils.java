@@ -23,8 +23,7 @@ public class TestUtils {
         return restTemplate.exchange(uri, httpMethod, requestEntity, responseType);
     }
 
-    public static ResponseEntity<String> sendPostHttpRequest(String uri,
-            String textMessage) throws IOException {
+    public static ResponseEntity<String> sendPostHttpRequest(String uri, String textMessage) throws IOException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> requestEntity = new HttpEntity<>(textMessage, headers);

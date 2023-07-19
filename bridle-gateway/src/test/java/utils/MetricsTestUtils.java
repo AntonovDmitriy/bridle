@@ -24,10 +24,7 @@ public class MetricsTestUtils {
 
     public static final int PROCESS_EXCHANGE_TIMEOUT = 10;
 
-    public static void verifyMetrics(String routeName,
-            int successCount,
-            int failedCount,
-            int handledErrors) {
+    public static void verifyMetrics(String routeName, int successCount, int failedCount, int handledErrors) {
         ResponseEntity<String> metricsResponse =
                 TestUtils.sendHttpRequest(PROMETHEUS_URI, String.class, HttpMethod.GET, null);
         int receivedFailedMessageCount =
@@ -41,39 +38,32 @@ public class MetricsTestUtils {
         assertEquals(successCount, receivedSuccessMessageCount - handledErrorsCount);
     }
 
-    public static int parseSuccessMessagesAmount(String metricsInfo,
-            String routeName) {
+    public static int parseSuccessMessagesAmount(String metricsInfo, String routeName) {
         return extractDecimalMetric(metricsInfo, routeName, "CamelExchangesSucceeded_total").getValue().intValue();
     }
 
-    public static int parseFailedMessagesAmount(String metricsInfo,
-            String routeName) {
+    public static int parseFailedMessagesAmount(String metricsInfo, String routeName) {
         return extractDecimalMetric(metricsInfo, routeName, "CamelExchangesFailed_total").getValue().intValue();
     }
 
-    public static int parseMessagesWithHandledErrorAmount(String metricsInfo,
-            String routeName) {
+    public static int parseMessagesWithHandledErrorAmount(String metricsInfo, String routeName) {
         return extractDecimalMetric(metricsInfo, routeName, "CamelExchangesFailuresHandled_total")
                 .getValue()
                 .intValue();
     }
 
-    public static List<MetricsHolder<Double>> extractDecimalMetrics(String content,
-            String routeId,
-            String metricName) {
+    public static List<MetricsHolder<Double>> extractDecimalMetrics(String content, String routeId, String metricName) {
         List<String> metricRows = extractMetricRowsFromStringContent(content, routeId, metricName);
         List<MetricsHolder<Double>> metrics = extractDecimalMetricsFromMetricRows(metricRows);
         if (metrics.size() == 0) {
-            throw new RuntimeException(String.format("MetricsForTest is not found. MetricsForTest: %s RouteId: %s",
-                                                     metricName,
-                                                     routeId));
+            throw new IllegalStateException(String.format("MetricsForTest is not found. MetricsForTest: %s RouteId: %s",
+                                                          metricName,
+                                                          routeId));
         }
         return metrics;
     }
 
-    public static MetricsHolder<Double> extractDecimalMetric(String content,
-            String routeId,
-            String metricName) {
+    public static MetricsHolder<Double> extractDecimalMetric(String content, String routeId, String metricName) {
         List<MetricsHolder<Double>> metrics = extractDecimalMetrics(content, routeId, metricName);
         if (metrics.size() != 1) {
             throw new RuntimeException(String.format(
@@ -102,8 +92,7 @@ public class MetricsTestUtils {
                 .toArray(new Double[]{});
     }
 
-    public static List<String> extractTagValuesFromMetricRows(List<String> metricRows,
-            String tag) {
+    public static List<String> extractTagValuesFromMetricRows(List<String> metricRows, String tag) {
         List<String> tagValues = new ArrayList<>();
         for (String metricRow : metricRows) {
             tagValues.add(StringUtils.substringBetween(metricRow, tag + "=\"", "\""));
@@ -111,9 +100,7 @@ public class MetricsTestUtils {
         return tagValues;
     }
 
-    public static List<String> extractMetricRowsFromStringContent(String content,
-            String routeId,
-            String metricName) {
+    public static List<String> extractMetricRowsFromStringContent(String content, String routeId, String metricName) {
         String preparedMetricName =
                 metricName.endsWith(START_TAG_BODY_SYMBOL) ? metricName : metricName + START_TAG_BODY_SYMBOL;
         String[] splitContent = content.split("\n");
