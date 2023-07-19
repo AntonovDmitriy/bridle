@@ -13,6 +13,8 @@ import static org.apache.camel.component.rest.RestConstants.HTTP_RESPONSE_CODE;
 public class HttpConsumerToProducerRoute extends GenericHttpConsumerRoute {
 
     public static final String PROCESSING_AFTER_CONSUMER = "direct:processingAfterConsumer";
+
+    public static final String PROCESSING_AFTER_PRODUCER = "direct:processingAfterProducer";
     private final HttpConsumerToProducerRouteParams routeParams;
 
 
@@ -45,12 +47,15 @@ public class HttpConsumerToProducerRoute extends GenericHttpConsumerRoute {
 
         ProcessingBuilder.addProcessing(from(PROCESSING_AFTER_CONSUMER),
                 routeParams.afterConsumerProcessingParams(), "processingAfterConsumer");
+        ProcessingBuilder.addProcessing(from(PROCESSING_AFTER_PRODUCER),
+                routeParams.afterProducerProcessingParams(), "processingAfterProducer");
 
         from("direct:process")
             .routeId(routeParams.routeId())
             .setHeader(CONTENT_TYPE, constant(restConfiguration.getContentType()))
             .to(PROCESSING_AFTER_CONSUMER)
             .to(routeParams.mainProducer())
+            .to(PROCESSING_AFTER_PRODUCER)
             .to(routeParams.successResponseBuilder())
             .log(LOG_BODY);
     }

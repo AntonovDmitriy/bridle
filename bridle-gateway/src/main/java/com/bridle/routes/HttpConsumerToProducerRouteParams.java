@@ -8,7 +8,8 @@ public record HttpConsumerToProducerRouteParams(String routeId,
                                                 EndpointProducerBuilder successResponseBuilder,
                                                 EndpointProducerBuilder errorResponseBuilder,
                                                 EndpointProducerBuilder validationErrorResponseBuilder,
-                                                ProcessingParams afterConsumerProcessingParams) {
+                                                ProcessingParams afterConsumerProcessingParams,
+                                                ProcessingParams afterProducerProcessingParams) {
     public HttpConsumerToProducerRouteParams {
         Validate.notEmpty(routeId);
         Validate.notNull(mainProducer);

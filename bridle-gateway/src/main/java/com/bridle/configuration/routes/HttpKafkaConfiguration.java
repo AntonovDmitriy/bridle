@@ -47,6 +47,7 @@ public class HttpKafkaConfiguration {
                                             ErrorHandlerFactory errorHandlerFactory,
                                             HttpConsumerConfiguration httpConsumerConfiguration,
                                             @Autowired(required = false) @Qualifier("afterConsumer") ProcessingParams processingAfterConsumerParams,
+                                            @Autowired(required = false) @Qualifier("afterProducer") ProcessingParams processingAfterProducerParams,
                                             @Qualifier("successResponseBuilder") EndpointProducerBuilder successResponseBuilder,
                                             @Qualifier("errorResponseBuilder") EndpointProducerBuilder errorResponseBuilder,
                                             @Qualifier("validationErrorResponseBuilder") EndpointProducerBuilder validationErrorResponseBuilder) {
@@ -58,6 +59,7 @@ public class HttpKafkaConfiguration {
                         successResponseBuilder,
                         errorResponseBuilder,
                         validationErrorResponseBuilder,
-                        processingAfterConsumerParams));
+                        processingAfterConsumerParams,
+                        processingAfterProducerParams));
     }
 }
