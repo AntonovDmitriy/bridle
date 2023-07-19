@@ -17,7 +17,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.MockServerContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
+import utils.MockServerContainerUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -32,12 +32,7 @@ import static org.mockserver.model.HttpResponse.response;
 public class LoadFreemarkerHttpRouteTest {
 
     @Container
-    public static MockServerContainer mockServer = new MockServerContainer(DockerImageName
-                                                                                   .parse("mockserver/mockserver")
-                                                                                   .withTag("mockserver-" +
-                                                                                                    MockServerClient.class
-                                                                                                            .getPackage()
-                                                                                                            .getImplementationVersion()));
+    public static MockServerContainer mockServer = MockServerContainerUtils.createMockServerContainer();
 
     @Autowired
     private ProducerTemplate producerTemplate;

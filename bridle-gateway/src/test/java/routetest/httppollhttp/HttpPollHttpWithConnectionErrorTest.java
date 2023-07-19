@@ -19,7 +19,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.MockServerContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
+import utils.MockServerContainerUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -43,20 +43,10 @@ public class HttpPollHttpWithConnectionErrorTest {
     private static final HttpRequest POLL_SERVER_REQUEST = request().withMethod("GET").withPath("/salary");
 
     @Container
-    public static MockServerContainer mockPollServer = new MockServerContainer(DockerImageName
-                                                                                       .parse("mockserver/mockserver")
-                                                                                       .withTag("mockserver-" +
-                                                                                                        MockServerClient.class
-                                                                                                                .getPackage()
-                                                                                                                .getImplementationVersion()));
+    public static MockServerContainer mockPollServer = MockServerContainerUtils.createMockServerContainer();
 
     @Container
-    public static MockServerContainer mockCallServer = new MockServerContainer(DockerImageName
-                                                                                       .parse("mockserver/mockserver")
-                                                                                       .withTag("mockserver-" +
-                                                                                                        MockServerClient.class
-                                                                                                                .getPackage()
-                                                                                                                .getImplementationVersion()));
+    public static MockServerContainer mockCallServer = MockServerContainerUtils.createMockServerContainer();
 
     @Autowired
     private CamelContext context;

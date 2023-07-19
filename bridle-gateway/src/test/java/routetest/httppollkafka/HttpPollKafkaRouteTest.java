@@ -18,6 +18,7 @@ import org.testcontainers.containers.MockServerContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
+import utils.MockServerContainerUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -39,12 +40,7 @@ public class HttpPollKafkaRouteTest {
             new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"));
 
     @Container
-    public static MockServerContainer mockPollServer = new MockServerContainer(DockerImageName
-                                                                                       .parse("mockserver/mockserver")
-                                                                                       .withTag("mockserver-" +
-                                                                                                        MockServerClient.class
-                                                                                                                .getPackage()
-                                                                                                                .getImplementationVersion()));
+    public static MockServerContainer mockPollServer = MockServerContainerUtils.createMockServerContainer();
 
     @Autowired
     private CamelContext context;
