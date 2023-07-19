@@ -1,7 +1,7 @@
 package com.bridle.configuration.routes;
 
-import com.bridle.configuration.common.errorhandling.ErrorHandlerConfiguration;
 import com.bridle.configuration.common.consumer.KafkaInConfiguration;
+import com.bridle.configuration.common.errorhandling.ErrorHandlerConfiguration;
 import com.bridle.configuration.common.producer.KafkaOutConfiguration;
 import com.bridle.configuration.common.producer.RestCallConfiguration;
 import com.bridle.properties.HttpProducerConfiguration;

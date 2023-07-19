@@ -37,7 +37,7 @@ public class HttpPollConfiguration {
 
     @Bean
     public EndpointProducerBuilder restPollBuilder(@Qualifier("restPollConfiguration")
-                                                     HttpProducerConfiguration configuration) {
+                                                   HttpProducerConfiguration configuration) {
         EndpointProducerBuilder result = http(REST_POLL_COMPONENT_NAME, configuration.createHttpUrl());
         configuration.getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(result::doSetProperty));

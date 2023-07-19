@@ -39,29 +39,23 @@ public class AfterConsumerProcessingConfiguration {
 
     public static final String POSTFIX = "AfterConsumer";
     public static final String CONFIGURATION_POSTFIX = "Configuration";
-    private static final String VALIDATOR_AFTER_CONSUMER_COMPONENT_NAME = VALIDATOR_COMPONENT_NAME + POSTFIX;
-    public static final String VALIDATOR_AFTER_CONSUMER_BUILDER = VALIDATOR_AFTER_CONSUMER_COMPONENT_NAME + "Builder";
-
-    public static final String JSON_VALIDATOR_AFTER_CONSUMER_CONFIGURATION = VALIDATOR_AFTER_CONSUMER_COMPONENT_NAME + CONFIGURATION_POSTFIX;
     public static final String JSON_VALIDATOR_AFTER_CONSUMER_CONFIGURATION_PATH = PROCESSING_AFTER_CONSUMER + "validation";
-
     public static final String CONVERT_BODY_CONFIGURATION_PATH = PROCESSING_AFTER_CONSUMER + "convert-body";
     public static final String CONVERT_BODY_NAME = "convertBody" + POSTFIX;
-
     public static final String HEADER_COLLECTOR_AFTER_CONSUMER_COMPONENT_NAME = HEADER_COLLECTOR_COMPONENT_NAME + POSTFIX;
     public static final String HEADER_COLLECTOR_AFTER_CONSUMER_CONFIGURATION = HEADER_COLLECTOR_AFTER_CONSUMER_COMPONENT_NAME + CONFIGURATION_POSTFIX;
     public static final String HEADER_COLLECTOR_AFTER_CONSUMER_CONFIGURATION_PATH = PROCESSING_AFTER_CONSUMER + "header-collector";
-
     public static final String UNMARSHALLING_FORMAT_AFTER_CONSUMER_CONFIGURATION_PATH = PROCESSING_AFTER_CONSUMER + "unmarshalling-data-format";
     public static final String UNMARSHALLING_FORMAT_AFTER_CONSUMER_NAME = "unmarshallingBody" + POSTFIX;
-
+    public static final String FREEMARKER_AFTER_CONSUMER_CONFIGURATION_PATH = PROCESSING_AFTER_CONSUMER + "transform";
+    public static final String MARSHALLING_FORMAT_AFTER_CONSUMER_CONFIGURATION_PATH = PROCESSING_AFTER_CONSUMER + "marshalling-data-format";
+    public static final String MARSHALLING_FORMAT_AFTER_CONSUMER_NAME = "marshallingBody" + POSTFIX;
+    private static final String VALIDATOR_AFTER_CONSUMER_COMPONENT_NAME = VALIDATOR_COMPONENT_NAME + POSTFIX;
+    public static final String VALIDATOR_AFTER_CONSUMER_BUILDER = VALIDATOR_AFTER_CONSUMER_COMPONENT_NAME + "Builder";
+    public static final String JSON_VALIDATOR_AFTER_CONSUMER_CONFIGURATION = VALIDATOR_AFTER_CONSUMER_COMPONENT_NAME + CONFIGURATION_POSTFIX;
     private static final String FREEMARKER_AFTER_CONSUMER_COMPONENT_NAME = "freemarker" + POSTFIX;
     public static final String FREEMARKER_AFTER_CONSUMER_BUILDER = FREEMARKER_AFTER_CONSUMER_COMPONENT_NAME + "Builder";
     public static final String FREEMARKER_AFTER_CONSUMER_CONFIGURATION = FREEMARKER_AFTER_CONSUMER_COMPONENT_NAME + CONFIGURATION_POSTFIX;
-    public static final String FREEMARKER_AFTER_CONSUMER_CONFIGURATION_PATH = PROCESSING_AFTER_CONSUMER + "transform";
-
-    public static final String MARSHALLING_FORMAT_AFTER_CONSUMER_CONFIGURATION_PATH = PROCESSING_AFTER_CONSUMER + "marshalling-data-format";
-    public static final String MARSHALLING_FORMAT_AFTER_CONSUMER_NAME = "marshallingBody" + POSTFIX;
 
     // Validation
     @ConditionalOnProperty(value = JSON_VALIDATOR_AFTER_CONSUMER_CONFIGURATION_PATH + ".format", havingValue = "json-schema")
@@ -98,7 +92,7 @@ public class AfterConsumerProcessingConfiguration {
 
     // convert body
 
-    @ConditionalOnProperty(value = CONVERT_BODY_CONFIGURATION_PATH)
+    @ConditionalOnProperty(value = CONVERT_BODY_CONFIGURATION_PATH + ".type")
     @ConfigurationProperties(prefix = CONVERT_BODY_CONFIGURATION_PATH)
     @Bean(CONVERT_BODY_NAME)
     public ConvertBodyDefinition convertBodyAfterConsumer() {
@@ -108,7 +102,7 @@ public class AfterConsumerProcessingConfiguration {
     // header collector
 
     @ConfigurationProperties(prefix = HEADER_COLLECTOR_AFTER_CONSUMER_CONFIGURATION_PATH)
-    @ConditionalOnProperty(HEADER_COLLECTOR_AFTER_CONSUMER_CONFIGURATION_PATH)
+    @ConditionalOnProperty(HEADER_COLLECTOR_AFTER_CONSUMER_CONFIGURATION_PATH + ".expression-format")
     @Bean(HEADER_COLLECTOR_AFTER_CONSUMER_CONFIGURATION)
     public FacadeHeaderCollectorConfiguration headerCollectorAfterConsumerConfiguration() {
         return new FacadeHeaderCollectorConfiguration();

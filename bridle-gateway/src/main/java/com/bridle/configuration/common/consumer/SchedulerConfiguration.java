@@ -1,11 +1,9 @@
 package com.bridle.configuration.common.consumer;
 
 import com.bridle.properties.SchedulerConsumerConfiguration;
-import com.bridle.properties.ValidatedKafkaProducerConfiguration;
 import com.bridle.utils.ComponentCustomizerImpl;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.EndpointConsumerBuilder;
-import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.apache.camel.component.scheduler.SchedulerComponent;
 import org.apache.camel.spi.ComponentCustomizer;
@@ -13,9 +11,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 
-import static com.bridle.configuration.common.ComponentNameConstants.KAFKA_OUT_COMPONENT_NAME;
 import static com.bridle.configuration.common.ComponentNameConstants.SCHEDULER_COMPONENT_NAME;
-import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.kafka;
 
 public class SchedulerConfiguration {
 

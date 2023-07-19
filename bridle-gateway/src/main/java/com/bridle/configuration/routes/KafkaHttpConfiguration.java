@@ -1,8 +1,8 @@
 package com.bridle.configuration.routes;
 
 import com.bridle.configuration.common.ComponentNameConstants;
-import com.bridle.configuration.common.errorhandling.ErrorHandlerConfiguration;
 import com.bridle.configuration.common.consumer.KafkaInConfiguration;
+import com.bridle.configuration.common.errorhandling.ErrorHandlerConfiguration;
 import com.bridle.configuration.common.producer.RestCallConfiguration;
 import com.bridle.properties.HttpProducerConfiguration;
 import com.bridle.properties.ValidatedKafkaConsumerConfiguration;

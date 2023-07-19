@@ -1,9 +1,9 @@
 package com.bridle.configuration.routes;
 
+import com.bridle.configuration.common.consumer.SchedulerConfiguration;
 import com.bridle.configuration.common.errorhandling.ErrorHandlerConfiguration;
 import com.bridle.configuration.common.producer.HttpPollConfiguration;
 import com.bridle.configuration.common.producer.KafkaOutConfiguration;
-import com.bridle.configuration.common.consumer.SchedulerConfiguration;
 import com.bridle.properties.HttpProducerConfiguration;
 import com.bridle.properties.SchedulerConsumerConfiguration;
 import com.bridle.properties.ValidatedKafkaProducerConfiguration;

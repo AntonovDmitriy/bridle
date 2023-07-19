@@ -1,12 +1,10 @@
 package com.bridle.routes;
 
 import org.apache.camel.ErrorHandlerFactory;
-import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.ValidationException;
 
 import static com.bridle.configuration.common.ComponentNameConstants.REDELIVERY_POLICY;
-import static org.apache.camel.component.rest.RestConstants.HTTP_RESPONSE_CODE;
 
 public class ConsumerToDoubleProducerRoute extends BaseRouteBuilder {
 

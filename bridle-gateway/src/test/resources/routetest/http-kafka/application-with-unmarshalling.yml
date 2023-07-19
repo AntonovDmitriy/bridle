@@ -29,10 +29,12 @@ redelivery-policy:
   retry-attempted-log-level: "WARN"
 error-handler:
   redelivery-policy-ref: "redelivery-policy"
-main-freemarker:
-  resource-uri: "/routetest/http-kafka/transform-with-unmarshalling.tmpl"
-inbound-data-format:
-  data-format-name: "json"
+processing:
+  after-consumer:
+    transform:
+      resource-uri: "/routetest/http-kafka/transform-with-unmarshalling.tmpl"
+    unmarshalling-data-format":
+      data-format-name: "json"
 rest-in:
   clientRequestValidation: "true"
   component: "servlet"

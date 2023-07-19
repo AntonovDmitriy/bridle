@@ -5,7 +5,6 @@ import org.apache.camel.ErrorHandlerFactory;
 import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.ValidationException;
-import org.apache.camel.model.RouteDefinition;
 
 import static com.bridle.configuration.common.ComponentNameConstants.REDELIVERY_POLICY;
 import static org.apache.camel.component.rest.RestConstants.CONTENT_TYPE;
@@ -13,6 +12,7 @@ import static org.apache.camel.component.rest.RestConstants.HTTP_RESPONSE_CODE;
 
 public class HttpConsumerToProducerRoute extends GenericHttpConsumerRoute {
 
+    public static final String PROCESSING_AFTER_CONSUMER = "direct:processingAfterConsumer";
     private final HttpConsumerToProducerRouteParams routeParams;
 
 
@@ -43,40 +43,15 @@ public class HttpConsumerToProducerRoute extends GenericHttpConsumerRoute {
                 .to(routeParams.validationErrorResponseBuilder())
                 .log(LOG_BODY);
 
-        RouteDefinition routeDefinition = from("direct:process")
-                .routeId(routeParams.routeId())
-                .setHeader(CONTENT_TYPE, constant(restConfiguration.getContentType()));
+        ProcessingBuilder.addProcessing(from(PROCESSING_AFTER_CONSUMER),
+                routeParams.afterConsumerProcessingParams(), "processingAfterConsumer");
 
-        if (routeParams.convertBody() != null) {
-            routeDefinition.addOutput(routeParams.convertBody());
-        }
-
-        if (routeParams.inboundValidator() != null) {
-            routeDefinition.to(routeParams.inboundValidator());
-        }
-
-        if (routeParams.headerCollector() != null) {
-            routeDefinition.process(routeParams.headerCollector());
-        }
-
-        if (routeParams.beforeTransformDataFormatDefinition() != null) {
-            routeDefinition.unmarshal(routeParams.beforeTransformDataFormatDefinition());
-        }
-
-        if (routeParams.transform() != null) {
-            routeDefinition.to(routeParams.transform());
-        }
-
-        if (routeParams.afterTransformDataFormatDefinition() != null) {
-            routeDefinition.marshal(routeParams.afterTransformDataFormatDefinition());
-        }
-
-        if (routeParams.mainProducer() != null) {
-            routeDefinition.to(routeParams.mainProducer());
-        }
-
-        routeDefinition
-                .to(routeParams.successResponseBuilder())
-                .log(LOG_BODY);
+        from("direct:process")
+            .routeId(routeParams.routeId())
+            .setHeader(CONTENT_TYPE, constant(restConfiguration.getContentType()))
+            .to(PROCESSING_AFTER_CONSUMER)
+            .to(routeParams.mainProducer())
+            .to(routeParams.successResponseBuilder())
+            .log(LOG_BODY);
     }
 }

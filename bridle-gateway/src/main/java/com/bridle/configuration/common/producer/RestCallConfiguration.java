@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 
 import static com.bridle.configuration.common.ComponentNameConstants.REST_CALL_COMPONENT_NAME;
-import static com.bridle.configuration.common.ComponentNameConstants.REST_POLL_COMPONENT_NAME;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.http;
 
 public class RestCallConfiguration {
