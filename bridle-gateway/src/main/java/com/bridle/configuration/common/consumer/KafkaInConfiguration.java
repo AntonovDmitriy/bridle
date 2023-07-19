@@ -26,7 +26,7 @@ public class KafkaInConfiguration {
     @Lazy
     @Bean
     public ComponentCustomizer configureKafkaComponent(CamelContext context,
-                                                       ValidatedKafkaConsumerConfiguration componentConfiguration) {
+            ValidatedKafkaConsumerConfiguration componentConfiguration) {
         return new ComponentCustomizerImpl(context,
                                            componentConfiguration,
                                            ComponentNameConstants.KAFKA_IN_COMPONENT_NAME);

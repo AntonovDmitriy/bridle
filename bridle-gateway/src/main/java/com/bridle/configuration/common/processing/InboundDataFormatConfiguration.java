@@ -10,14 +10,16 @@ import org.springframework.context.annotation.Bean;
 public class InboundDataFormatConfiguration {
 
     @ConfigurationProperties(prefix = "inbound-data-format")
-    @ConditionalOnProperty(name = "inbound-data-format.data-format-name", havingValue = "json")
+    @ConditionalOnProperty(name = "inbound-data-format.data-format-name",
+            havingValue = "json")
     @Bean("inboundDataFormat")
     public DataFormatDefinition jsonDataFormat() {
         return new JsonDataFormat();
     }
 
     @ConfigurationProperties(prefix = "inbound-data-format")
-    @ConditionalOnProperty(name = "inbound-data-format.data-format-name", havingValue = "xml")
+    @ConditionalOnProperty(name = "inbound-data-format.data-format-name",
+            havingValue = "xml")
     @Bean("inboundDataFormat")
     public DataFormatDefinition xmlDataFormat() {
         return new JacksonXMLDataFormat();

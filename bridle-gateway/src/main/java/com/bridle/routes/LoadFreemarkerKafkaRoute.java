@@ -16,9 +16,9 @@ public class LoadFreemarkerKafkaRoute extends BaseRouteBuilder {
 
 
     public LoadFreemarkerKafkaRoute(ErrorHandlerFactory errorHandlerFactory,
-                                    EndpointConsumerBuilder scheduler,
-                                    EndpointProducerBuilder freemarker,
-                                    EndpointProducerBuilder kafkaOut) {
+            EndpointConsumerBuilder scheduler,
+            EndpointProducerBuilder freemarker,
+            EndpointProducerBuilder kafkaOut) {
         super(errorHandlerFactory);
         this.scheduler = scheduler;
         this.freemarker = freemarker;
@@ -29,6 +29,9 @@ public class LoadFreemarkerKafkaRoute extends BaseRouteBuilder {
     public void configure() throws Exception {
         super.configure();
 
-        from(scheduler).routeId(LOAD_FREEMARKER_KAFKA).to(freemarker).log("Request: ${body}").to(kafkaOut);
+        from(scheduler).routeId(LOAD_FREEMARKER_KAFKA)
+                .to(freemarker)
+                .log("Request: ${body}")
+                .to(kafkaOut);
     }
 }

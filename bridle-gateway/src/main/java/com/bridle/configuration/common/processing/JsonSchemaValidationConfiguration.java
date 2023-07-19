@@ -18,7 +18,8 @@ import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.jsonValid
 
 public class JsonSchemaValidationConfiguration {
 
-    @ConditionalOnProperty(value = "inbound-validation.format", havingValue = "json-schema")
+    @ConditionalOnProperty(value = "inbound-validation.format",
+            havingValue = "json-schema")
     @ConfigurationProperties(prefix = "inbound-validation." + VALIDATOR_COMPONENT_NAME)
     @Bean
     public JsonSchemaValidatorConfiguration jsonValidatorConfiguration() {
@@ -45,7 +46,7 @@ public class JsonSchemaValidationConfiguration {
     @Bean
     @ConditionalOnBean(name = "jsonValidatorConfiguration")
     public ComponentCustomizer configureJsonValidatorComponent(CamelContext context,
-                                                               JsonSchemaValidatorConfiguration componentConfiguration) {
+            JsonSchemaValidatorConfiguration componentConfiguration) {
         return new ComponentCustomizerImpl(context, componentConfiguration, VALIDATOR_COMPONENT_NAME);
     }
 

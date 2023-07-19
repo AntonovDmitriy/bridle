@@ -24,7 +24,7 @@ public class HeaderCollectorConfiguration {
 
     @Bean(name = ComponentNameConstants.HEADER_COLLECTOR_COMPONENT_NAME)
     public Processor kafkaInComponent(FacadeHeaderCollectorConfiguration configuration,
-                                      ValuesCollectorFactory valuesCollectorFactory) {
+            ValuesCollectorFactory valuesCollectorFactory) {
         return new FacadeHeadersCollector(valuesCollectorFactory, configuration);
     }
 

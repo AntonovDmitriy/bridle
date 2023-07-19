@@ -12,14 +12,13 @@ import java.util.Map;
  */
 public class SingletonHeaderCollectorsFactory implements ValuesCollectorFactory {
 
-    @SuppressWarnings("rawtypes")
-    private final Map<ExpressionFormat, ValuesCollector> collectorsByMessageFormat =
+    @SuppressWarnings("rawtypes") private final Map<ExpressionFormat, ValuesCollector> collectorsByMessageFormat =
             new EnumMap<>(ExpressionFormat.class);
 
     @SuppressWarnings("rawtypes")
     @Override
     public ValuesCollector createValuesCollector(ExpressionFormat messageFormat,
-                                                 Map<String, String> queryExpressionsByHeaderName) {
+            Map<String, String> queryExpressionsByHeaderName) {
         checkMessageFormat(messageFormat);
         ValuesCollector result = collectorsByMessageFormat.get(messageFormat);
         if (result == null) {
@@ -44,7 +43,7 @@ public class SingletonHeaderCollectorsFactory implements ValuesCollectorFactory 
 
     @SuppressWarnings("rawtypes")
     private ValuesCollector createValuesCollectorForMessageFormat(ExpressionFormat expressionFormat,
-                                                                  Map<String, String> queryExpressionsByHeaderName) {
+            Map<String, String> queryExpressionsByHeaderName) {
         return switch (expressionFormat) {
             case XPATH -> new XpathXmlValuesCollector(queryExpressionsByHeaderName);
             case JSON -> new JsonValuesCollector(queryExpressionsByHeaderName);

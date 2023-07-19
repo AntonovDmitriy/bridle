@@ -17,9 +17,9 @@ public class KafkaHttpKafkaRoute extends BaseRouteBuilder {
 
 
     public KafkaHttpKafkaRoute(ErrorHandlerFactory errorHandlerFactory,
-                               EndpointConsumerBuilder kafkaIn,
-                               EndpointProducerBuilder restCall,
-                               EndpointProducerBuilder kafkaOut) {
+            EndpointConsumerBuilder kafkaIn,
+            EndpointProducerBuilder restCall,
+            EndpointProducerBuilder kafkaOut) {
         super(errorHandlerFactory);
         this.kafkaIn = kafkaIn;
         this.restCall = restCall;

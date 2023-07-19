@@ -20,8 +20,8 @@ public class HttpConsumerToProducerRoute extends GenericHttpConsumerRoute {
 
 
     public HttpConsumerToProducerRoute(ErrorHandlerFactory errorHandlerFactory,
-                                       HttpConsumerConfiguration restConfiguration,
-                                       HttpConsumerToProducerRouteParams routeParams) {
+            HttpConsumerConfiguration restConfiguration,
+            HttpConsumerToProducerRouteParams routeParams) {
         super(errorHandlerFactory, restConfiguration);
         this.routeParams = routeParams;
     }

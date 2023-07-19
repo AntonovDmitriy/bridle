@@ -26,20 +26,18 @@ import static com.bridle.configuration.routes.HttpPollHttpConfiguration.GATEWAY_
 @Import({SchedulerConfiguration.class, HttpPollConfiguration.class, RestCallConfiguration.class,
         ErrorHandlerConfiguration.class, AfterConsumerProcessingConfiguration.class,
         AfterProducerProcessingConfiguration.class})
-@ConditionalOnProperty(name = "gateway.type", havingValue = GATEWAY_TYPE_HTTP_POLL_HTTP)
-public class HttpPollHttpConfiguration {
+@ConditionalOnProperty(name = "gateway.type",
+        havingValue = GATEWAY_TYPE_HTTP_POLL_HTTP) public class HttpPollHttpConfiguration {
 
     public static final String GATEWAY_TYPE_HTTP_POLL_HTTP = "http-poll-http";
 
     @Bean
     public RouteBuilder httpPollHttpRoute(ErrorHandlerFactory errorHandlerFactory,
-                                          EndpointConsumerBuilder scheduler,
-                                          @Autowired(required = false) @Qualifier("afterConsumer")
-                                          ProcessingParams processingAfterConsumerParams,
-                                          @Autowired(required = false) @Qualifier("afterProducer")
-                                          ProcessingParams processingAfterProducerParams,
-                                          @Qualifier("restPollBuilder") EndpointProducerBuilder restPoll,
-                                          @Qualifier("restCallBuilder") EndpointProducerBuilder restCall) {
+            EndpointConsumerBuilder scheduler,
+            @Autowired(required = false) @Qualifier("afterConsumer") ProcessingParams processingAfterConsumerParams,
+            @Autowired(required = false) @Qualifier("afterProducer") ProcessingParams processingAfterProducerParams,
+            @Qualifier("restPollBuilder") EndpointProducerBuilder restPoll,
+            @Qualifier("restCallBuilder") EndpointProducerBuilder restCall) {
 
         return new ConsumerToDoubleProducerRoute(errorHandlerFactory,
                                                  new ConsumerToDoubleProducerRouteParams(GATEWAY_TYPE_HTTP_POLL_HTTP,

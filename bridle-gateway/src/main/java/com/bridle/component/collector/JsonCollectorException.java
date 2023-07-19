@@ -9,7 +9,8 @@ public class JsonCollectorException extends RuntimeException {
         super(message);
     }
 
-    public JsonCollectorException(String message, Throwable cause) {
+    public JsonCollectorException(String message,
+            Throwable cause) {
         super(message, cause);
     }
 }

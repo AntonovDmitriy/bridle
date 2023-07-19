@@ -28,25 +28,25 @@ import static org.mockserver.model.HttpResponse.response;
 @TestPropertySource(properties = {"spring.config.location=classpath:routetest/load-freemarker-http/application.yml"})
 @CamelSpringBootTest @DirtiesContext @Testcontainers public class LoadFreemarkerHttpRouteTest {
 
-    @Container
-    public static MockServerContainer mockServer =
+    @Container public static MockServerContainer mockServer =
             new MockServerContainer(DockerImageName.parse("mockserver/mockserver")
                                             .withTag("mockserver-" + MockServerClient.class.getPackage()
                                                     .getImplementationVersion()));
 
-    @Autowired
-    private ProducerTemplate producerTemplate;
+    @Autowired private ProducerTemplate producerTemplate;
 
-    @Autowired
-    private CamelContext context;
+    @Autowired private CamelContext context;
 
     @BeforeAll
     public static void setUp() throws Exception {
         mockServer.start();
-        System.setProperty("rest-call.port", mockServer.getServerPort().toString());
+        System.setProperty("rest-call.port",
+                           mockServer.getServerPort()
+                                   .toString());
 
         var mockServerClient = new MockServerClient(mockServer.getHost(), mockServer.getServerPort());
-        mockServerClient.when(request().withMethod("POST").withPath("/person"))
+        mockServerClient.when(request().withMethod("POST")
+                                      .withPath("/person"))
                 .respond(response("OK").withStatusCode(200));
 
     }
@@ -59,7 +59,8 @@ import static org.mockserver.model.HttpResponse.response;
     @Test
     void verifySuccessLoadFreemarkerHttpScenario() throws Exception {
 
-        NotifyBuilder notify = new NotifyBuilder(context).whenExactlyCompleted(5).create();
+        NotifyBuilder notify = new NotifyBuilder(context).whenExactlyCompleted(5)
+                .create();
 
         boolean done = notify.matches(10, TimeUnit.SECONDS);
         Assertions.assertTrue(done);

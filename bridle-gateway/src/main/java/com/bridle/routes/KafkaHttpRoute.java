@@ -13,8 +13,8 @@ public class KafkaHttpRoute extends BaseRouteBuilder {
     private final EndpointProducerBuilder restCall;
 
     public KafkaHttpRoute(ErrorHandlerFactory errorHandlerFactory,
-                          EndpointConsumerBuilder kafkaIn,
-                          EndpointProducerBuilder restCall) {
+            EndpointConsumerBuilder kafkaIn,
+            EndpointProducerBuilder restCall) {
         super(errorHandlerFactory);
         this.kafkaIn = kafkaIn;
         this.restCall = restCall;
@@ -24,6 +24,9 @@ public class KafkaHttpRoute extends BaseRouteBuilder {
     public void configure() throws Exception {
         super.configure();
 
-        from(kafkaIn).routeId(GATEWAY_TYPE_KAFKA_HTTP).log("Request: ${body}").to(restCall).log("Response ${body}");
+        from(kafkaIn).routeId(GATEWAY_TYPE_KAFKA_HTTP)
+                .log("Request: ${body}")
+                .to(restCall)
+                .log("Response ${body}");
     }
 }

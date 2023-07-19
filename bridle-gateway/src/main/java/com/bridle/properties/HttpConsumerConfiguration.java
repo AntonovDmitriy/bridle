@@ -12,17 +12,13 @@ import java.util.List;
 
 @Validated public class HttpConsumerConfiguration extends RestConfiguration {
 
-    @NotEmpty
-    private List<GenericVerbDefinition> routes;
+    @NotEmpty private List<GenericVerbDefinition> routes;
 
-    @NotEmpty
-    private String contentType = "application/json";
+    @NotEmpty private String contentType = "application/json";
 
-    @Positive
-    private int errorHttpResponseCode = 500;
+    @Positive private int errorHttpResponseCode = 500;
 
-    @Positive
-    private int validationErrorHttpResponseCode = 400;
+    @Positive private int validationErrorHttpResponseCode = 400;
 
     public List<GenericVerbDefinition> getRoutes() {
         return routes;

@@ -26,20 +26,18 @@ import static com.bridle.configuration.routes.HttpPollKafkaConfiguration.GATEWAY
 @Import({SchedulerConfiguration.class, HttpPollConfiguration.class, KafkaOutConfiguration.class,
         ErrorHandlerConfiguration.class, AfterConsumerProcessingConfiguration.class,
         AfterProducerProcessingConfiguration.class})
-@ConditionalOnProperty(name = "gateway.type", havingValue = GATEWAY_TYPE_HTTP_POLL_KAFKA)
-public class HttpPollKafkaConfiguration {
+@ConditionalOnProperty(name = "gateway.type",
+        havingValue = GATEWAY_TYPE_HTTP_POLL_KAFKA) public class HttpPollKafkaConfiguration {
 
     public static final String GATEWAY_TYPE_HTTP_POLL_KAFKA = "http-poll-kafka";
 
     @Bean
     public RouteBuilder httpPollHttpRoute(ErrorHandlerFactory errorHandlerFactory,
-                                          EndpointConsumerBuilder scheduler,
-                                          @Qualifier("kafkaOutBuilder") EndpointProducerBuilder kafkaOut,
-                                          @Qualifier("restPollBuilder") EndpointProducerBuilder restPoll,
-                                          @Autowired(required = false) @Qualifier("afterConsumer")
-                                          ProcessingParams processingAfterConsumerParams,
-                                          @Autowired(required = false) @Qualifier("afterProducer")
-                                          ProcessingParams processingAfterProducerParams) {
+            EndpointConsumerBuilder scheduler,
+            @Qualifier("kafkaOutBuilder") EndpointProducerBuilder kafkaOut,
+            @Qualifier("restPollBuilder") EndpointProducerBuilder restPoll,
+            @Autowired(required = false) @Qualifier("afterConsumer") ProcessingParams processingAfterConsumerParams,
+            @Autowired(required = false) @Qualifier("afterProducer") ProcessingParams processingAfterProducerParams) {
         return new ConsumerToDoubleProducerRoute(errorHandlerFactory,
                                                  new ConsumerToDoubleProducerRouteParams(GATEWAY_TYPE_HTTP_POLL_KAFKA,
                                                                                          scheduler,

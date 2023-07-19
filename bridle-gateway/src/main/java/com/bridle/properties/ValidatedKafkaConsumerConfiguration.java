@@ -17,8 +17,7 @@ import static javax.validation.constraints.Pattern.Flag.CASE_INSENSITIVE;
 
     private Map<String, Object> endpointProperties;
 
-    @NotEmpty
-    private String topic;
+    @NotEmpty private String topic;
 
     @Override
     @NotEmpty
@@ -52,7 +51,8 @@ import static javax.validation.constraints.Pattern.Flag.CASE_INSENSITIVE;
     }
 
     @Override
-    @Pattern(regexp = "earliest|latest|fail", flags = {CASE_INSENSITIVE})
+    @Pattern(regexp = "earliest|latest|fail",
+            flags = {CASE_INSENSITIVE})
     public String getAutoOffsetReset() {
         return super.getAutoOffsetReset();
     }

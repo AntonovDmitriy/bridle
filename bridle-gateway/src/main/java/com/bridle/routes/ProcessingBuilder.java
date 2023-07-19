@@ -9,8 +9,8 @@ public class ProcessingBuilder {
     }
 
     public static RouteDefinition addProcessing(RouteDefinition route,
-                                                ProcessingParams processingParams,
-                                                String routeId) {
+            ProcessingParams processingParams,
+            String routeId) {
         Validate.notNull(route);
         Validate.notEmpty(routeId);
 

@@ -41,7 +41,8 @@ public class FreemarkerConfiguration {
     public EndpointProducerBuilder freemarkerTransformBuilder(
             @Qualifier("freemarkerConfiguration") FreemarkerProducerConfiguration configuration) {
         EndpointProducerBuilder result = freemarker(FREEMARKER_COMPONENT_NAME, configuration.getResourceUri());
-        configuration.getEndpointProperties().ifPresent(additional -> additional.forEach(result::doSetProperty));
+        configuration.getEndpointProperties()
+                .ifPresent(additional -> additional.forEach(result::doSetProperty));
         return result;
     }
 
@@ -49,8 +50,7 @@ public class FreemarkerConfiguration {
     @Bean
     @ConditionalOnBean(name = "freemarkerConfiguration")
     public ComponentCustomizer configureFreemarkerComponent(CamelContext context,
-                                                            @Qualifier("freemarkerConfiguration")
-                                                            FreemarkerProducerConfiguration componentConfiguration) {
+            @Qualifier("freemarkerConfiguration") FreemarkerProducerConfiguration componentConfiguration) {
         return new ComponentCustomizerImpl(context, componentConfiguration, FREEMARKER_COMPONENT_NAME);
     }
 

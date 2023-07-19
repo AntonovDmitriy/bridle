@@ -6,7 +6,8 @@ public class MetricsHolder<T> {
 
     private final String metricRow;
 
-    public MetricsHolder(String metricRow, T value) {
+    public MetricsHolder(String metricRow,
+            T value) {
         this.value = value;
         this.metricRow = metricRow;
     }

@@ -28,17 +28,16 @@ import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.http;
 @Configuration
 @Import({SchedulerConfiguration.class, RestCallConfiguration.class, FreemarkerConfiguration.class,
         ErrorHandlerConfiguration.class})
-@ConditionalOnProperty(name = "gateway.type", havingValue = LOAD_FREEMARKER_HTTP)
-public class LoadFreemarkerHttpConfiguration {
+@ConditionalOnProperty(name = "gateway.type",
+        havingValue = LOAD_FREEMARKER_HTTP) public class LoadFreemarkerHttpConfiguration {
 
     public static final String LOAD_FREEMARKER_HTTP = "load-freemarker-http";
 
     @Bean
     public RouteBuilder dataSetHttpRoute(ErrorHandlerFactory errorHandlerFactory,
-                                         @Qualifier("restCallConfiguration")
-                                         HttpProducerConfiguration restCallConfiguration,
-                                         FreemarkerProducerConfiguration freemarkerConfiguration,
-                                         SchedulerConsumerConfiguration schedulerConfiguration) {
+            @Qualifier("restCallConfiguration") HttpProducerConfiguration restCallConfiguration,
+            FreemarkerProducerConfiguration freemarkerConfiguration,
+            SchedulerConsumerConfiguration schedulerConfiguration) {
 
         EndpointConsumerBuilder scheduler =
                 StaticEndpointBuilders.scheduler(SCHEDULER_COMPONENT_NAME, SCHEDULER_COMPONENT_NAME);

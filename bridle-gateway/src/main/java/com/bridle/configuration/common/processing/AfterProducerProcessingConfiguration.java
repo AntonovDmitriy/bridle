@@ -85,7 +85,7 @@ public class AfterProducerProcessingConfiguration {
 
     // Validation
     @ConditionalOnProperty(value = JSON_VALIDATOR_AFTER_PRODUCER_CONFIGURATION_PATH + ".format",
-                           havingValue = "json-schema")
+            havingValue = "json-schema")
     @ConfigurationProperties(prefix = JSON_VALIDATOR_AFTER_PRODUCER_CONFIGURATION_PATH)
     @Bean(JSON_VALIDATOR_AFTER_PRODUCER_CONFIGURATION)
     public JsonSchemaValidatorConfiguration jsonValidatorAfterProducerConfiguration() {
@@ -101,7 +101,7 @@ public class AfterProducerProcessingConfiguration {
     @Bean(VALIDATOR_AFTER_PRODUCER_BUILDER)
     @ConditionalOnBean(name = JSON_VALIDATOR_AFTER_PRODUCER_CONFIGURATION)
     public EndpointProducerBuilder validatorBuilder(@Qualifier(JSON_VALIDATOR_AFTER_PRODUCER_CONFIGURATION)
-                                                    JsonSchemaValidatorConfiguration validatorConfiguration) {
+    JsonSchemaValidatorConfiguration validatorConfiguration) {
         EndpointProducerBuilder result =
                 jsonValidator(VALIDATOR_AFTER_PRODUCER_COMPONENT_NAME, validatorConfiguration.getResourceUri());
         validatorConfiguration.getEndpointProperties()
@@ -113,9 +113,8 @@ public class AfterProducerProcessingConfiguration {
     @Bean
     @ConditionalOnBean(name = JSON_VALIDATOR_AFTER_PRODUCER_CONFIGURATION)
     public ComponentCustomizer configureJsonValidatorAfterProducerComponent(CamelContext context,
-                                                                            @Qualifier(
-                                                                                    JSON_VALIDATOR_AFTER_PRODUCER_CONFIGURATION)
-                                                                            JsonSchemaValidatorConfiguration componentConfiguration) {
+            @Qualifier(JSON_VALIDATOR_AFTER_PRODUCER_CONFIGURATION)
+            JsonSchemaValidatorConfiguration componentConfiguration) {
         return new ComponentCustomizerImpl(context, componentConfiguration, VALIDATOR_AFTER_PRODUCER_COMPONENT_NAME);
     }
 
@@ -153,7 +152,7 @@ public class AfterProducerProcessingConfiguration {
     // format for unmarshalling
     @ConfigurationProperties(prefix = UNMARSHALLING_FORMAT_AFTER_PRODUCER_CONFIGURATION_PATH)
     @ConditionalOnProperty(name = UNMARSHALLING_FORMAT_AFTER_PRODUCER_CONFIGURATION_PATH + ".data-format-name",
-                           havingValue = "json")
+            havingValue = "json")
     @Bean(UNMARSHALLING_FORMAT_AFTER_PRODUCER_NAME)
     public DataFormatDefinition jsonDataFormat() {
         return new JsonDataFormat();
@@ -161,7 +160,7 @@ public class AfterProducerProcessingConfiguration {
 
     @ConfigurationProperties(prefix = UNMARSHALLING_FORMAT_AFTER_PRODUCER_CONFIGURATION_PATH)
     @ConditionalOnProperty(name = UNMARSHALLING_FORMAT_AFTER_PRODUCER_CONFIGURATION_PATH + ".data-format-name",
-                           havingValue = "xml")
+            havingValue = "xml")
     @Bean(UNMARSHALLING_FORMAT_AFTER_PRODUCER_NAME)
     public DataFormatDefinition xmlDataFormat() {
         return new JacksonXMLDataFormat();
@@ -187,7 +186,8 @@ public class AfterProducerProcessingConfiguration {
             @Qualifier(FREEMARKER_AFTER_PRODUCER_CONFIGURATION) FreemarkerProducerConfiguration configuration) {
         EndpointProducerBuilder result =
                 freemarker(FREEMARKER_AFTER_PRODUCER_COMPONENT_NAME, configuration.getResourceUri());
-        configuration.getEndpointProperties().ifPresent(additional -> additional.forEach(result::doSetProperty));
+        configuration.getEndpointProperties()
+                .ifPresent(additional -> additional.forEach(result::doSetProperty));
         return result;
     }
 
@@ -195,15 +195,15 @@ public class AfterProducerProcessingConfiguration {
     @Bean
     @ConditionalOnBean(name = FREEMARKER_AFTER_PRODUCER_CONFIGURATION)
     public ComponentCustomizer configureFreemarkerComponent(CamelContext context,
-                                                            @Qualifier(FREEMARKER_AFTER_PRODUCER_CONFIGURATION)
-                                                            FreemarkerProducerConfiguration componentConfiguration) {
+            @Qualifier(FREEMARKER_AFTER_PRODUCER_CONFIGURATION)
+            FreemarkerProducerConfiguration componentConfiguration) {
         return new ComponentCustomizerImpl(context, componentConfiguration, FREEMARKER_AFTER_PRODUCER_COMPONENT_NAME);
     }
 
     // format for marshalling
     @ConfigurationProperties(prefix = MARSHALLING_FORMAT_AFTER_PRODUCER_CONFIGURATION_PATH)
     @ConditionalOnProperty(name = MARSHALLING_FORMAT_AFTER_PRODUCER_CONFIGURATION_PATH + ".data-format-name",
-                           havingValue = "json")
+            havingValue = "json")
     @Bean(MARSHALLING_FORMAT_AFTER_PRODUCER_NAME)
     public DataFormatDefinition marshallingJsonDataFormat() {
         return new JsonDataFormat();
@@ -211,7 +211,7 @@ public class AfterProducerProcessingConfiguration {
 
     @ConfigurationProperties(prefix = MARSHALLING_FORMAT_AFTER_PRODUCER_CONFIGURATION_PATH)
     @ConditionalOnProperty(name = MARSHALLING_FORMAT_AFTER_PRODUCER_CONFIGURATION_PATH + ".data-format-name",
-                           havingValue = "xml")
+            havingValue = "xml")
     @Bean(MARSHALLING_FORMAT_AFTER_PRODUCER_NAME)
     public DataFormatDefinition marshallingXmlDataFormat() {
         return new JacksonXMLDataFormat();

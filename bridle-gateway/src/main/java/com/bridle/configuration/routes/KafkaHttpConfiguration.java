@@ -22,22 +22,24 @@ import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.http;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.kafka;
 
 @Configuration @Import({KafkaInConfiguration.class, RestCallConfiguration.class, ErrorHandlerConfiguration.class})
-@ConditionalOnProperty(name = "gateway.type", havingValue = GATEWAY_TYPE_KAFKA_HTTP)
-public class KafkaHttpConfiguration {
+@ConditionalOnProperty(name = "gateway.type",
+        havingValue = GATEWAY_TYPE_KAFKA_HTTP) public class KafkaHttpConfiguration {
 
     public static final String GATEWAY_TYPE_KAFKA_HTTP = "kafka-http";
 
     @Bean
     public RouteBuilder kafkaHttpRoute(ErrorHandlerFactory errorHandlerFactory,
-                                       ValidatedKafkaConsumerConfiguration kafkaConfiguration,
-                                       HttpProducerConfiguration restConfiguration) {
+            ValidatedKafkaConsumerConfiguration kafkaConfiguration,
+            HttpProducerConfiguration restConfiguration) {
 
         EndpointConsumerBuilder kafka =
                 kafka(ComponentNameConstants.KAFKA_IN_COMPONENT_NAME, kafkaConfiguration.getTopic());
-        kafkaConfiguration.getEndpointProperties().ifPresent(additional -> additional.forEach(kafka::doSetProperty));
+        kafkaConfiguration.getEndpointProperties()
+                .ifPresent(additional -> additional.forEach(kafka::doSetProperty));
 
         EndpointProducerBuilder http = http(REST_CALL_COMPONENT_NAME, restConfiguration.createHttpUrl());
-        restConfiguration.getEndpointProperties().ifPresent(additional -> additional.forEach(http::doSetProperty));
+        restConfiguration.getEndpointProperties()
+                .ifPresent(additional -> additional.forEach(http::doSetProperty));
 
         return new KafkaHttpRoute(errorHandlerFactory, kafka, http);
     }

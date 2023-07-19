@@ -22,7 +22,7 @@ public class ErrorHandlerConfiguration {
 
     @Bean(name = REDELIVERY_POLICY)
     public RedeliveryPolicy customRedeliveryPolicy(RedeliveryPolicyDefinition myRedeliveryPolicyDefinition,
-                                                   CamelContext context) {
+            CamelContext context) {
         return ErrorHandlerReifier.createRedeliveryPolicy(myRedeliveryPolicyDefinition, context);
     }
 

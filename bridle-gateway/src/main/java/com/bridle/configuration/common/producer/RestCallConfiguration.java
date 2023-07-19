@@ -30,8 +30,7 @@ public class RestCallConfiguration {
     @Lazy
     @Bean
     public ComponentCustomizer configureHttpComponent(CamelContext context,
-                                                      @Qualifier("restCallConfiguration")
-                                                      HttpProducerConfiguration componentConfiguration) {
+            @Qualifier("restCallConfiguration") HttpProducerConfiguration componentConfiguration) {
         return new ComponentCustomizerImpl(context, componentConfiguration, REST_CALL_COMPONENT_NAME);
     }
 
@@ -39,7 +38,8 @@ public class RestCallConfiguration {
     public EndpointProducerBuilder restCallBuilder(
             @Qualifier("restCallConfiguration") HttpProducerConfiguration configuration) {
         EndpointProducerBuilder result = http(REST_CALL_COMPONENT_NAME, configuration.createHttpUrl());
-        configuration.getEndpointProperties().ifPresent(additional -> additional.forEach(result::doSetProperty));
+        configuration.getEndpointProperties()
+                .ifPresent(additional -> additional.forEach(result::doSetProperty));
         return result;
     }
 }

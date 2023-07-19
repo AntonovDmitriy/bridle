@@ -29,7 +29,7 @@ public class SchedulerConfiguration {
     @Lazy
     @Bean
     public ComponentCustomizer configureSchedulerComponent(CamelContext context,
-                                                           SchedulerConsumerConfiguration componentConfiguration) {
+            SchedulerConsumerConfiguration componentConfiguration) {
         return new ComponentCustomizerImpl(context, componentConfiguration, SCHEDULER_COMPONENT_NAME);
     }
 
@@ -37,7 +37,8 @@ public class SchedulerConfiguration {
     public EndpointConsumerBuilder schedulerConsumer(SchedulerConsumerConfiguration configuration) {
         EndpointConsumerBuilder result =
                 StaticEndpointBuilders.scheduler(SCHEDULER_COMPONENT_NAME, SCHEDULER_COMPONENT_NAME);
-        configuration.getEndpointProperties().ifPresent(additional -> additional.forEach(result::doSetProperty));
+        configuration.getEndpointProperties()
+                .ifPresent(additional -> additional.forEach(result::doSetProperty));
         return result;
     }
 

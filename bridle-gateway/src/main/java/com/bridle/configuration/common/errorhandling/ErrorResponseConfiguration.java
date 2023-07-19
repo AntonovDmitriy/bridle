@@ -45,8 +45,7 @@ public class ErrorResponseConfiguration {
     @Lazy
     @Bean
     public ComponentCustomizer configureErrorResponseComponent(CamelContext context,
-                                                               @Qualifier("errorResponseConfiguration")
-                                                               FreemarkerProducerConfiguration componentConfiguration) {
+            @Qualifier("errorResponseConfiguration") FreemarkerProducerConfiguration componentConfiguration) {
         return new ComponentCustomizerImpl(context, componentConfiguration, ERROR_RESPONSE_FREEMARKER_COMPONENT_NAME);
     }
 

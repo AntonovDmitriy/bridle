@@ -27,16 +27,16 @@ import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.kafka;
 @Configuration
 @Import({SchedulerConfiguration.class, KafkaOutConfiguration.class, FreemarkerConfiguration.class,
         ErrorHandlerConfiguration.class})
-@ConditionalOnProperty(name = "gateway.type", havingValue = LOAD_FREEMARKER_KAFKA)
-public class LoadFreemarkerKafkaConfiguration {
+@ConditionalOnProperty(name = "gateway.type",
+        havingValue = LOAD_FREEMARKER_KAFKA) public class LoadFreemarkerKafkaConfiguration {
 
     public static final String LOAD_FREEMARKER_KAFKA = "load-freemarker-kafka";
 
     @Bean
     public RouteBuilder dataSetHttpRoute(ErrorHandlerFactory errorHandlerFactory,
-                                         ValidatedKafkaProducerConfiguration kafkaProducerConfiguration,
-                                         FreemarkerProducerConfiguration freemarkerConfiguration,
-                                         SchedulerConsumerConfiguration schedulerConfiguration) {
+            ValidatedKafkaProducerConfiguration kafkaProducerConfiguration,
+            FreemarkerProducerConfiguration freemarkerConfiguration,
+            SchedulerConsumerConfiguration schedulerConfiguration) {
 
         EndpointConsumerBuilder scheduler =
                 StaticEndpointBuilders.scheduler(SCHEDULER_COMPONENT_NAME, SCHEDULER_COMPONENT_NAME);

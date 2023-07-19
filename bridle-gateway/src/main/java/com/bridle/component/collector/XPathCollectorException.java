@@ -9,7 +9,8 @@ public class XPathCollectorException extends RuntimeException {
         super(message);
     }
 
-    public XPathCollectorException(String message, Throwable cause) {
+    public XPathCollectorException(String message,
+            Throwable cause) {
         super(message, cause);
     }
 }

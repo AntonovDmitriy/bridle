@@ -31,15 +31,17 @@ public class EndpointSendEventNotifier extends EventNotifierSupport {
 
     @Override
     public void notify(CamelEvent event) {
-        if (event instanceof ExchangeSentEvent sentEvent &&
-                sentEvent.getEndpoint().getEndpointUri().startsWith(endpointName)) {
+        if (event instanceof ExchangeSentEvent sentEvent && sentEvent.getEndpoint()
+                .getEndpointUri()
+                .startsWith(endpointName)) {
             if (counter.incrementAndGet() == counterValueToStartAction) {
                 action.accept(event);
             }
         }
     }
 
-    public void runActionWhenCounterExactlyEquals(int counterValueToStartAction, Consumer<CamelEvent> action) {
+    public void runActionWhenCounterExactlyEquals(int counterValueToStartAction,
+            Consumer<CamelEvent> action) {
         this.counterValueToStartAction = counterValueToStartAction;
         this.action = action;
     }

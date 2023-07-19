@@ -15,7 +15,7 @@ public class ConsumerToDoubleProducerRoute extends BaseRouteBuilder {
     private final ConsumerToDoubleProducerRouteParams routeParams;
 
     public ConsumerToDoubleProducerRoute(ErrorHandlerFactory errorHandlerFactory,
-                                         ConsumerToDoubleProducerRouteParams routeParams) {
+            ConsumerToDoubleProducerRouteParams routeParams) {
         super(errorHandlerFactory);
         this.routeParams = routeParams;
     }

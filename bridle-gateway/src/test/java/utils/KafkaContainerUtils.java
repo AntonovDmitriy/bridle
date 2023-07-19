@@ -5,8 +5,8 @@ import org.testcontainers.containers.KafkaContainer;
 import java.io.IOException;
 
 public class KafkaContainerUtils {
-    public static CommandResult createTopic(KafkaContainer kafkaContainer, String topicName)
-    throws IOException, InterruptedException {
+    public static CommandResult createTopic(KafkaContainer kafkaContainer,
+            String topicName) throws IOException, InterruptedException {
         org.testcontainers.containers.Container.ExecResult execResult = kafkaContainer.execInContainer("/bin/bash",
                                                                                                        "-c",
                                                                                                        String.format(
@@ -16,8 +16,8 @@ public class KafkaContainerUtils {
         return new CommandResult(execResult.getExitCode(), execResult.getStdout(), execResult.getStderr());
     }
 
-    public static CommandResult deleteTopic(KafkaContainer kafkaContainer, String topicName)
-    throws IOException, InterruptedException {
+    public static CommandResult deleteTopic(KafkaContainer kafkaContainer,
+            String topicName) throws IOException, InterruptedException {
         org.testcontainers.containers.Container.ExecResult execResult = kafkaContainer.execInContainer("/bin/bash",
                                                                                                        "-c",
                                                                                                        String.format(
@@ -26,8 +26,8 @@ public class KafkaContainerUtils {
         return new CommandResult(execResult.getExitCode(), execResult.getStdout(), execResult.getStderr());
     }
 
-    public static CommandResult readMessage(KafkaContainer kafkaContainer, String topicName)
-    throws IOException, InterruptedException {
+    public static CommandResult readMessage(KafkaContainer kafkaContainer,
+            String topicName) throws IOException, InterruptedException {
         org.testcontainers.containers.Container.ExecResult execResult = kafkaContainer.execInContainer("/bin/bash",
                                                                                                        "-c",
                                                                                                        String.format(
@@ -37,19 +37,24 @@ public class KafkaContainerUtils {
         return new CommandResult(execResult.getExitCode(), execResult.getStdout(), execResult.getStderr());
     }
 
-    public static int countMessages(KafkaContainer kafkaContainer, String topicName)
-    throws IOException, InterruptedException {
+    public static int countMessages(KafkaContainer kafkaContainer,
+            String topicName) throws IOException, InterruptedException {
         org.testcontainers.containers.Container.ExecResult execResult = kafkaContainer.execInContainer("/bin/bash",
                                                                                                        "-c",
                                                                                                        String.format(
                                                                                                                "kafka-run-class kafka.tools.GetOffsetShell --broker-list localhost:9092" +
                                                                                                                        " --topic %s --offsets -1",
                                                                                                                topicName));
-        return Integer.parseInt(execResult.getStdout().strip().split(":")[2]);
+        return Integer.parseInt(execResult.getStdout()
+                                        .strip()
+                                        .split(":")[2]);
     }
 
-    public static void setupKafka(KafkaContainer kafkaContainer, int kafkaPort) {
+    public static void setupKafka(KafkaContainer kafkaContainer,
+            int kafkaPort) {
         kafkaContainer.start();
-        System.setProperty("kafka-out.brokers", "localhost:" + kafkaContainer.getMappedPort(kafkaPort).toString());
+        System.setProperty("kafka-out.brokers",
+                           "localhost:" + kafkaContainer.getMappedPort(kafkaPort)
+                                   .toString());
     }
 }

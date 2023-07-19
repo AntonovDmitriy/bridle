@@ -30,8 +30,7 @@ public class HttpPollConfiguration {
     @Lazy
     @Bean
     public ComponentCustomizer configureHttpPollComponent(CamelContext context,
-                                                          @Qualifier("restPollConfiguration")
-                                                          HttpProducerConfiguration componentConfiguration) {
+            @Qualifier("restPollConfiguration") HttpProducerConfiguration componentConfiguration) {
         return new ComponentCustomizerImpl(context, componentConfiguration, REST_POLL_COMPONENT_NAME);
     }
 
@@ -39,7 +38,8 @@ public class HttpPollConfiguration {
     public EndpointProducerBuilder restPollBuilder(
             @Qualifier("restPollConfiguration") HttpProducerConfiguration configuration) {
         EndpointProducerBuilder result = http(REST_POLL_COMPONENT_NAME, configuration.createHttpUrl());
-        configuration.getEndpointProperties().ifPresent(additional -> additional.forEach(result::doSetProperty));
+        configuration.getEndpointProperties()
+                .ifPresent(additional -> additional.forEach(result::doSetProperty));
         return result;
     }
 }
