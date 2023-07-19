@@ -30,15 +30,16 @@ public class HttpConsumerToProducerRoute extends GenericHttpConsumerRoute {
     public void configure() throws Exception {
         super.configure();
 
-        onException(Exception.class).log(LoggingLevel.ERROR, "Exception occurred: ${exception.stacktrace}")
+        onException(Exception.class)
+                .log(LoggingLevel.ERROR, "Exception occurred: ${exception.stacktrace}")
                 .handled(true)
                 .redeliveryPolicyRef(REDELIVERY_POLICY)
                 .setHeader(HTTP_RESPONSE_CODE, constant(restConfiguration.getErrorHttpResponseCode()))
                 .to(routeParams.errorResponseBuilder())
                 .log(LOG_BODY);
 
-        onException(ValidationException.class).log(LoggingLevel.ERROR,
-                                                   "Validation exception occurred: ${exception.stacktrace}")
+        onException(ValidationException.class)
+                .log(LoggingLevel.ERROR, "Validation exception occurred: ${exception.stacktrace}")
                 .handled(true)
                 .setHeader(HTTP_RESPONSE_CODE, constant(restConfiguration.getValidationErrorHttpResponseCode()))
                 .setHeader(Exchange.EXCEPTION_CAUGHT)

@@ -37,7 +37,8 @@ public class SuccessResponseConfiguration {
             @Qualifier("successResponseConfiguration") FreemarkerProducerConfiguration successResponseConfiguration) {
         EndpointProducerBuilder result =
                 freemarker(SUCCESS_RESPONSE_FREEMARKER_COMPONENT_NAME, successResponseConfiguration.getResourceUri());
-        successResponseConfiguration.getEndpointProperties()
+        successResponseConfiguration
+                .getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(result::doSetProperty));
         return result;
     }

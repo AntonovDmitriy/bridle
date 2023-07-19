@@ -17,7 +17,8 @@ import static javax.validation.constraints.Pattern.Flag.CASE_INSENSITIVE;
 
     private Map<String, Object> endpointProperties;
 
-    @NotEmpty private String topic;
+    @NotEmpty
+    private String topic;
 
     @Override
     @NotEmpty

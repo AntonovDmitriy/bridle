@@ -1,4 +1,4 @@
-package routetest;
+package routetest.httppollkafka;
 
 import com.bridle.App;
 import org.apache.camel.CamelContext;
@@ -31,31 +31,41 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
 
     private static final String TOPIC_NAME = "routetest";
 
-    @Container private static final KafkaContainer kafka =
+    @Container
+    private static final KafkaContainer kafka =
             new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"));
 
-    @Container public static MockServerContainer mockPollServer =
-            new MockServerContainer(DockerImageName.parse("mockserver/mockserver")
-                                            .withTag("mockserver-" + MockServerClient.class.getPackage()
-                                                    .getImplementationVersion()));
+    @Container
+    public static MockServerContainer mockPollServer = new MockServerContainer(DockerImageName
+                                                                                       .parse("mockserver/mockserver")
+                                                                                       .withTag("mockserver-" +
+                                                                                                        MockServerClient.class
+                                                                                                                .getPackage()
+                                                                                                                .getImplementationVersion()));
 
-    @Autowired private CamelContext context;
+    @Autowired
+    private CamelContext context;
 
     @BeforeAll
     public static void setUp() throws Exception {
         mockPollServer.start();
         System.setProperty("rest-poll.port",
-                           mockPollServer.getServerPort()
+                           mockPollServer
+                                   .getServerPort()
                                    .toString());
         var mockPollerverClient = new MockServerClient(mockPollServer.getHost(), mockPollServer.getServerPort());
-        mockPollerverClient.when(request().withMethod("GET")
-                                         .withPath("/salary"))
-                .respond(response().withBody("52.255")
+        mockPollerverClient
+                .when(request()
+                              .withMethod("GET")
+                              .withPath("/salary"))
+                .respond(response()
+                                 .withBody("52.255")
                                  .withStatusCode(200));
 
         kafka.start();
         System.setProperty("kafka-out.brokers",
-                           "localhost:" + kafka.getMappedPort(KAFKA_PORT)
+                           "localhost:" + kafka
+                                   .getMappedPort(KAFKA_PORT)
                                    .toString());
         kafka.execInContainer("/bin/bash",
                               "-c",
@@ -71,7 +81,8 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
     @Test
     void verifySuccessHttpPollKafkaScenario() throws Exception {
 
-        NotifyBuilder notify = new NotifyBuilder(context).whenExactlyCompleted(3)
+        NotifyBuilder notify = new NotifyBuilder(context)
+                .whenExactlyCompleted(3)
                 .create();
         boolean done = notify.matches(10, TimeUnit.SECONDS);
         Assertions.assertTrue(done);

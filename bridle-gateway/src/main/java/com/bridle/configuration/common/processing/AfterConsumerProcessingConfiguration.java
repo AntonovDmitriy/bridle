@@ -104,7 +104,8 @@ public class AfterConsumerProcessingConfiguration {
     JsonSchemaValidatorConfiguration validatorConfiguration) {
         EndpointProducerBuilder result =
                 jsonValidator(VALIDATOR_AFTER_CONSUMER_COMPONENT_NAME, validatorConfiguration.getResourceUri());
-        validatorConfiguration.getEndpointProperties()
+        validatorConfiguration
+                .getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(result::doSetProperty));
         return result;
     }
@@ -188,7 +189,8 @@ public class AfterConsumerProcessingConfiguration {
             @Qualifier(FREEMARKER_AFTER_CONSUMER_CONFIGURATION) FreemarkerProducerConfiguration configuration) {
         EndpointProducerBuilder result =
                 freemarker(FREEMARKER_AFTER_CONSUMER_COMPONENT_NAME, configuration.getResourceUri());
-        configuration.getEndpointProperties()
+        configuration
+                .getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(result::doSetProperty));
         return result;
     }

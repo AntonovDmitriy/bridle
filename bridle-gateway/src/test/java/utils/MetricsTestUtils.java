@@ -43,19 +43,22 @@ public class MetricsTestUtils {
 
     public static int parseSuccessMessagesAmount(String metricsInfo,
             String routeName) {
-        return extractDecimalMetric(metricsInfo, routeName, "CamelExchangesSucceeded_total").getValue()
+        return extractDecimalMetric(metricsInfo, routeName, "CamelExchangesSucceeded_total")
+                .getValue()
                 .intValue();
     }
 
     public static int parseFailedMessagesAmount(String metricsInfo,
             String routeName) {
-        return extractDecimalMetric(metricsInfo, routeName, "CamelExchangesFailed_total").getValue()
+        return extractDecimalMetric(metricsInfo, routeName, "CamelExchangesFailed_total")
+                .getValue()
                 .intValue();
     }
 
     public static int parseMessagesWithHandledErrorAmount(String metricsInfo,
             String routeName) {
-        return extractDecimalMetric(metricsInfo, routeName, "CamelExchangesFailuresHandled_total").getValue()
+        return extractDecimalMetric(metricsInfo, routeName, "CamelExchangesFailuresHandled_total")
+                .getValue()
                 .intValue();
     }
 
@@ -86,9 +89,11 @@ public class MetricsTestUtils {
     }
 
     public static List<MetricsHolder<Double>> extractDecimalMetricsFromMetricRows(List<String> metricRows) {
-        return metricRows.stream()
+        return metricRows
+                .stream()
                 .map(metricRow -> {
-                    Double value = Double.parseDouble(StringUtils.substringAfterLast(metricRow, "}")
+                    Double value = Double.parseDouble(StringUtils
+                                                              .substringAfterLast(metricRow, "}")
                                                               .trim());
                     return new MetricsHolder<>(metricRow, value);
                 })
@@ -99,7 +104,8 @@ public class MetricsTestUtils {
     public static Double[] extractQuantilesTagValuesFromMetricApiResponse(String content) {
         List<String> metricRows =
                 extractMetricRowsFromStringContent(content, MAIN_ROUTE_NAME, METRIC_NAME_FOR_PERCENTILES);
-        return extractTagValuesFromMetricRows(metricRows, TAG_PERCENTILE).stream()
+        return extractTagValuesFromMetricRows(metricRows, TAG_PERCENTILE)
+                .stream()
                 .map(Double::parseDouble)
                 .toList()
                 .toArray(new Double[]{});
@@ -120,7 +126,8 @@ public class MetricsTestUtils {
         String preparedMetricName =
                 metricName.endsWith(START_TAG_BODY_SYMBOL) ? metricName : metricName + START_TAG_BODY_SYMBOL;
         String[] splitContent = content.split("\n");
-        return Arrays.stream(splitContent)
+        return Arrays
+                .stream(splitContent)
                 .filter(entry -> routeId == null || entry.contains(routeId))
                 .filter(entry -> entry.contains(preparedMetricName))
                 .collect(Collectors.toList());

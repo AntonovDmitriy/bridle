@@ -12,7 +12,8 @@ import java.util.Map;
  */
 public class SingletonHeaderCollectorsFactory implements ValuesCollectorFactory {
 
-    @SuppressWarnings("rawtypes") private final Map<ExpressionFormat, ValuesCollector> collectorsByMessageFormat =
+    @SuppressWarnings("rawtypes")
+    private final Map<ExpressionFormat, ValuesCollector> collectorsByMessageFormat =
             new EnumMap<>(ExpressionFormat.class);
 
     @SuppressWarnings("rawtypes")

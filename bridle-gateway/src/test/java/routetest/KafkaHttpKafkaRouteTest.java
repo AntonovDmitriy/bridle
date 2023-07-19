@@ -34,26 +34,34 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
 
     private static final String TOPIC_NAME_RESPONSE = "routetest_response";
 
-    @Container private static final KafkaContainer kafka =
+    @Container
+    private static final KafkaContainer kafka =
             new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"));
 
-    @Container public static MockServerContainer mockServer =
-            new MockServerContainer(DockerImageName.parse("mockserver/mockserver")
-                                            .withTag("mockserver-" + MockServerClient.class.getPackage()
-                                                    .getImplementationVersion()));
+    @Container
+    public static MockServerContainer mockServer = new MockServerContainer(DockerImageName
+                                                                                   .parse("mockserver/mockserver")
+                                                                                   .withTag("mockserver-" +
+                                                                                                    MockServerClient.class
+                                                                                                            .getPackage()
+                                                                                                            .getImplementationVersion()));
 
-    @Autowired private ProducerTemplate producerTemplate;
+    @Autowired
+    private ProducerTemplate producerTemplate;
 
-    @Autowired private CamelContext context;
+    @Autowired
+    private CamelContext context;
 
     @BeforeAll
     public static void setUp() throws Exception {
         kafka.start();
         System.setProperty("kafka-in.brokers",
-                           "localhost:" + kafka.getMappedPort(KAFKA_PORT)
+                           "localhost:" + kafka
+                                   .getMappedPort(KAFKA_PORT)
                                    .toString());
         System.setProperty("kafka-out.brokers",
-                           "localhost:" + kafka.getMappedPort(KAFKA_PORT)
+                           "localhost:" + kafka
+                                   .getMappedPort(KAFKA_PORT)
                                    .toString());
         kafka.execInContainer("/bin/bash",
                               "-c",
@@ -68,12 +76,15 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
 
         mockServer.start();
         System.setProperty("rest-call.port",
-                           mockServer.getServerPort()
+                           mockServer
+                                   .getServerPort()
                                    .toString());
 
         var mockServerClient = new MockServerClient(mockServer.getHost(), mockServer.getServerPort());
-        mockServerClient.when(request().withMethod("POST")
-                                      .withPath("/person"))
+        mockServerClient
+                .when(request()
+                              .withMethod("POST")
+                              .withPath("/person"))
                 .respond(response("OK").withStatusCode(200));
     }
 
@@ -86,7 +97,8 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
     @Test
     void verifySuccessKafkaHttpKafkaScenario() throws Exception {
 
-        NotifyBuilder notify = new NotifyBuilder(context).whenExactlyCompleted(1)
+        NotifyBuilder notify = new NotifyBuilder(context)
+                .whenExactlyCompleted(1)
                 .create();
 
         String message = "Test message";

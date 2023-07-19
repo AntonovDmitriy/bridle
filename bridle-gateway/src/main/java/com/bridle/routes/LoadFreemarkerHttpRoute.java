@@ -29,7 +29,8 @@ public class LoadFreemarkerHttpRoute extends BaseRouteBuilder {
     public void configure() throws Exception {
         super.configure();
 
-        from(scheduler).routeId(LOAD_FREEMARKER_HTTP)
+        from(scheduler)
+                .routeId(LOAD_FREEMARKER_HTTP)
                 .to(freemarker)
                 .log("Request: ${body}")
                 .to(restCall)

@@ -11,9 +11,11 @@ import java.util.Optional;
 @Validated public class HttpProducerConfiguration extends HttpComponentConfiguration {
     private String resourcePath = "";
 
-    @NotEmpty private String host;
+    @NotEmpty
+    private String host;
 
-    @Positive private Integer port = 80;
+    @Positive
+    private Integer port = 80;
 
     private Map<String, Object> endpointProperties;
 

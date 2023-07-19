@@ -67,12 +67,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
         Optional<Map<String, Object>> result = collector.collectValues(CORRECT_JSON);
         assertTrue(result.isPresent());
         assertEquals(RQUID_VALUE,
-                     result.get()
+                     result
+                             .get()
                              .get(RQ_UID_KEY));
         assertEquals(SYS_ID_VALUE,
-                     result.get()
+                     result
+                             .get()
                              .get(SYS_ID_KEY));
-        assertNull(result.get()
+        assertNull(result
+                           .get()
                            .get(MSG_ID_KEY));
     }
 
@@ -84,10 +87,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
         JsonValuesCollector collector = new JsonValuesCollector(expressionsByName);
         Optional<Map<String, Object>> result = collector.collectValues(CORRECT_JSON);
         assertTrue(result.isPresent());
-        assertNull(result.get()
+        assertNull(result
+                           .get()
                            .get(unknownKey));
         assertEquals(1,
-                     result.get()
+                     result
+                             .get()
                              .size());
     }
 
@@ -100,10 +105,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
         String jsonWithEmptyValue = "{" + "\"" + emptyKey + "\": \"\"}";
         Optional<Map<String, Object>> result = collector.collectValues(jsonWithEmptyValue);
         assertTrue(result.isPresent());
-        assertNull(result.get()
+        assertNull(result
+                           .get()
                            .get(""));
         assertEquals(1,
-                     result.get()
+                     result
+                             .get()
                              .size());
     }
 

@@ -33,43 +33,58 @@ import static utils.MetricsTestUtils.verifyMetrics;
 @TestPropertySource(properties = {"spring.config.location=classpath:routetest/http-poll-http/application.yml"})
 @CamelSpringBootTest @DirtiesContext @Testcontainers @AutoConfigureMetrics public class HttpPollHttpRouteTest {
 
-    public static final HttpRequest CALL_SERVER_REQUEST = request().withMethod("POST")
+    public static final HttpRequest CALL_SERVER_REQUEST = request()
+            .withMethod("POST")
             .withPath("/person")
             .withBody("52.255");
 
-    private static final HttpRequest POLL_SERVER_REQUEST = request().withMethod("GET")
+    private static final HttpRequest POLL_SERVER_REQUEST = request()
+            .withMethod("GET")
             .withPath("/salary");
 
-    @Container public static MockServerContainer mockPollServer =
-            new MockServerContainer(DockerImageName.parse("mockserver/mockserver")
-                                            .withTag("mockserver-" + MockServerClient.class.getPackage()
-                                                    .getImplementationVersion()));
+    @Container
+    public static MockServerContainer mockPollServer = new MockServerContainer(DockerImageName
+                                                                                       .parse("mockserver/mockserver")
+                                                                                       .withTag("mockserver-" +
+                                                                                                        MockServerClient.class
+                                                                                                                .getPackage()
+                                                                                                                .getImplementationVersion()));
 
-    @Container public static MockServerContainer mockCallServer =
-            new MockServerContainer(DockerImageName.parse("mockserver/mockserver")
-                                            .withTag("mockserver-" + MockServerClient.class.getPackage()
-                                                    .getImplementationVersion()));
+    @Container
+    public static MockServerContainer mockCallServer = new MockServerContainer(DockerImageName
+                                                                                       .parse("mockserver/mockserver")
+                                                                                       .withTag("mockserver-" +
+                                                                                                        MockServerClient.class
+                                                                                                                .getPackage()
+                                                                                                                .getImplementationVersion()));
 
-    @Autowired private CamelContext context;
+    @Autowired
+    private CamelContext context;
 
     @BeforeAll
     public static void setUp() throws Exception {
         mockPollServer.start();
         System.setProperty("rest-poll.port",
-                           mockPollServer.getServerPort()
+                           mockPollServer
+                                   .getServerPort()
                                    .toString());
         var mockPollerverClient = new MockServerClient(mockPollServer.getHost(), mockPollServer.getServerPort());
-        mockPollerverClient.when(POLL_SERVER_REQUEST)
-                .respond(response().withBody("52.255")
+        mockPollerverClient
+                .when(POLL_SERVER_REQUEST)
+                .respond(response()
+                                 .withBody("52.255")
                                  .withStatusCode(200));
 
         mockCallServer.start();
         System.setProperty("rest-call.port",
-                           mockCallServer.getServerPort()
+                           mockCallServer
+                                   .getServerPort()
                                    .toString());
         var mockCallServerClient = new MockServerClient(mockCallServer.getHost(), mockCallServer.getServerPort());
-        mockCallServerClient.when(CALL_SERVER_REQUEST)
-                .respond(response().withBody("OK")
+        mockCallServerClient
+                .when(CALL_SERVER_REQUEST)
+                .respond(response()
+                                 .withBody("OK")
                                  .withStatusCode(200));
     }
 
@@ -83,7 +98,8 @@ import static utils.MetricsTestUtils.verifyMetrics;
     void verifySuccessHttpPollHttpScenario() throws Exception {
 
         int messageCount = 3;
-        NotifyBuilder notify = new NotifyBuilder(context).whenExactlyCompleted(messageCount)
+        NotifyBuilder notify = new NotifyBuilder(context)
+                .whenExactlyCompleted(messageCount)
                 .create();
         boolean done = notify.matches(10, TimeUnit.SECONDS);
 

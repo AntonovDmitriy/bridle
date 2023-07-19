@@ -39,15 +39,18 @@ import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.kafka;
             ValidatedKafkaProducerConfiguration kafkaOutConfiguration) {
 
         EndpointConsumerBuilder kafkaIn = kafka(KAFKA_IN_COMPONENT_NAME, kafkaInConfiguration.getTopic());
-        kafkaInConfiguration.getEndpointProperties()
+        kafkaInConfiguration
+                .getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(kafkaIn::doSetProperty));
 
         EndpointProducerBuilder http = http(REST_CALL_COMPONENT_NAME, restConfiguration.createHttpUrl());
-        restConfiguration.getEndpointProperties()
+        restConfiguration
+                .getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(http::doSetProperty));
 
         EndpointProducerBuilder kafkaOut = kafka(KAFKA_OUT_COMPONENT_NAME, kafkaOutConfiguration.getTopic());
-        kafkaOutConfiguration.getEndpointProperties()
+        kafkaOutConfiguration
+                .getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(kafkaOut::doSetProperty));
 
         return new KafkaHttpKafkaRoute(errorHandlerFactory, kafkaIn, http, kafkaOut);

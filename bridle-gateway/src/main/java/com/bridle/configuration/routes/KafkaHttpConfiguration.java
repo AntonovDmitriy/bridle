@@ -34,11 +34,13 @@ import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.kafka;
 
         EndpointConsumerBuilder kafka =
                 kafka(ComponentNameConstants.KAFKA_IN_COMPONENT_NAME, kafkaConfiguration.getTopic());
-        kafkaConfiguration.getEndpointProperties()
+        kafkaConfiguration
+                .getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(kafka::doSetProperty));
 
         EndpointProducerBuilder http = http(REST_CALL_COMPONENT_NAME, restConfiguration.createHttpUrl());
-        restConfiguration.getEndpointProperties()
+        restConfiguration
+                .getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(http::doSetProperty));
 
         return new KafkaHttpRoute(errorHandlerFactory, kafka, http);

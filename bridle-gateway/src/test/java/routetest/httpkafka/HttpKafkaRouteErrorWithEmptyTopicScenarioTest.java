@@ -34,12 +34,13 @@ public class HttpKafkaRouteErrorWithEmptyTopicScenarioTest {
 
     public static final String REQUEST_BODY = "Request Body";
 
-    @Container private static final KafkaContainer kafka =
-            new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1")).withEnv("KAFKA_DELETE_TOPIC_ENABLE",
-                                                                                             "true")
-                    .withEnv("KAFKA_AUTO_CREATE_TOPICS_ENABLE", "false");
+    @Container
+    private static final KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"))
+            .withEnv("KAFKA_DELETE_TOPIC_ENABLE", "true")
+            .withEnv("KAFKA_AUTO_CREATE_TOPICS_ENABLE", "false");
 
-    @Autowired private CamelContext context;
+    @Autowired
+    private CamelContext context;
 
     @BeforeAll
     public static void setUp() throws Exception {

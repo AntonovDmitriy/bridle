@@ -17,7 +17,8 @@ public class FacadeHeadersCollector implements Processor {
 
     private final FacadeHeaderCollectorConfiguration configuration;
 
-    @SuppressWarnings("rawtypes") private ValuesCollector collector;
+    @SuppressWarnings("rawtypes")
+    private ValuesCollector collector;
 
     public FacadeHeadersCollector(ValuesCollectorFactory collectorFactory,
             FacadeHeaderCollectorConfiguration configuration) {
@@ -31,8 +32,10 @@ public class FacadeHeadersCollector implements Processor {
     @Override
     public void process(Exchange exchange) {
         if (collector != null) {
-            collector.collectValues(exchange.getIn()
-                                            .getBody(String.class))
+            collector
+                    .collectValues(exchange
+                                           .getIn()
+                                           .getBody(String.class))
                     .ifPresent(putValuesToExchangeHeaders(exchange));
         }
     }

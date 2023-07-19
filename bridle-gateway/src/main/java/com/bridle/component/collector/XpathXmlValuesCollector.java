@@ -53,7 +53,8 @@ public class XpathXmlValuesCollector implements ValuesCollector<String> {
             try {
                 final Document document = createXmlDomDocument(body);
                 for (Map.Entry<String, XPathExpression> entry : xpathExpressionsByName.entrySet()) {
-                    Object xpathResultNode = entry.getValue()
+                    Object xpathResultNode = entry
+                            .getValue()
                             .evaluate(document, XPathConstants.NODE);
                     valuesByName.put(entry.getKey(),
                                      xpathResultNode != null ? ((Node) xpathResultNode).getNodeValue() : null);
@@ -67,7 +68,8 @@ public class XpathXmlValuesCollector implements ValuesCollector<String> {
     }
 
     private Document createXmlDomDocument(String body) throws SAXException, IOException, ParserConfigurationException {
-        return documentBuilderFactory.newDocumentBuilder()
+        return documentBuilderFactory
+                .newDocumentBuilder()
                 .parse(new ByteArrayInputStream(body.getBytes(StandardCharsets.UTF_8)));
     }
 

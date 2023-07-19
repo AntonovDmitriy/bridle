@@ -36,12 +36,13 @@ public class HttpKafkaRouteSuccessScenarioWithDefaultTemplatesTest {
 
     private static final String TOPIC_NAME = "routetest";
 
-    @Container private static final KafkaContainer kafka =
-            new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1")).withEnv("KAFKA_DELETE_TOPIC_ENABLE",
-                                                                                             "true")
-                    .withEnv("KAFKA_AUTO_CREATE_TOPICS_ENABLE", "false");
+    @Container
+    private static final KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"))
+            .withEnv("KAFKA_DELETE_TOPIC_ENABLE", "true")
+            .withEnv("KAFKA_AUTO_CREATE_TOPICS_ENABLE", "false");
 
-    @Autowired private CamelContext context;
+    @Autowired
+    private CamelContext context;
 
     @BeforeAll
     public static void setUp() throws Exception {
@@ -56,11 +57,13 @@ public class HttpKafkaRouteSuccessScenarioWithDefaultTemplatesTest {
         ResponseEntity<String> httpResponseEntity = sendPostHttpRequest(HTTP_SERVER_URL, textMessage);
 
         assertEquals(200,
-                     httpResponseEntity.getStatusCode()
+                     httpResponseEntity
+                             .getStatusCode()
                              .value());
         assertEquals("Success!", httpResponseEntity.getBody());
         assertEquals(textMessage,
-                     readMessage(kafka, TOPIC_NAME).stdOut()
+                     readMessage(kafka, TOPIC_NAME)
+                             .stdOut()
                              .strip());
         verifyMetrics(GATEWAY_TYPE_HTTP_KAFKA, 1, 0, 0);
         KafkaContainerUtils.deleteTopic(kafka, TOPIC_NAME);

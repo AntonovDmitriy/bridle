@@ -24,12 +24,13 @@ public class ConsumerToDoubleProducerRoute extends BaseRouteBuilder {
     public void configure() throws Exception {
         super.configure();
 
-        onException(Exception.class).log(LoggingLevel.ERROR, "Exception occurred: ${exception.stacktrace}")
+        onException(Exception.class)
+                .log(LoggingLevel.ERROR, "Exception occurred: ${exception.stacktrace}")
                 .redeliveryPolicyRef(REDELIVERY_POLICY)
                 .log(LOG_BODY);
 
-        onException(ValidationException.class).log(LoggingLevel.ERROR,
-                                                   "Validation exception occurred: ${exception.stacktrace}")
+        onException(ValidationException.class)
+                .log(LoggingLevel.ERROR, "Validation exception occurred: ${exception.stacktrace}")
                 .log(LOG_BODY);
 
         ProcessingBuilder.addProcessing(from(PROCESSING_AFTER_CONSUMER),
@@ -39,7 +40,8 @@ public class ConsumerToDoubleProducerRoute extends BaseRouteBuilder {
                                         routeParams.afterProducerProcessingParams(),
                                         "processingAfterProducer");
 
-        from(routeParams.consumer()).routeId(routeParams.routeId())
+        from(routeParams.consumer())
+                .routeId(routeParams.routeId())
                 .to(PROCESSING_AFTER_CONSUMER)
                 .to(routeParams.firstProducer())
                 .to(PROCESSING_AFTER_PRODUCER)

@@ -63,12 +63,15 @@ class XpathXmlValuesCollectorTest {
         Optional<Map<String, Object>> result = collector.collectValues(CORRECT_XML);
         assertTrue(result.isPresent());
         assertEquals(RQUID_VALUE,
-                     result.get()
+                     result
+                             .get()
                              .get(RQ_UID_KEY));
         assertEquals(SYS_ID_VALUE,
-                     result.get()
+                     result
+                             .get()
                              .get(SYS_ID_KEY));
-        assertNull(result.get()
+        assertNull(result
+                           .get()
                            .get(MSG_ID_KEY));
     }
 

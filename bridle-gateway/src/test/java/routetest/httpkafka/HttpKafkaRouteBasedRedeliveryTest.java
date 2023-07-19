@@ -35,12 +35,13 @@ import static utils.TestUtils.sendPostHttpRequest;
 
     private static final String TOPIC_NAME = "routetest";
 
-    @Container private static final KafkaContainer kafka =
-            new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1")).withEnv("KAFKA_DELETE_TOPIC_ENABLE",
-                                                                                             "true")
-                    .withEnv("KAFKA_AUTO_CREATE_TOPICS_ENABLE", "false");
+    @Container
+    private static final KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"))
+            .withEnv("KAFKA_DELETE_TOPIC_ENABLE", "true")
+            .withEnv("KAFKA_AUTO_CREATE_TOPICS_ENABLE", "false");
 
-    @Autowired private CamelContext context;
+    @Autowired
+    private CamelContext context;
 
     @BeforeAll
     public static void setUp() throws Exception {
@@ -51,22 +52,26 @@ import static utils.TestUtils.sendPostHttpRequest;
     void verifySuccessMessageWithRedeliverySettings() throws Exception {
         KafkaContainerUtils.createTopic(kafka, TOPIC_NAME);
         EndpointSendEventNotifier eventNotifierSuccessMessage = new EndpointSendEventNotifier(KAFKA_OUT_COMPONENT_NAME);
-        context.getManagementStrategy()
+        context
+                .getManagementStrategy()
                 .addEventNotifier(eventNotifierSuccessMessage);
 
         ResponseEntity<String> httpResponseEntity = sendPostHttpRequest(HTTP_SERVER_URL, REQUEST_BODY);
 
         assertEquals(200,
-                     httpResponseEntity.getStatusCode()
+                     httpResponseEntity
+                             .getStatusCode()
                              .value());
         assertEquals("Success!", httpResponseEntity.getBody());
         assertEquals(1, eventNotifierSuccessMessage.getCounter());
         assertEquals(REQUEST_BODY,
-                     KafkaContainerUtils.readMessage(kafka, TOPIC_NAME)
+                     KafkaContainerUtils
+                             .readMessage(kafka, TOPIC_NAME)
                              .stdOut()
                              .strip());
         assertEquals(1, KafkaContainerUtils.countMessages(kafka, TOPIC_NAME));
-        context.getManagementStrategy()
+        context
+                .getManagementStrategy()
                 .removeEventNotifier(eventNotifierSuccessMessage);
         KafkaContainerUtils.deleteTopic(kafka, TOPIC_NAME);
     }
@@ -74,7 +79,8 @@ import static utils.TestUtils.sendPostHttpRequest;
     @Test
     void verifyRedeliveryWithFinalError() throws Exception {
         EndpointSendEventNotifier notifierRedeliveredMessage = new EndpointSendEventNotifier(KAFKA_OUT_COMPONENT_NAME);
-        context.getManagementStrategy()
+        context
+                .getManagementStrategy()
                 .addEventNotifier(notifierRedeliveredMessage);
 
         RestClientResponseException exception = Assertions.assertThrows(RestClientResponseException.class,
@@ -84,7 +90,8 @@ import static utils.TestUtils.sendPostHttpRequest;
         assertEquals(501, exception.getRawStatusCode());
         assertEquals(3, notifierRedeliveredMessage.getCounter());
 
-        context.getManagementStrategy()
+        context
+                .getManagementStrategy()
                 .removeEventNotifier(notifierRedeliveredMessage);
     }
 
@@ -97,18 +104,21 @@ import static utils.TestUtils.sendPostHttpRequest;
             } catch (Exception ignored) {
             }
         });
-        context.getManagementStrategy()
+        context
+                .getManagementStrategy()
                 .addEventNotifier(notifierRedeliveredSuccess);
 
         ResponseEntity<String> httpResponseEntity = sendPostHttpRequest(HTTP_SERVER_URL, REQUEST_BODY);
 
         assertEquals(200,
-                     httpResponseEntity.getStatusCode()
+                     httpResponseEntity
+                             .getStatusCode()
                              .value());
         assertEquals("Success!", httpResponseEntity.getBody());
         assertEquals(3, notifierRedeliveredSuccess.getCounter());
         assertEquals(REQUEST_BODY,
-                     KafkaContainerUtils.readMessage(kafka, TOPIC_NAME)
+                     KafkaContainerUtils
+                             .readMessage(kafka, TOPIC_NAME)
                              .stdOut()
                              .strip());
         assertEquals(1, KafkaContainerUtils.countMessages(kafka, TOPIC_NAME));

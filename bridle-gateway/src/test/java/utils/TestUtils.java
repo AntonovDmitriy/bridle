@@ -32,7 +32,8 @@ public class TestUtils {
     }
 
     public static String getStringResources(String path) throws IOException {
-        return new String(Files.readAllBytes(new ClassPathResource(path).getFile()
+        return new String(Files.readAllBytes(new ClassPathResource(path)
+                                                     .getFile()
                                                      .toPath()));
     }
 }

@@ -34,34 +34,46 @@ import static utils.MetricsTestUtils.verifyMetrics;
 @CamelSpringBootTest @DirtiesContext @Testcontainers @AutoConfigureMetrics
 public class HttpPollHttpWithConnectionErrorTest {
 
-    public static final HttpRequest CALL_SERVER_REQUEST = request().withMethod("POST")
+    public static final HttpRequest CALL_SERVER_REQUEST = request()
+            .withMethod("POST")
             .withPath("/person")
             .withBody("52.255");
 
-    private static final HttpRequest POLL_SERVER_REQUEST = request().withMethod("GET")
+    private static final HttpRequest POLL_SERVER_REQUEST = request()
+            .withMethod("GET")
             .withPath("/salary");
 
-    @Container public static MockServerContainer mockPollServer =
-            new MockServerContainer(DockerImageName.parse("mockserver/mockserver")
-                                            .withTag("mockserver-" + MockServerClient.class.getPackage()
-                                                    .getImplementationVersion()));
+    @Container
+    public static MockServerContainer mockPollServer = new MockServerContainer(DockerImageName
+                                                                                       .parse("mockserver/mockserver")
+                                                                                       .withTag("mockserver-" +
+                                                                                                        MockServerClient.class
+                                                                                                                .getPackage()
+                                                                                                                .getImplementationVersion()));
 
-    @Container public static MockServerContainer mockCallServer =
-            new MockServerContainer(DockerImageName.parse("mockserver/mockserver")
-                                            .withTag("mockserver-" + MockServerClient.class.getPackage()
-                                                    .getImplementationVersion()));
+    @Container
+    public static MockServerContainer mockCallServer = new MockServerContainer(DockerImageName
+                                                                                       .parse("mockserver/mockserver")
+                                                                                       .withTag("mockserver-" +
+                                                                                                        MockServerClient.class
+                                                                                                                .getPackage()
+                                                                                                                .getImplementationVersion()));
 
-    @Autowired private CamelContext context;
+    @Autowired
+    private CamelContext context;
 
     @BeforeAll
     public static void setUp() throws Exception {
         mockPollServer.start();
         System.setProperty("rest-poll.port",
-                           mockPollServer.getServerPort()
+                           mockPollServer
+                                   .getServerPort()
                                    .toString());
         var mockPollerverClient = new MockServerClient(mockPollServer.getHost(), mockPollServer.getServerPort());
-        mockPollerverClient.when(POLL_SERVER_REQUEST)
-                .respond(response().withBody("52.255")
+        mockPollerverClient
+                .when(POLL_SERVER_REQUEST)
+                .respond(response()
+                                 .withBody("52.255")
                                  .withStatusCode(200));
     }
 
@@ -73,7 +85,8 @@ public class HttpPollHttpWithConnectionErrorTest {
     @Test
     void verifyErrorHttpPollHttpScenarioWhenRestCallGetsConnectionError() throws Exception {
         int messageCount = 1;
-        NotifyBuilder notify = new NotifyBuilder(context).whenFailed(messageCount)
+        NotifyBuilder notify = new NotifyBuilder(context)
+                .whenFailed(messageCount)
                 .create();
         boolean done = notify.matches(10, TimeUnit.SECONDS);
 

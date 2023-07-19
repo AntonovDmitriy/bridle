@@ -40,16 +40,19 @@ import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.kafka;
 
         EndpointConsumerBuilder scheduler =
                 StaticEndpointBuilders.scheduler(SCHEDULER_COMPONENT_NAME, SCHEDULER_COMPONENT_NAME);
-        schedulerConfiguration.getEndpointProperties()
+        schedulerConfiguration
+                .getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(scheduler::doSetProperty));
 
         EndpointProducerBuilder freemarker =
                 StaticEndpointBuilders.freemarker(FREEMARKER_COMPONENT_NAME, freemarkerConfiguration.getResourceUri());
-        freemarkerConfiguration.getEndpointProperties()
+        freemarkerConfiguration
+                .getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(freemarker::doSetProperty));
 
         EndpointProducerBuilder kafkaOut = kafka(KAFKA_OUT_COMPONENT_NAME, kafkaProducerConfiguration.getTopic());
-        kafkaProducerConfiguration.getEndpointProperties()
+        kafkaProducerConfiguration
+                .getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(kafkaOut::doSetProperty));
 
         return new LoadFreemarkerKafkaRoute(errorHandlerFactory, scheduler, freemarker, kafkaOut);

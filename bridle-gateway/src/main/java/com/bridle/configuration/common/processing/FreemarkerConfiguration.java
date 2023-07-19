@@ -41,7 +41,8 @@ public class FreemarkerConfiguration {
     public EndpointProducerBuilder freemarkerTransformBuilder(
             @Qualifier("freemarkerConfiguration") FreemarkerProducerConfiguration configuration) {
         EndpointProducerBuilder result = freemarker(FREEMARKER_COMPONENT_NAME, configuration.getResourceUri());
-        configuration.getEndpointProperties()
+        configuration
+                .getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(result::doSetProperty));
         return result;
     }

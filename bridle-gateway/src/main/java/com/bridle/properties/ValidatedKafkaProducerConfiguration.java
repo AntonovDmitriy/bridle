@@ -13,7 +13,8 @@ import java.util.Optional;
 
     private Map<String, Object> endpointProperties;
 
-    @NotEmpty private String topic;
+    @NotEmpty
+    private String topic;
 
     @Override
     @NotEmpty

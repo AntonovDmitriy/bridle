@@ -37,7 +37,8 @@ public class ValidationErrorResponseConfiguration {
     FreemarkerProducerConfiguration errorResponseConfiguration) {
         EndpointProducerBuilder result =
                 freemarker(VALIDATION_RESPONSE_FREEMARKER_COMPONENT_NAME, errorResponseConfiguration.getResourceUri());
-        errorResponseConfiguration.getEndpointProperties()
+        errorResponseConfiguration
+                .getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(result::doSetProperty));
         return result;
     }

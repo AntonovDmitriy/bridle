@@ -27,18 +27,22 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
 
     private static final String TOPIC_NAME = "routetest";
 
-    @Container private static final KafkaContainer kafka =
+    @Container
+    private static final KafkaContainer kafka =
             new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"));
 
-    @Autowired private ProducerTemplate producerTemplate;
+    @Autowired
+    private ProducerTemplate producerTemplate;
 
-    @Autowired private CamelContext context;
+    @Autowired
+    private CamelContext context;
 
     @BeforeAll
     public static void setUp() throws Exception {
         kafka.start();
         System.setProperty("kafka-out.brokers",
-                           "localhost:" + kafka.getMappedPort(KAFKA_PORT)
+                           "localhost:" + kafka
+                                   .getMappedPort(KAFKA_PORT)
                                    .toString());
         kafka.execInContainer("/bin/bash",
                               "-c",
@@ -49,7 +53,8 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
     @Test
     void verifySuccessLoadFreemarkerKafkaScenario() throws Exception {
 
-        NotifyBuilder notify = new NotifyBuilder(context).whenExactlyCompleted(5)
+        NotifyBuilder notify = new NotifyBuilder(context)
+                .whenExactlyCompleted(5)
                 .create();
 
         boolean done = notify.matches(10, TimeUnit.SECONDS);

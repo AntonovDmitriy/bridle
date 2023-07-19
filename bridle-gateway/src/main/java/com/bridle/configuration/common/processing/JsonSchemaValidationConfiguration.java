@@ -37,7 +37,8 @@ public class JsonSchemaValidationConfiguration {
     public EndpointProducerBuilder validatorBuilder(JsonSchemaValidatorConfiguration validatorConfiguration) {
         EndpointProducerBuilder result =
                 jsonValidator(VALIDATOR_COMPONENT_NAME, validatorConfiguration.getResourceUri());
-        validatorConfiguration.getEndpointProperties()
+        validatorConfiguration
+                .getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(result::doSetProperty));
         return result;
     }

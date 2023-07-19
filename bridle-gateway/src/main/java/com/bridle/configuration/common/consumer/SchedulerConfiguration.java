@@ -37,7 +37,8 @@ public class SchedulerConfiguration {
     public EndpointConsumerBuilder schedulerConsumer(SchedulerConsumerConfiguration configuration) {
         EndpointConsumerBuilder result =
                 StaticEndpointBuilders.scheduler(SCHEDULER_COMPONENT_NAME, SCHEDULER_COMPONENT_NAME);
-        configuration.getEndpointProperties()
+        configuration
+                .getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(result::doSetProperty));
         return result;
     }

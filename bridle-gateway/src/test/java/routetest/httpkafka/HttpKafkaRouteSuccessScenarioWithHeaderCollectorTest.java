@@ -63,10 +63,10 @@ public class HttpKafkaRouteSuccessScenarioWithHeaderCollectorTest {
 
     private static final String TOPIC_NAME = "routetest";
 
-    @Container private static final KafkaContainer kafka =
-            new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1")).withEnv("KAFKA_DELETE_TOPIC_ENABLE",
-                                                                                             "true")
-                    .withEnv("KAFKA_AUTO_CREATE_TOPICS_ENABLE", "false");
+    @Container
+    private static final KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"))
+            .withEnv("KAFKA_DELETE_TOPIC_ENABLE", "true")
+            .withEnv("KAFKA_AUTO_CREATE_TOPICS_ENABLE", "false");
 
     @BeforeAll
     public static void setUp() throws Exception {
@@ -81,7 +81,8 @@ public class HttpKafkaRouteSuccessScenarioWithHeaderCollectorTest {
         ResponseEntity<String> httpResponseEntity = sendPostHttpRequest(HTTP_SERVER_URL, textMessage);
 
         assertEquals(200,
-                     httpResponseEntity.getStatusCode()
+                     httpResponseEntity
+                             .getStatusCode()
                              .value());
         assertEquals("Success!", httpResponseEntity.getBody());
         assertEquals(EXPECTED_TRANSFORMED_MESSAGE, readMessage(kafka, TOPIC_NAME).stdOut());

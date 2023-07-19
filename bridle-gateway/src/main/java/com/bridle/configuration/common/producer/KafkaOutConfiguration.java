@@ -30,7 +30,8 @@ public class KafkaOutConfiguration {
     @Bean
     public EndpointProducerBuilder kafkaProducerBuilder(ValidatedKafkaProducerConfiguration kafkaOutConfiguration) {
         EndpointProducerBuilder result = kafka(KAFKA_OUT_COMPONENT_NAME, kafkaOutConfiguration.getTopic());
-        kafkaOutConfiguration.getEndpointProperties()
+        kafkaOutConfiguration
+                .getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(result::doSetProperty));
         return result;
     }
@@ -47,7 +48,8 @@ public class KafkaOutConfiguration {
             @Qualifier("kafkaOutConfiguration") ValidatedKafkaProducerConfiguration configuration) {
 
         EndpointProducerBuilder result = kafka(KAFKA_OUT_COMPONENT_NAME, configuration.getTopic());
-        configuration.getEndpointProperties()
+        configuration
+                .getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(result::doSetProperty));
         return result;
     }
