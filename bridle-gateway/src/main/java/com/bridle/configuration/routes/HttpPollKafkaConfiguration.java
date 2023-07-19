@@ -38,8 +38,7 @@ public class HttpPollKafkaConfiguration {
             EndpointConsumerBuilder scheduler,
             @Qualifier("restPollBuilder")
             EndpointProducerBuilder restPoll,
-            @Qualifier("kafkaOutBuilder")
-            EndpointProducerBuilder kafkaOut,
+            EndpointProducerBuilder kafkaProducerBuilder,
             @Autowired(required = false)
             @Qualifier("afterConsumer")
             ProcessingParams processingAfterConsumerParams,
@@ -52,6 +51,6 @@ public class HttpPollKafkaConfiguration {
                                                                                          processingAfterConsumerParams,
                                                                                          restPoll,
                                                                                          processingAfterProducerParams,
-                                                                                         kafkaOut));
+                                                                                         kafkaProducerBuilder));
     }
 }
