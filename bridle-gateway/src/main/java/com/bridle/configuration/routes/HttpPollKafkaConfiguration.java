@@ -23,14 +23,12 @@ import org.springframework.context.annotation.Import;
 import static com.bridle.configuration.routes.HttpPollKafkaConfiguration.GATEWAY_TYPE_HTTP_POLL_KAFKA;
 
 @Configuration
-@Import({SchedulerConfiguration.class,
-        HttpPollConfiguration.class,
-        KafkaOutConfiguration.class,
-        ErrorHandlerConfiguration.class,
-        AfterConsumerProcessingConfiguration.class,
+@Import({SchedulerConfiguration.class, HttpPollConfiguration.class, KafkaOutConfiguration.class,
+        ErrorHandlerConfiguration.class, AfterConsumerProcessingConfiguration.class,
         AfterProducerProcessingConfiguration.class})
 @ConditionalOnProperty(name = "gateway.type", havingValue = GATEWAY_TYPE_HTTP_POLL_KAFKA)
 public class HttpPollKafkaConfiguration {
+
     public static final String GATEWAY_TYPE_HTTP_POLL_KAFKA = "http-poll-kafka";
 
     @Bean
@@ -38,10 +36,16 @@ public class HttpPollKafkaConfiguration {
                                           EndpointConsumerBuilder scheduler,
                                           @Qualifier("kafkaOutBuilder") EndpointProducerBuilder kafkaOut,
                                           @Qualifier("restPollBuilder") EndpointProducerBuilder restPoll,
-                                          @Autowired(required = false) @Qualifier("afterConsumer") ProcessingParams processingAfterConsumerParams,
-                                          @Autowired(required = false) @Qualifier("afterProducer") ProcessingParams processingAfterProducerParams) {
+                                          @Autowired(required = false) @Qualifier("afterConsumer")
+                                          ProcessingParams processingAfterConsumerParams,
+                                          @Autowired(required = false) @Qualifier("afterProducer")
+                                          ProcessingParams processingAfterProducerParams) {
         return new ConsumerToDoubleProducerRoute(errorHandlerFactory,
-                new ConsumerToDoubleProducerRouteParams(GATEWAY_TYPE_HTTP_POLL_KAFKA,
-                        scheduler, processingAfterConsumerParams, restPoll, processingAfterProducerParams, restPoll));
+                                                 new ConsumerToDoubleProducerRouteParams(GATEWAY_TYPE_HTTP_POLL_KAFKA,
+                                                                                         scheduler,
+                                                                                         processingAfterConsumerParams,
+                                                                                         restPoll,
+                                                                                         processingAfterProducerParams,
+                                                                                         kafkaOut));
     }
 }

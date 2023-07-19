@@ -27,19 +27,20 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
 
 @SpringBootTest(classes = {App.class})
 @TestPropertySource(properties = {"spring.config.location=classpath:routetest/http-poll-kafka/application.yml"})
-@CamelSpringBootTest
-@Testcontainers
-@DirtiesContext
-public class HttpPollKafkaRouteTest {
+@CamelSpringBootTest @Testcontainers @DirtiesContext public class HttpPollKafkaRouteTest {
 
     private static final String TOPIC_NAME = "routetest";
+
     @Container
     private static final KafkaContainer kafka =
             new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"));
+
     @Container
-    public static MockServerContainer mockPollServer = new MockServerContainer(DockerImageName
-            .parse("mockserver/mockserver")
-            .withTag("mockserver-" + MockServerClient.class.getPackage().getImplementationVersion()));
+    public static MockServerContainer mockPollServer =
+            new MockServerContainer(DockerImageName.parse("mockserver/mockserver")
+                                            .withTag("mockserver-" + MockServerClient.class.getPackage()
+                                                    .getImplementationVersion()));
+
     @Autowired
     private CamelContext context;
 
@@ -48,15 +49,15 @@ public class HttpPollKafkaRouteTest {
         mockPollServer.start();
         System.setProperty("rest-poll.port", mockPollServer.getServerPort().toString());
         var mockPollerverClient = new MockServerClient(mockPollServer.getHost(), mockPollServer.getServerPort());
-        mockPollerverClient
-                .when(request().withMethod("GET").withPath("/salary"))
+        mockPollerverClient.when(request().withMethod("GET").withPath("/salary"))
                 .respond(response().withBody("52.255").withStatusCode(200));
 
         kafka.start();
         System.setProperty("kafka-out.brokers", "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
-        kafka.execInContainer("/bin/bash", "-c",
-                String.format("kafka-topics --create --bootstrap-server localhost:9092 " +
-                        "--topic %s --partitions 1 --replication-factor 1", TOPIC_NAME));
+        kafka.execInContainer("/bin/bash",
+                              "-c",
+                              String.format("kafka-topics --create --bootstrap-server localhost:9092 " +
+                                                    "--topic %s --partitions 1 --replication-factor 1", TOPIC_NAME));
     }
 
     @AfterAll

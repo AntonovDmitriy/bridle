@@ -38,27 +38,54 @@ public class AfterConsumerProcessingConfiguration {
     public static final String PROCESSING_AFTER_CONSUMER = "processing.after-consumer.";
 
     public static final String POSTFIX = "AfterConsumer";
+
     public static final String CONFIGURATION_POSTFIX = "Configuration";
-    public static final String JSON_VALIDATOR_AFTER_CONSUMER_CONFIGURATION_PATH = PROCESSING_AFTER_CONSUMER + "validation";
+
+    public static final String JSON_VALIDATOR_AFTER_CONSUMER_CONFIGURATION_PATH =
+            PROCESSING_AFTER_CONSUMER + "validation";
+
     public static final String CONVERT_BODY_CONFIGURATION_PATH = PROCESSING_AFTER_CONSUMER + "convert-body";
+
     public static final String CONVERT_BODY_NAME = "convertBody" + POSTFIX;
-    public static final String HEADER_COLLECTOR_AFTER_CONSUMER_COMPONENT_NAME = HEADER_COLLECTOR_COMPONENT_NAME + POSTFIX;
-    public static final String HEADER_COLLECTOR_AFTER_CONSUMER_CONFIGURATION = HEADER_COLLECTOR_AFTER_CONSUMER_COMPONENT_NAME + CONFIGURATION_POSTFIX;
-    public static final String HEADER_COLLECTOR_AFTER_CONSUMER_CONFIGURATION_PATH = PROCESSING_AFTER_CONSUMER + "header-collector";
-    public static final String UNMARSHALLING_FORMAT_AFTER_CONSUMER_CONFIGURATION_PATH = PROCESSING_AFTER_CONSUMER + "unmarshalling-data-format";
+
+    public static final String HEADER_COLLECTOR_AFTER_CONSUMER_COMPONENT_NAME =
+            HEADER_COLLECTOR_COMPONENT_NAME + POSTFIX;
+
+    public static final String HEADER_COLLECTOR_AFTER_CONSUMER_CONFIGURATION =
+            HEADER_COLLECTOR_AFTER_CONSUMER_COMPONENT_NAME + CONFIGURATION_POSTFIX;
+
+    public static final String HEADER_COLLECTOR_AFTER_CONSUMER_CONFIGURATION_PATH =
+            PROCESSING_AFTER_CONSUMER + "header-collector";
+
+    public static final String UNMARSHALLING_FORMAT_AFTER_CONSUMER_CONFIGURATION_PATH =
+            PROCESSING_AFTER_CONSUMER + "unmarshalling-data-format";
+
     public static final String UNMARSHALLING_FORMAT_AFTER_CONSUMER_NAME = "unmarshallingBody" + POSTFIX;
+
     public static final String FREEMARKER_AFTER_CONSUMER_CONFIGURATION_PATH = PROCESSING_AFTER_CONSUMER + "transform";
-    public static final String MARSHALLING_FORMAT_AFTER_CONSUMER_CONFIGURATION_PATH = PROCESSING_AFTER_CONSUMER + "marshalling-data-format";
+
+    public static final String MARSHALLING_FORMAT_AFTER_CONSUMER_CONFIGURATION_PATH =
+            PROCESSING_AFTER_CONSUMER + "marshalling-data-format";
+
     public static final String MARSHALLING_FORMAT_AFTER_CONSUMER_NAME = "marshallingBody" + POSTFIX;
+
     private static final String VALIDATOR_AFTER_CONSUMER_COMPONENT_NAME = VALIDATOR_COMPONENT_NAME + POSTFIX;
+
     public static final String VALIDATOR_AFTER_CONSUMER_BUILDER = VALIDATOR_AFTER_CONSUMER_COMPONENT_NAME + "Builder";
-    public static final String JSON_VALIDATOR_AFTER_CONSUMER_CONFIGURATION = VALIDATOR_AFTER_CONSUMER_COMPONENT_NAME + CONFIGURATION_POSTFIX;
+
+    public static final String JSON_VALIDATOR_AFTER_CONSUMER_CONFIGURATION =
+            VALIDATOR_AFTER_CONSUMER_COMPONENT_NAME + CONFIGURATION_POSTFIX;
+
     private static final String FREEMARKER_AFTER_CONSUMER_COMPONENT_NAME = "freemarker" + POSTFIX;
+
     public static final String FREEMARKER_AFTER_CONSUMER_BUILDER = FREEMARKER_AFTER_CONSUMER_COMPONENT_NAME + "Builder";
-    public static final String FREEMARKER_AFTER_CONSUMER_CONFIGURATION = FREEMARKER_AFTER_CONSUMER_COMPONENT_NAME + CONFIGURATION_POSTFIX;
+
+    public static final String FREEMARKER_AFTER_CONSUMER_CONFIGURATION =
+            FREEMARKER_AFTER_CONSUMER_COMPONENT_NAME + CONFIGURATION_POSTFIX;
 
     // Validation
-    @ConditionalOnProperty(value = JSON_VALIDATOR_AFTER_CONSUMER_CONFIGURATION_PATH + ".format", havingValue = "json-schema")
+    @ConditionalOnProperty(value = JSON_VALIDATOR_AFTER_CONSUMER_CONFIGURATION_PATH + ".format",
+                           havingValue = "json-schema")
     @ConfigurationProperties(prefix = JSON_VALIDATOR_AFTER_CONSUMER_CONFIGURATION_PATH)
     @Bean(JSON_VALIDATOR_AFTER_CONSUMER_CONFIGURATION)
     public JsonSchemaValidatorConfiguration jsonValidatorAfterConsumerConfiguration() {
@@ -75,7 +102,8 @@ public class AfterConsumerProcessingConfiguration {
     @ConditionalOnBean(name = JSON_VALIDATOR_AFTER_CONSUMER_CONFIGURATION)
     public EndpointProducerBuilder validatorBuilder(@Qualifier(JSON_VALIDATOR_AFTER_CONSUMER_CONFIGURATION)
                                                     JsonSchemaValidatorConfiguration validatorConfiguration) {
-        EndpointProducerBuilder result = jsonValidator(VALIDATOR_AFTER_CONSUMER_COMPONENT_NAME, validatorConfiguration.getResourceUri());
+        EndpointProducerBuilder result =
+                jsonValidator(VALIDATOR_AFTER_CONSUMER_COMPONENT_NAME, validatorConfiguration.getResourceUri());
         validatorConfiguration.getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(result::doSetProperty));
         return result;
@@ -85,7 +113,8 @@ public class AfterConsumerProcessingConfiguration {
     @Bean
     @ConditionalOnBean(name = JSON_VALIDATOR_AFTER_CONSUMER_CONFIGURATION)
     public ComponentCustomizer configureJsonValidatorAfterConsumerComponent(CamelContext context,
-                                                                            @Qualifier(JSON_VALIDATOR_AFTER_CONSUMER_CONFIGURATION)
+                                                                            @Qualifier(
+                                                                                    JSON_VALIDATOR_AFTER_CONSUMER_CONFIGURATION)
                                                                             JsonSchemaValidatorConfiguration componentConfiguration) {
         return new ComponentCustomizerImpl(context, componentConfiguration, VALIDATOR_AFTER_CONSUMER_COMPONENT_NAME);
     }
@@ -116,23 +145,25 @@ public class AfterConsumerProcessingConfiguration {
 
     @Bean(name = HEADER_COLLECTOR_AFTER_CONSUMER_COMPONENT_NAME)
     @ConditionalOnBean(name = HEADER_COLLECTOR_AFTER_CONSUMER_CONFIGURATION)
-    public Processor headerCollectorAfterConsumer(@Qualifier(HEADER_COLLECTOR_AFTER_CONSUMER_CONFIGURATION)
-                                                  FacadeHeaderCollectorConfiguration configuration,
-                                                  ValuesCollectorFactory valuesCollectorFactory) {
+    public Processor headerCollectorAfterConsumer(
+            @Qualifier(HEADER_COLLECTOR_AFTER_CONSUMER_CONFIGURATION) FacadeHeaderCollectorConfiguration configuration,
+            ValuesCollectorFactory valuesCollectorFactory) {
         return new FacadeHeadersCollector(valuesCollectorFactory, configuration);
     }
 
 
     // format for unmarshalling
     @ConfigurationProperties(prefix = UNMARSHALLING_FORMAT_AFTER_CONSUMER_CONFIGURATION_PATH)
-    @ConditionalOnProperty(name = UNMARSHALLING_FORMAT_AFTER_CONSUMER_CONFIGURATION_PATH + ".data-format-name", havingValue = "json")
+    @ConditionalOnProperty(name = UNMARSHALLING_FORMAT_AFTER_CONSUMER_CONFIGURATION_PATH + ".data-format-name",
+                           havingValue = "json")
     @Bean(UNMARSHALLING_FORMAT_AFTER_CONSUMER_NAME)
     public DataFormatDefinition jsonDataFormat() {
         return new JsonDataFormat();
     }
 
     @ConfigurationProperties(prefix = UNMARSHALLING_FORMAT_AFTER_CONSUMER_CONFIGURATION_PATH)
-    @ConditionalOnProperty(name = UNMARSHALLING_FORMAT_AFTER_CONSUMER_CONFIGURATION_PATH + ".data-format-name", havingValue = "xml")
+    @ConditionalOnProperty(name = UNMARSHALLING_FORMAT_AFTER_CONSUMER_CONFIGURATION_PATH + ".data-format-name",
+                           havingValue = "xml")
     @Bean(UNMARSHALLING_FORMAT_AFTER_CONSUMER_NAME)
     public DataFormatDefinition xmlDataFormat() {
         return new JacksonXMLDataFormat();
@@ -154,12 +185,11 @@ public class AfterConsumerProcessingConfiguration {
 
     @Bean(FREEMARKER_AFTER_CONSUMER_BUILDER)
     @ConditionalOnBean(name = FREEMARKER_AFTER_CONSUMER_CONFIGURATION)
-    public EndpointProducerBuilder freemarkerTransformBuilder(@Qualifier(FREEMARKER_AFTER_CONSUMER_CONFIGURATION)
-                                                              FreemarkerProducerConfiguration configuration) {
-        EndpointProducerBuilder result = freemarker(FREEMARKER_AFTER_CONSUMER_COMPONENT_NAME,
-                configuration.getResourceUri());
-        configuration.getEndpointProperties()
-                .ifPresent(additional -> additional.forEach(result::doSetProperty));
+    public EndpointProducerBuilder freemarkerTransformBuilder(
+            @Qualifier(FREEMARKER_AFTER_CONSUMER_CONFIGURATION) FreemarkerProducerConfiguration configuration) {
+        EndpointProducerBuilder result =
+                freemarker(FREEMARKER_AFTER_CONSUMER_COMPONENT_NAME, configuration.getResourceUri());
+        configuration.getEndpointProperties().ifPresent(additional -> additional.forEach(result::doSetProperty));
         return result;
     }
 
@@ -174,41 +204,40 @@ public class AfterConsumerProcessingConfiguration {
 
     // format for marshalling
     @ConfigurationProperties(prefix = MARSHALLING_FORMAT_AFTER_CONSUMER_CONFIGURATION_PATH)
-    @ConditionalOnProperty(name = MARSHALLING_FORMAT_AFTER_CONSUMER_CONFIGURATION_PATH + ".data-format-name", havingValue = "json")
+    @ConditionalOnProperty(name = MARSHALLING_FORMAT_AFTER_CONSUMER_CONFIGURATION_PATH + ".data-format-name",
+                           havingValue = "json")
     @Bean(MARSHALLING_FORMAT_AFTER_CONSUMER_NAME)
     public DataFormatDefinition marshallingJsonDataFormat() {
         return new JsonDataFormat();
     }
 
     @ConfigurationProperties(prefix = MARSHALLING_FORMAT_AFTER_CONSUMER_CONFIGURATION_PATH)
-    @ConditionalOnProperty(name = MARSHALLING_FORMAT_AFTER_CONSUMER_CONFIGURATION_PATH + ".data-format-name", havingValue = "xml")
+    @ConditionalOnProperty(name = MARSHALLING_FORMAT_AFTER_CONSUMER_CONFIGURATION_PATH + ".data-format-name",
+                           havingValue = "xml")
     @Bean(MARSHALLING_FORMAT_AFTER_CONSUMER_NAME)
     public DataFormatDefinition marshallingXmlDataFormat() {
         return new JacksonXMLDataFormat();
     }
 
     @Bean(name = "afterConsumer")
-    public ProcessingParams afterConsumerProcessing(@Autowired(required = false)
-                                                    @Qualifier(VALIDATOR_AFTER_CONSUMER_BUILDER)
-                                                    EndpointProducerBuilder validatorBuilder,
-                                                    @Autowired(required = false)
-                                                    @Qualifier(CONVERT_BODY_NAME)
-                                                    ConvertBodyDefinition convertBody,
-                                                    @Autowired(required = false)
-                                                    @Qualifier(HEADER_COLLECTOR_AFTER_CONSUMER_COMPONENT_NAME)
-                                                    Processor headerCollector,
-                                                    @Autowired(required = false)
-                                                    @Qualifier(UNMARSHALLING_FORMAT_AFTER_CONSUMER_NAME)
-                                                    DataFormatDefinition unmarshallingFormat,
-                                                    @Autowired(required = false)
-                                                    @Qualifier(FREEMARKER_AFTER_CONSUMER_BUILDER)
-                                                    EndpointProducerBuilder transform,
-                                                    @Autowired(required = false)
-                                                    @Qualifier(MARSHALLING_FORMAT_AFTER_CONSUMER_NAME)
-                                                    DataFormatDefinition marshallingFormat
-    ) {
+    public ProcessingParams afterConsumerProcessing(
+            @Autowired(required = false) @Qualifier(VALIDATOR_AFTER_CONSUMER_BUILDER)
+            EndpointProducerBuilder validatorBuilder,
+            @Autowired(required = false) @Qualifier(CONVERT_BODY_NAME) ConvertBodyDefinition convertBody,
+            @Autowired(required = false) @Qualifier(HEADER_COLLECTOR_AFTER_CONSUMER_COMPONENT_NAME)
+            Processor headerCollector,
+            @Autowired(required = false) @Qualifier(UNMARSHALLING_FORMAT_AFTER_CONSUMER_NAME)
+            DataFormatDefinition unmarshallingFormat,
+            @Autowired(required = false) @Qualifier(FREEMARKER_AFTER_CONSUMER_BUILDER)
+            EndpointProducerBuilder transform,
+            @Autowired(required = false) @Qualifier(MARSHALLING_FORMAT_AFTER_CONSUMER_NAME)
+            DataFormatDefinition marshallingFormat) {
         return new ProcessingParams(validatorBuilder,
-                convertBody, headerCollector, unmarshallingFormat, transform, marshallingFormat);
+                                    convertBody,
+                                    headerCollector,
+                                    unmarshallingFormat,
+                                    transform,
+                                    marshallingFormat);
     }
 
 }

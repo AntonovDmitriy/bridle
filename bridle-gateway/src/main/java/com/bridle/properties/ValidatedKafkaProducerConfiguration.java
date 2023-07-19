@@ -9,8 +9,7 @@ import javax.validation.constraints.NotEmpty;
 import java.util.Map;
 import java.util.Optional;
 
-@Validated
-public class ValidatedKafkaProducerConfiguration extends KafkaComponentConfiguration {
+@Validated public class ValidatedKafkaProducerConfiguration extends KafkaComponentConfiguration {
 
     private Map<String, Object> endpointProperties;
 
@@ -26,9 +25,8 @@ public class ValidatedKafkaProducerConfiguration extends KafkaComponentConfigura
     @AssertTrue(message = "ssl configuration is not consistent")
     public boolean isSslSettingsConsistent() {
         boolean result = true;
-        if (getSecurityProtocol() == null
-                || (!getSecurityProtocol().equals("PLAINTEXT")
-                && StringUtils.isAnyBlank(getSslKeystoreLocation(),
+        if (getSecurityProtocol() == null || (!getSecurityProtocol().equals("PLAINTEXT") && StringUtils.isAnyBlank(
+                getSslKeystoreLocation(),
                 getSslKeystorePassword(),
                 getSslTruststoreLocation(),
                 getSslTruststorePassword()))) {

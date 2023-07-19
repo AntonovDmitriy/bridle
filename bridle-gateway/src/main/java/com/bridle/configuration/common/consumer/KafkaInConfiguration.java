@@ -27,7 +27,8 @@ public class KafkaInConfiguration {
     @Bean
     public ComponentCustomizer configureKafkaComponent(CamelContext context,
                                                        ValidatedKafkaConsumerConfiguration componentConfiguration) {
-        return new ComponentCustomizerImpl(context, componentConfiguration,
-                ComponentNameConstants.KAFKA_IN_COMPONENT_NAME);
+        return new ComponentCustomizerImpl(context,
+                                           componentConfiguration,
+                                           ComponentNameConstants.KAFKA_IN_COMPONENT_NAME);
     }
 }

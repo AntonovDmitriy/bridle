@@ -26,17 +26,17 @@ import static org.mockserver.model.HttpResponse.response;
 
 @SpringBootTest(classes = {App.class})
 @TestPropertySource(properties = {"spring.config.location=classpath:routetest/load-freemarker-http/application.yml"})
-@CamelSpringBootTest
-@DirtiesContext
-@Testcontainers
-public class LoadFreemarkerHttpRouteTest {
+@CamelSpringBootTest @DirtiesContext @Testcontainers public class LoadFreemarkerHttpRouteTest {
 
     @Container
-    public static MockServerContainer mockServer = new MockServerContainer(DockerImageName
-            .parse("mockserver/mockserver")
-            .withTag("mockserver-" + MockServerClient.class.getPackage().getImplementationVersion()));
+    public static MockServerContainer mockServer =
+            new MockServerContainer(DockerImageName.parse("mockserver/mockserver")
+                                            .withTag("mockserver-" + MockServerClient.class.getPackage()
+                                                    .getImplementationVersion()));
+
     @Autowired
     private ProducerTemplate producerTemplate;
+
     @Autowired
     private CamelContext context;
 
@@ -46,8 +46,7 @@ public class LoadFreemarkerHttpRouteTest {
         System.setProperty("rest-call.port", mockServer.getServerPort().toString());
 
         var mockServerClient = new MockServerClient(mockServer.getHost(), mockServer.getServerPort());
-        mockServerClient
-                .when(request().withMethod("POST").withPath("/person"))
+        mockServerClient.when(request().withMethod("POST").withPath("/person"))
                 .respond(response("OK").withStatusCode(200));
 
     }

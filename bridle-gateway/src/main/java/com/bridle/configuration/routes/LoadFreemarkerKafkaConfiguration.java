@@ -25,9 +25,7 @@ import static com.bridle.configuration.routes.LoadFreemarkerKafkaConfiguration.L
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.kafka;
 
 @Configuration
-@Import({SchedulerConfiguration.class,
-        KafkaOutConfiguration.class,
-        FreemarkerConfiguration.class,
+@Import({SchedulerConfiguration.class, KafkaOutConfiguration.class, FreemarkerConfiguration.class,
         ErrorHandlerConfiguration.class})
 @ConditionalOnProperty(name = "gateway.type", havingValue = LOAD_FREEMARKER_KAFKA)
 public class LoadFreemarkerKafkaConfiguration {
@@ -40,19 +38,19 @@ public class LoadFreemarkerKafkaConfiguration {
                                          FreemarkerProducerConfiguration freemarkerConfiguration,
                                          SchedulerConsumerConfiguration schedulerConfiguration) {
 
-        EndpointConsumerBuilder scheduler = StaticEndpointBuilders.scheduler(SCHEDULER_COMPONENT_NAME,
-                SCHEDULER_COMPONENT_NAME);
+        EndpointConsumerBuilder scheduler =
+                StaticEndpointBuilders.scheduler(SCHEDULER_COMPONENT_NAME, SCHEDULER_COMPONENT_NAME);
         schedulerConfiguration.getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(scheduler::doSetProperty));
 
-        EndpointProducerBuilder freemarker = StaticEndpointBuilders.freemarker(FREEMARKER_COMPONENT_NAME,
-                freemarkerConfiguration.getResourceUri());
+        EndpointProducerBuilder freemarker =
+                StaticEndpointBuilders.freemarker(FREEMARKER_COMPONENT_NAME, freemarkerConfiguration.getResourceUri());
         freemarkerConfiguration.getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(freemarker::doSetProperty));
 
         EndpointProducerBuilder kafkaOut = kafka(KAFKA_OUT_COMPONENT_NAME, kafkaProducerConfiguration.getTopic());
-        kafkaProducerConfiguration.getEndpointProperties().
-                ifPresent(additional -> additional.forEach(kafkaOut::doSetProperty));
+        kafkaProducerConfiguration.getEndpointProperties()
+                .ifPresent(additional -> additional.forEach(kafkaOut::doSetProperty));
 
         return new LoadFreemarkerKafkaRoute(errorHandlerFactory, scheduler, freemarker, kafkaOut);
     }

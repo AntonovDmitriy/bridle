@@ -6,8 +6,7 @@ import org.springframework.validation.annotation.Validated;
 import java.util.Map;
 import java.util.Optional;
 
-@Validated
-public class FreemarkerProducerConfiguration extends FreemarkerComponentConfiguration {
+@Validated public class FreemarkerProducerConfiguration extends FreemarkerComponentConfiguration {
 
     private String resourceUri;
 

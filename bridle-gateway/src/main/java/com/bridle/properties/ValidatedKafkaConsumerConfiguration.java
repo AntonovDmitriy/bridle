@@ -13,8 +13,7 @@ import java.util.Optional;
 
 import static javax.validation.constraints.Pattern.Flag.CASE_INSENSITIVE;
 
-@Validated
-public class ValidatedKafkaConsumerConfiguration extends KafkaComponentConfiguration {
+@Validated public class ValidatedKafkaConsumerConfiguration extends KafkaComponentConfiguration {
 
     private Map<String, Object> endpointProperties;
 
@@ -36,9 +35,8 @@ public class ValidatedKafkaConsumerConfiguration extends KafkaComponentConfigura
     @AssertTrue(message = "ssl configuration is not consistent")
     public boolean isSslSettingsConsistent() {
         boolean result = true;
-        if (getSecurityProtocol() == null
-                || (!getSecurityProtocol().equals("PLAINTEXT")
-                && StringUtils.isAnyBlank(getSslKeystoreLocation(),
+        if (getSecurityProtocol() == null || (!getSecurityProtocol().equals("PLAINTEXT") && StringUtils.isAnyBlank(
+                getSslKeystoreLocation(),
                 getSslKeystorePassword(),
                 getSslTruststoreLocation(),
                 getSslTruststorePassword()))) {

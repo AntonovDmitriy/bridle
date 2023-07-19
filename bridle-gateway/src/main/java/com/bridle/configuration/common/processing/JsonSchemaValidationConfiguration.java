@@ -34,7 +34,8 @@ public class JsonSchemaValidationConfiguration {
     @Bean
     @ConditionalOnBean(name = "jsonValidatorConfiguration")
     public EndpointProducerBuilder validatorBuilder(JsonSchemaValidatorConfiguration validatorConfiguration) {
-        EndpointProducerBuilder result = jsonValidator(VALIDATOR_COMPONENT_NAME, validatorConfiguration.getResourceUri());
+        EndpointProducerBuilder result =
+                jsonValidator(VALIDATOR_COMPONENT_NAME, validatorConfiguration.getResourceUri());
         validatorConfiguration.getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(result::doSetProperty));
         return result;

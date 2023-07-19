@@ -28,21 +28,23 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
 
 @SpringBootTest(classes = {App.class})
 @TestPropertySource(properties = {"spring.config.location=classpath:routetest/kafka-http/application.yml"})
-@CamelSpringBootTest
-@DirtiesContext
-@Testcontainers
-public class KafkaHttpRouteTest {
+@CamelSpringBootTest @DirtiesContext @Testcontainers public class KafkaHttpRouteTest {
 
     private static final String TOPIC_NAME = "routetest";
+
     @Container
     private static final KafkaContainer kafka =
             new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"));
+
     @Container
-    public static MockServerContainer mockServer = new MockServerContainer(DockerImageName
-            .parse("mockserver/mockserver")
-            .withTag("mockserver-" + MockServerClient.class.getPackage().getImplementationVersion()));
+    public static MockServerContainer mockServer =
+            new MockServerContainer(DockerImageName.parse("mockserver/mockserver")
+                                            .withTag("mockserver-" + MockServerClient.class.getPackage()
+                                                    .getImplementationVersion()));
+
     @Autowired
     private ProducerTemplate producerTemplate;
+
     @Autowired
     private CamelContext context;
 
@@ -50,16 +52,16 @@ public class KafkaHttpRouteTest {
     public static void setUp() throws Exception {
         kafka.start();
         System.setProperty("kafka-in.brokers", "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
-        kafka.execInContainer("/bin/bash", "-c",
-                String.format("kafka-topics --create --bootstrap-server localhost:9092 " +
-                        "--topic %s --partitions 1 --replication-factor 1", TOPIC_NAME));
+        kafka.execInContainer("/bin/bash",
+                              "-c",
+                              String.format("kafka-topics --create --bootstrap-server localhost:9092 " +
+                                                    "--topic %s --partitions 1 --replication-factor 1", TOPIC_NAME));
 
         mockServer.start();
         System.setProperty("rest-call.port", mockServer.getServerPort().toString());
 
         var mockServerClient = new MockServerClient(mockServer.getHost(), mockServer.getServerPort());
-        mockServerClient
-                .when(request().withMethod("POST").withPath("/person"))
+        mockServerClient.when(request().withMethod("POST").withPath("/person"))
                 .respond(response("OK").withStatusCode(200));
 
     }

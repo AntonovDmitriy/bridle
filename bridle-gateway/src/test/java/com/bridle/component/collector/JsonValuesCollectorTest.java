@@ -19,16 +19,15 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ExtendWith(MockitoExtension.class)
-class JsonValuesCollectorTest {
+@ExtendWith(MockitoExtension.class) class JsonValuesCollectorTest {
 
-    private static final String BAD_JSON = "{" +
-            "\"" + RQ_UID_KEY + "\": \"" + RQUID_VALUE + "\"," +
-            "\"" + SYS_ID_KEY + "\": " + "\"" + SYS_ID_VALUE + "\"";
-    private static final String CORRECT_JSON = "{" +
-            "\"" + RQ_UID_KEY + "\": \"" + RQUID_VALUE + "\"," +
-            "\"" + SYS_ID_KEY + "\": " + "\"" + SYS_ID_VALUE + "\"" +
-            "}";
+    private static final String BAD_JSON =
+            "{" + "\"" + RQ_UID_KEY + "\": \"" + RQUID_VALUE + "\"," + "\"" + SYS_ID_KEY + "\": " + "\"" +
+                    SYS_ID_VALUE + "\"";
+
+    private static final String CORRECT_JSON =
+            "{" + "\"" + RQ_UID_KEY + "\": \"" + RQUID_VALUE + "\"," + "\"" + SYS_ID_KEY + "\": " + "\"" +
+                    SYS_ID_VALUE + "\"" + "}";
 
     @Test
     void collectValuesThrowsExceptionWhenBodyIsNull() {

@@ -38,12 +38,10 @@ public class FreemarkerConfiguration {
 
     @Bean
     @ConditionalOnBean(name = "freemarkerConfiguration")
-    public EndpointProducerBuilder freemarkerTransformBuilder(@Qualifier("freemarkerConfiguration")
-                                                              FreemarkerProducerConfiguration configuration) {
-        EndpointProducerBuilder result = freemarker(FREEMARKER_COMPONENT_NAME,
-                configuration.getResourceUri());
-        configuration.getEndpointProperties()
-                .ifPresent(additional -> additional.forEach(result::doSetProperty));
+    public EndpointProducerBuilder freemarkerTransformBuilder(
+            @Qualifier("freemarkerConfiguration") FreemarkerProducerConfiguration configuration) {
+        EndpointProducerBuilder result = freemarker(FREEMARKER_COMPONENT_NAME, configuration.getResourceUri());
+        configuration.getEndpointProperties().ifPresent(additional -> additional.forEach(result::doSetProperty));
         return result;
     }
 

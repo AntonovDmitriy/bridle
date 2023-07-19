@@ -24,11 +24,11 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-class FacadeHeadersCollectorTest {
+@ExtendWith(MockitoExtension.class) class FacadeHeadersCollectorTest {
 
     @Spy
     private FacadeHeaderCollectorConfiguration configuration = new FacadeHeaderCollectorConfiguration();
+
     @Mock
     private ValuesCollectorFactory collectorFactory;
 

@@ -23,11 +23,8 @@ import org.springframework.context.annotation.Import;
 import static com.bridle.configuration.routes.HttpPollHttpConfiguration.GATEWAY_TYPE_HTTP_POLL_HTTP;
 
 @Configuration
-@Import({SchedulerConfiguration.class,
-        HttpPollConfiguration.class,
-        RestCallConfiguration.class,
-        ErrorHandlerConfiguration.class,
-        AfterConsumerProcessingConfiguration.class,
+@Import({SchedulerConfiguration.class, HttpPollConfiguration.class, RestCallConfiguration.class,
+        ErrorHandlerConfiguration.class, AfterConsumerProcessingConfiguration.class,
         AfterProducerProcessingConfiguration.class})
 @ConditionalOnProperty(name = "gateway.type", havingValue = GATEWAY_TYPE_HTTP_POLL_HTTP)
 public class HttpPollHttpConfiguration {
@@ -37,13 +34,19 @@ public class HttpPollHttpConfiguration {
     @Bean
     public RouteBuilder httpPollHttpRoute(ErrorHandlerFactory errorHandlerFactory,
                                           EndpointConsumerBuilder scheduler,
-                                          @Autowired(required = false) @Qualifier("afterConsumer") ProcessingParams processingAfterConsumerParams,
-                                          @Autowired(required = false) @Qualifier("afterProducer") ProcessingParams processingAfterProducerParams,
+                                          @Autowired(required = false) @Qualifier("afterConsumer")
+                                          ProcessingParams processingAfterConsumerParams,
+                                          @Autowired(required = false) @Qualifier("afterProducer")
+                                          ProcessingParams processingAfterProducerParams,
                                           @Qualifier("restPollBuilder") EndpointProducerBuilder restPoll,
                                           @Qualifier("restCallBuilder") EndpointProducerBuilder restCall) {
 
         return new ConsumerToDoubleProducerRoute(errorHandlerFactory,
-                new ConsumerToDoubleProducerRouteParams(GATEWAY_TYPE_HTTP_POLL_HTTP,
-                        scheduler, processingAfterConsumerParams, restPoll, processingAfterProducerParams, restCall));
+                                                 new ConsumerToDoubleProducerRouteParams(GATEWAY_TYPE_HTTP_POLL_HTTP,
+                                                                                         scheduler,
+                                                                                         processingAfterConsumerParams,
+                                                                                         restPoll,
+                                                                                         processingAfterProducerParams,
+                                                                                         restCall));
     }
 }

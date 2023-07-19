@@ -33,10 +33,10 @@ public class SuccessResponseConfiguration {
     }
 
     @Bean
-    public EndpointProducerBuilder successResponseBuilder(@Qualifier("successResponseConfiguration")
-                                                          FreemarkerProducerConfiguration successResponseConfiguration) {
-        EndpointProducerBuilder result = freemarker(SUCCESS_RESPONSE_FREEMARKER_COMPONENT_NAME,
-                successResponseConfiguration.getResourceUri());
+    public EndpointProducerBuilder successResponseBuilder(
+            @Qualifier("successResponseConfiguration") FreemarkerProducerConfiguration successResponseConfiguration) {
+        EndpointProducerBuilder result =
+                freemarker(SUCCESS_RESPONSE_FREEMARKER_COMPONENT_NAME, successResponseConfiguration.getResourceUri());
         successResponseConfiguration.getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(result::doSetProperty));
         return result;

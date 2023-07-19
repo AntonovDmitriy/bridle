@@ -25,9 +25,7 @@ import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.http;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.kafka;
 
 @Configuration
-@Import({KafkaInConfiguration.class,
-        RestCallConfiguration.class,
-        KafkaOutConfiguration.class,
+@Import({KafkaInConfiguration.class, RestCallConfiguration.class, KafkaOutConfiguration.class,
         ErrorHandlerConfiguration.class})
 @ConditionalOnProperty(name = "gateway.type", havingValue = GATEWAY_TYPE_KAFKA_HTTP_KAFKA)
 public class KafkaHttpKafkaConfiguration {
@@ -41,8 +39,8 @@ public class KafkaHttpKafkaConfiguration {
                                             ValidatedKafkaProducerConfiguration kafkaOutConfiguration) {
 
         EndpointConsumerBuilder kafkaIn = kafka(KAFKA_IN_COMPONENT_NAME, kafkaInConfiguration.getTopic());
-        kafkaInConfiguration.getEndpointProperties().
-                ifPresent(additional -> additional.forEach(kafkaIn::doSetProperty));
+        kafkaInConfiguration.getEndpointProperties()
+                .ifPresent(additional -> additional.forEach(kafkaIn::doSetProperty));
 
         EndpointProducerBuilder http = http(REST_CALL_COMPONENT_NAME, restConfiguration.createHttpUrl());
         restConfiguration.getEndpointProperties().ifPresent(additional -> additional.forEach(http::doSetProperty));

@@ -6,10 +6,10 @@ import org.springframework.validation.annotation.Validated;
 import java.util.HashMap;
 import java.util.Map;
 
-@Validated
-public class FacadeHeaderCollectorConfiguration {
+@Validated public class FacadeHeaderCollectorConfiguration {
 
     private Map<String, String> queryExpressionsByHeaderName = new HashMap<>();
+
     private ExpressionFormat expressionFormat;
 
     public Map<String, String> getQueryExpressionsByHeaderName() {

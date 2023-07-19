@@ -36,11 +36,10 @@ public class RestCallConfiguration {
     }
 
     @Bean
-    public EndpointProducerBuilder restCallBuilder(@Qualifier("restCallConfiguration")
-                                                   HttpProducerConfiguration configuration) {
+    public EndpointProducerBuilder restCallBuilder(
+            @Qualifier("restCallConfiguration") HttpProducerConfiguration configuration) {
         EndpointProducerBuilder result = http(REST_CALL_COMPONENT_NAME, configuration.createHttpUrl());
-        configuration.getEndpointProperties().
-                ifPresent(additional -> additional.forEach(result::doSetProperty));
+        configuration.getEndpointProperties().ifPresent(additional -> additional.forEach(result::doSetProperty));
         return result;
     }
 }

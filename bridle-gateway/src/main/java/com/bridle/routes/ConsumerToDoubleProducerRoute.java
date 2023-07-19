@@ -9,12 +9,13 @@ import static com.bridle.configuration.common.ComponentNameConstants.REDELIVERY_
 public class ConsumerToDoubleProducerRoute extends BaseRouteBuilder {
 
     public static final String PROCESSING_AFTER_CONSUMER = "direct:processingAfterConsumer";
+
     public static final String PROCESSING_AFTER_PRODUCER = "direct:processingAfterProducer";
+
     private final ConsumerToDoubleProducerRouteParams routeParams;
 
     public ConsumerToDoubleProducerRoute(ErrorHandlerFactory errorHandlerFactory,
-                                         ConsumerToDoubleProducerRouteParams routeParams
-    ) {
+                                         ConsumerToDoubleProducerRouteParams routeParams) {
         super(errorHandlerFactory);
         this.routeParams = routeParams;
     }
@@ -23,25 +24,27 @@ public class ConsumerToDoubleProducerRoute extends BaseRouteBuilder {
     public void configure() throws Exception {
         super.configure();
 
-        onException(Exception.class)
-                .log(LoggingLevel.ERROR, "Exception occurred: ${exception.stacktrace}")
+        onException(Exception.class).log(LoggingLevel.ERROR, "Exception occurred: ${exception.stacktrace}")
                 .redeliveryPolicyRef(REDELIVERY_POLICY)
                 .log(LOG_BODY);
 
-        onException(ValidationException.class)
-                .log(LoggingLevel.ERROR, "Validation exception occurred: ${exception.stacktrace}")
+        onException(ValidationException.class).log(LoggingLevel.ERROR,
+                                                   "Validation exception occurred: ${exception.stacktrace}")
                 .log(LOG_BODY);
 
         ProcessingBuilder.addProcessing(from(PROCESSING_AFTER_CONSUMER),
-                routeParams.afterConsumerProcessingParams(), "processingAfterConsumer");
+                                        routeParams.afterConsumerProcessingParams(),
+                                        "processingAfterConsumer");
         ProcessingBuilder.addProcessing(from(PROCESSING_AFTER_PRODUCER),
-                routeParams.afterProducerProcessingParams(), "processingAfterProducer");
+                                        routeParams.afterProducerProcessingParams(),
+                                        "processingAfterProducer");
 
-        from(routeParams.consumer())
-                .routeId(routeParams.routeId())
+        from(routeParams.consumer()).routeId(routeParams.routeId())
                 .to(PROCESSING_AFTER_CONSUMER)
                 .to(routeParams.firstProducer())
                 .to(PROCESSING_AFTER_PRODUCER)
-                .log(LOG_BODY).to(routeParams.secondProducer()).log(LOG_BODY);
+                .log(LOG_BODY)
+                .to(routeParams.secondProducer())
+                .log(LOG_BODY);
     }
 }

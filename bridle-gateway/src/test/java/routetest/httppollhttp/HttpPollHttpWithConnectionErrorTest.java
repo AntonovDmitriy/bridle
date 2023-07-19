@@ -30,25 +30,26 @@ import static utils.MetricsTestUtils.verifyMetrics;
 
 @SpringBootTest(classes = {App.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(properties = {"spring.config.location=classpath:routetest/http-poll-http/application.yml"})
-@CamelSpringBootTest
-@DirtiesContext
-@Testcontainers
-@AutoConfigureMetrics
+@CamelSpringBootTest @DirtiesContext @Testcontainers @AutoConfigureMetrics
 public class HttpPollHttpWithConnectionErrorTest {
 
-    public static final HttpRequest CALL_SERVER_REQUEST = request().withMethod("POST")
-            .withPath("/person")
-            .withBody("52.255");
+    public static final HttpRequest CALL_SERVER_REQUEST =
+            request().withMethod("POST").withPath("/person").withBody("52.255");
 
     private static final HttpRequest POLL_SERVER_REQUEST = request().withMethod("GET").withPath("/salary");
+
     @Container
-    public static MockServerContainer mockPollServer = new MockServerContainer(DockerImageName
-            .parse("mockserver/mockserver")
-            .withTag("mockserver-" + MockServerClient.class.getPackage().getImplementationVersion()));
+    public static MockServerContainer mockPollServer =
+            new MockServerContainer(DockerImageName.parse("mockserver/mockserver")
+                                            .withTag("mockserver-" + MockServerClient.class.getPackage()
+                                                    .getImplementationVersion()));
+
     @Container
-    public static MockServerContainer mockCallServer = new MockServerContainer(DockerImageName
-            .parse("mockserver/mockserver")
-            .withTag("mockserver-" + MockServerClient.class.getPackage().getImplementationVersion()));
+    public static MockServerContainer mockCallServer =
+            new MockServerContainer(DockerImageName.parse("mockserver/mockserver")
+                                            .withTag("mockserver-" + MockServerClient.class.getPackage()
+                                                    .getImplementationVersion()));
+
     @Autowired
     private CamelContext context;
 
@@ -57,9 +58,7 @@ public class HttpPollHttpWithConnectionErrorTest {
         mockPollServer.start();
         System.setProperty("rest-poll.port", mockPollServer.getServerPort().toString());
         var mockPollerverClient = new MockServerClient(mockPollServer.getHost(), mockPollServer.getServerPort());
-        mockPollerverClient
-                .when(POLL_SERVER_REQUEST)
-                .respond(response().withBody("52.255").withStatusCode(200));
+        mockPollerverClient.when(POLL_SERVER_REQUEST).respond(response().withBody("52.255").withStatusCode(200));
     }
 
     @AfterAll

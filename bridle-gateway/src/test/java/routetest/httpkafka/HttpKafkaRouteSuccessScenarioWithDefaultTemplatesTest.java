@@ -26,20 +26,21 @@ import static utils.TestUtils.getStringResources;
 import static utils.TestUtils.sendPostHttpRequest;
 
 @SpringBootTest(classes = {App.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@TestPropertySource(properties = {"spring.config.location=classpath:routetest/http-kafka/application-with-default-templates.yml"})
-@CamelSpringBootTest
-@Testcontainers
-@DirtiesContext
-@AutoConfigureMetrics
+@TestPropertySource(properties = {
+        "spring.config.location=classpath:routetest/http-kafka/application-with-default-templates.yml"})
+@CamelSpringBootTest @Testcontainers @DirtiesContext @AutoConfigureMetrics
 public class HttpKafkaRouteSuccessScenarioWithDefaultTemplatesTest {
 
     public static final String HTTP_SERVER_URL = "http://localhost:8080/camel/myapi";
+
     private static final String TOPIC_NAME = "routetest";
+
     @Container
-    private static final KafkaContainer kafka = new KafkaContainer(
-            DockerImageName.parse("confluentinc/cp-kafka:6.2.1"))
-            .withEnv("KAFKA_DELETE_TOPIC_ENABLE", "true")
-            .withEnv("KAFKA_AUTO_CREATE_TOPICS_ENABLE", "false");
+    private static final KafkaContainer kafka =
+            new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1")).withEnv("KAFKA_DELETE_TOPIC_ENABLE",
+                                                                                             "true")
+                    .withEnv("KAFKA_AUTO_CREATE_TOPICS_ENABLE", "false");
+
     @Autowired
     private CamelContext context;
 

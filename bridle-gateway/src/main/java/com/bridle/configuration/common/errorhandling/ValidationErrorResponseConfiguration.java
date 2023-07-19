@@ -35,8 +35,8 @@ public class ValidationErrorResponseConfiguration {
     @Bean
     public EndpointProducerBuilder validationErrorResponseBuilder(@Qualifier("validationErrorResponseConfiguration")
                                                                   FreemarkerProducerConfiguration errorResponseConfiguration) {
-        EndpointProducerBuilder result = freemarker(VALIDATION_RESPONSE_FREEMARKER_COMPONENT_NAME,
-                errorResponseConfiguration.getResourceUri());
+        EndpointProducerBuilder result =
+                freemarker(VALIDATION_RESPONSE_FREEMARKER_COMPONENT_NAME, errorResponseConfiguration.getResourceUri());
         errorResponseConfiguration.getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(result::doSetProperty));
         return result;
@@ -45,9 +45,12 @@ public class ValidationErrorResponseConfiguration {
     @Lazy
     @Bean
     public ComponentCustomizer configureValidationErrorResponseComponent(CamelContext context,
-                                                                         @Qualifier("validationErrorResponseConfiguration")
+                                                                         @Qualifier(
+                                                                                 "validationErrorResponseConfiguration")
                                                                          FreemarkerProducerConfiguration componentConfiguration) {
-        return new ComponentCustomizerImpl(context, componentConfiguration, VALIDATION_RESPONSE_FREEMARKER_COMPONENT_NAME);
+        return new ComponentCustomizerImpl(context,
+                                           componentConfiguration,
+                                           VALIDATION_RESPONSE_FREEMARKER_COMPONENT_NAME);
     }
 
 }

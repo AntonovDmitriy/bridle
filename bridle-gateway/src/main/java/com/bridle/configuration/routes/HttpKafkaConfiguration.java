@@ -24,13 +24,9 @@ import org.springframework.context.annotation.Import;
 import static com.bridle.configuration.common.ComponentNameConstants.REST_IN_COMPONENT_NAME;
 
 @Configuration
-@Import({KafkaOutConfiguration.class,
-        ErrorHandlerConfiguration.class,
-        AfterConsumerProcessingConfiguration.class,
-        SuccessResponseConfiguration.class,
-        ErrorResponseConfiguration.class,
-        ValidationErrorResponseConfiguration.class
-})
+@Import({KafkaOutConfiguration.class, ErrorHandlerConfiguration.class, AfterConsumerProcessingConfiguration.class,
+        SuccessResponseConfiguration.class, ErrorResponseConfiguration.class,
+        ValidationErrorResponseConfiguration.class})
 @ConditionalOnProperty(name = "gateway.type", havingValue = HttpKafkaConfiguration.GATEWAY_TYPE_HTTP_KAFKA)
 public class HttpKafkaConfiguration {
 
@@ -46,20 +42,25 @@ public class HttpKafkaConfiguration {
     public RouteBuilder kafkaHttpKafkaRoute(EndpointProducerBuilder kafkaProducerBuilder,
                                             ErrorHandlerFactory errorHandlerFactory,
                                             HttpConsumerConfiguration httpConsumerConfiguration,
-                                            @Autowired(required = false) @Qualifier("afterConsumer") ProcessingParams processingAfterConsumerParams,
-                                            @Autowired(required = false) @Qualifier("afterProducer") ProcessingParams processingAfterProducerParams,
-                                            @Qualifier("successResponseBuilder") EndpointProducerBuilder successResponseBuilder,
-                                            @Qualifier("errorResponseBuilder") EndpointProducerBuilder errorResponseBuilder,
-                                            @Qualifier("validationErrorResponseBuilder") EndpointProducerBuilder validationErrorResponseBuilder) {
+                                            @Autowired(required = false) @Qualifier("afterConsumer")
+                                            ProcessingParams processingAfterConsumerParams,
+                                            @Autowired(required = false) @Qualifier("afterProducer")
+                                            ProcessingParams processingAfterProducerParams,
+                                            @Qualifier("successResponseBuilder")
+                                            EndpointProducerBuilder successResponseBuilder,
+                                            @Qualifier("errorResponseBuilder")
+                                            EndpointProducerBuilder errorResponseBuilder,
+                                            @Qualifier("validationErrorResponseBuilder")
+                                            EndpointProducerBuilder validationErrorResponseBuilder) {
 
         return new HttpConsumerToProducerRoute(errorHandlerFactory,
-                httpConsumerConfiguration,
-                new HttpConsumerToProducerRouteParams(GATEWAY_TYPE_HTTP_KAFKA,
-                        kafkaProducerBuilder,
-                        successResponseBuilder,
-                        errorResponseBuilder,
-                        validationErrorResponseBuilder,
-                        processingAfterConsumerParams,
-                        processingAfterProducerParams));
+                                               httpConsumerConfiguration,
+                                               new HttpConsumerToProducerRouteParams(GATEWAY_TYPE_HTTP_KAFKA,
+                                                                                     kafkaProducerBuilder,
+                                                                                     successResponseBuilder,
+                                                                                     errorResponseBuilder,
+                                                                                     validationErrorResponseBuilder,
+                                                                                     processingAfterConsumerParams,
+                                                                                     processingAfterProducerParams));
     }
 }

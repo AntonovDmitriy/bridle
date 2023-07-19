@@ -35,10 +35,9 @@ public class SchedulerConfiguration {
 
     @Bean
     public EndpointConsumerBuilder schedulerConsumer(SchedulerConsumerConfiguration configuration) {
-        EndpointConsumerBuilder result = StaticEndpointBuilders.scheduler(SCHEDULER_COMPONENT_NAME,
-                SCHEDULER_COMPONENT_NAME);
-        configuration.getEndpointProperties()
-                .ifPresent(additional -> additional.forEach(result::doSetProperty));
+        EndpointConsumerBuilder result =
+                StaticEndpointBuilders.scheduler(SCHEDULER_COMPONENT_NAME, SCHEDULER_COMPONENT_NAME);
+        configuration.getEndpointProperties().ifPresent(additional -> additional.forEach(result::doSetProperty));
         return result;
     }
 

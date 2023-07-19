@@ -10,8 +10,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.util.List;
 
-@Validated
-public class HttpConsumerConfiguration extends RestConfiguration {
+@Validated public class HttpConsumerConfiguration extends RestConfiguration {
 
     @NotEmpty
     private List<GenericVerbDefinition> routes;
@@ -21,6 +20,7 @@ public class HttpConsumerConfiguration extends RestConfiguration {
 
     @Positive
     private int errorHttpResponseCode = 500;
+
     @Positive
     private int validationErrorHttpResponseCode = 400;
 
@@ -56,8 +56,7 @@ public class HttpConsumerConfiguration extends RestConfiguration {
         this.validationErrorHttpResponseCode = validationErrorHttpResponseCode;
     }
 
-    @Validated
-    public static class GenericVerbDefinition extends VerbDefinition {
+    @Validated public static class GenericVerbDefinition extends VerbDefinition {
 
         private HttpMethod httpMethod;
 

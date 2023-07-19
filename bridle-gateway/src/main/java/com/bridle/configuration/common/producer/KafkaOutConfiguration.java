@@ -43,12 +43,11 @@ public class KafkaOutConfiguration {
     }
 
     @Bean
-    public EndpointProducerBuilder kafkaOutBuilder(@Qualifier("kafkaOutConfiguration")
-                                                   ValidatedKafkaProducerConfiguration configuration) {
+    public EndpointProducerBuilder kafkaOutBuilder(
+            @Qualifier("kafkaOutConfiguration") ValidatedKafkaProducerConfiguration configuration) {
 
         EndpointProducerBuilder result = kafka(KAFKA_OUT_COMPONENT_NAME, configuration.getTopic());
-        configuration.getEndpointProperties()
-                .ifPresent(additional -> additional.forEach(result::doSetProperty));
+        configuration.getEndpointProperties().ifPresent(additional -> additional.forEach(result::doSetProperty));
         return result;
     }
 }

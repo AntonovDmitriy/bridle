@@ -7,7 +7,8 @@ public class GenericHttpConsumerRoute extends BaseRouteBuilder {
 
     protected final HttpConsumerConfiguration restConfiguration;
 
-    public GenericHttpConsumerRoute(ErrorHandlerFactory errorHandlerFactory, HttpConsumerConfiguration restConfiguration) {
+    public GenericHttpConsumerRoute(ErrorHandlerFactory errorHandlerFactory,
+                                    HttpConsumerConfiguration restConfiguration) {
         super(errorHandlerFactory);
         this.restConfiguration = restConfiguration;
     }

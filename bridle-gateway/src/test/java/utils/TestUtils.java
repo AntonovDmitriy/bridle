@@ -20,11 +20,7 @@ public class TestUtils {
                                                         HttpMethod httpMethod,
                                                         HttpEntity<?> requestEntity) {
         RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.exchange(
-                uri,
-                httpMethod,
-                requestEntity,
-                responseType);
+        return restTemplate.exchange(uri, httpMethod, requestEntity, responseType);
     }
 
     public static ResponseEntity<String> sendPostHttpRequest(String uri, String textMessage) throws IOException {

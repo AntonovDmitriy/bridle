@@ -26,9 +26,7 @@ import static com.bridle.configuration.routes.LoadFreemarkerHttpConfiguration.LO
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.http;
 
 @Configuration
-@Import({SchedulerConfiguration.class,
-        RestCallConfiguration.class,
-        FreemarkerConfiguration.class,
+@Import({SchedulerConfiguration.class, RestCallConfiguration.class, FreemarkerConfiguration.class,
         ErrorHandlerConfiguration.class})
 @ConditionalOnProperty(name = "gateway.type", havingValue = LOAD_FREEMARKER_HTTP)
 public class LoadFreemarkerHttpConfiguration {
@@ -42,19 +40,19 @@ public class LoadFreemarkerHttpConfiguration {
                                          FreemarkerProducerConfiguration freemarkerConfiguration,
                                          SchedulerConsumerConfiguration schedulerConfiguration) {
 
-        EndpointConsumerBuilder scheduler = StaticEndpointBuilders.scheduler(SCHEDULER_COMPONENT_NAME,
-                SCHEDULER_COMPONENT_NAME);
+        EndpointConsumerBuilder scheduler =
+                StaticEndpointBuilders.scheduler(SCHEDULER_COMPONENT_NAME, SCHEDULER_COMPONENT_NAME);
         schedulerConfiguration.getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(scheduler::doSetProperty));
 
-        EndpointProducerBuilder freemarker = StaticEndpointBuilders.freemarker(FREEMARKER_COMPONENT_NAME,
-                freemarkerConfiguration.getResourceUri());
+        EndpointProducerBuilder freemarker =
+                StaticEndpointBuilders.freemarker(FREEMARKER_COMPONENT_NAME, freemarkerConfiguration.getResourceUri());
         freemarkerConfiguration.getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(freemarker::doSetProperty));
 
         EndpointProducerBuilder restCall = http(REST_CALL_COMPONENT_NAME, restCallConfiguration.createHttpUrl());
-        restCallConfiguration.getEndpointProperties().
-                ifPresent(additional -> additional.forEach(restCall::doSetProperty));
+        restCallConfiguration.getEndpointProperties()
+                .ifPresent(additional -> additional.forEach(restCall::doSetProperty));
 
         return new LoadFreemarkerHttpRoute(errorHandlerFactory, scheduler, freemarker, restCall);
     }

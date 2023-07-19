@@ -6,6 +6,7 @@ import org.apache.camel.builder.RouteBuilder;
 public class BaseRouteBuilder extends RouteBuilder {
 
     public static final String LOG_BODY = "Response: ${body}";
+
     private final ErrorHandlerFactory errorHandlerFactory;
 
     public BaseRouteBuilder(ErrorHandlerFactory errorHandlerFactory) {
