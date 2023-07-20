@@ -19,7 +19,6 @@ import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.MockServerContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import utils.MockServerContainerUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -35,6 +34,7 @@ import static utils.KafkaContainerUtils.readMessage;
 import static utils.KafkaContainerUtils.setupKafka;
 import static utils.MetricsTestUtils.verifyMetrics;
 import static utils.MockServerContainerUtils.createMockServerClient;
+import static utils.MockServerContainerUtils.createMockServerContainer;
 
 @SpringBootTest(classes = {App.class},
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -55,7 +55,7 @@ public class HttpPollKafkaRouteTest {
     private static final HttpRequest POLL_SERVER_REQUEST = request().withMethod("GET").withPath("/salary");
 
     @Container
-    public static MockServerContainer mockPollServer = MockServerContainerUtils.createMockServerContainer();
+    public static MockServerContainer mockPollServer = createMockServerContainer();
 
     @Autowired
     private CamelContext context;
@@ -64,7 +64,7 @@ public class HttpPollKafkaRouteTest {
     public static void setUp() throws Exception {
         mockPollServer.start();
         System.setProperty("rest-poll.port", mockPollServer.getServerPort().toString());
-        var mockPollerverClient = MockServerContainerUtils.createMockServerClient(mockPollServer);
+        var mockPollerverClient = createMockServerClient(mockPollServer);
         mockPollerverClient
                 .when(POLL_SERVER_REQUEST)
                 .respond(response().withBody(POLL_SERVER_RESPONSE).withStatusCode(200));
