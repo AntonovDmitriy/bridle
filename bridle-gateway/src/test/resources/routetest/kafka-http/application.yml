@@ -10,16 +10,31 @@ camel:
       enabled: false
     scheduler:
       enabled: false
+    rest:
+      enabled: false
+    freemarker:
+      enabled: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,prometheus"
 
 gateway:
   type: "kafka-http"
+redelivery-policy:
+  maximum-redeliveries: 2
+  redelivery-delay: 100
+  retry-attempted-log-level: "WARN"
+error-handler:
+  redelivery-policy-ref: "redelivery-policy"
 kafka-in:
   brokers: "localhost:9090"
   topic: "routetest"
   consumers-count: 1
   group-id: "KAFKA_HTTP_KAFKA_FIRST_TESTING6"
   break-on-error: false
-  auto-offset-reset: "earliest"
   max-poll-records: 500
   max-partition-fetch-bytes: 1048576
   heartbeat-interval-ms: 3000
