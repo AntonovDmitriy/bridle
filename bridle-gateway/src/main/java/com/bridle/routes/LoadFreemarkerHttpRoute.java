@@ -16,9 +16,9 @@ public class LoadFreemarkerHttpRoute extends BaseRouteBuilder {
 
 
     public LoadFreemarkerHttpRoute(ErrorHandlerFactory errorHandlerFactory,
-                                   EndpointConsumerBuilder scheduler,
-                                   EndpointProducerBuilder freemarker,
-                                   EndpointProducerBuilder restCall) {
+            EndpointConsumerBuilder scheduler,
+            EndpointProducerBuilder freemarker,
+            EndpointProducerBuilder restCall) {
         super(errorHandlerFactory);
         this.scheduler = scheduler;
         this.freemarker = freemarker;

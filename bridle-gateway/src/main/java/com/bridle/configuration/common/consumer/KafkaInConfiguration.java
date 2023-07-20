@@ -1,5 +1,6 @@
-package com.bridle.configuration.common;
+package com.bridle.configuration.common.consumer;
 
+import com.bridle.configuration.common.ComponentNameConstants;
 import com.bridle.properties.ValidatedKafkaConsumerConfiguration;
 import com.bridle.utils.ComponentCustomizerImpl;
 import org.apache.camel.CamelContext;
@@ -25,8 +26,9 @@ public class KafkaInConfiguration {
     @Lazy
     @Bean
     public ComponentCustomizer configureKafkaComponent(CamelContext context,
-                                                       ValidatedKafkaConsumerConfiguration componentConfiguration) {
-        return new ComponentCustomizerImpl(context, componentConfiguration,
-                ComponentNameConstants.KAFKA_IN_COMPONENT_NAME);
+            ValidatedKafkaConsumerConfiguration componentConfiguration) {
+        return new ComponentCustomizerImpl(context,
+                                           componentConfiguration,
+                                           ComponentNameConstants.KAFKA_IN_COMPONENT_NAME);
     }
 }

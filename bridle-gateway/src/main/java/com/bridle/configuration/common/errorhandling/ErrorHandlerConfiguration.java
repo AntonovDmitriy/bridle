@@ -1,4 +1,4 @@
-package com.bridle.configuration.common;
+package com.bridle.configuration.common.errorhandling;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.ErrorHandlerFactory;
@@ -21,7 +21,8 @@ public class ErrorHandlerConfiguration {
     }
 
     @Bean(name = REDELIVERY_POLICY)
-    public RedeliveryPolicy customRedeliveryPolicy(RedeliveryPolicyDefinition myRedeliveryPolicyDefinition, CamelContext context) {
+    public RedeliveryPolicy customRedeliveryPolicy(RedeliveryPolicyDefinition myRedeliveryPolicyDefinition,
+            CamelContext context) {
         return ErrorHandlerReifier.createRedeliveryPolicy(myRedeliveryPolicyDefinition, context);
     }
 

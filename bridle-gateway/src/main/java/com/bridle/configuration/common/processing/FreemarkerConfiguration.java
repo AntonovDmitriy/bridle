@@ -1,4 +1,4 @@
-package com.bridle.configuration.common;
+package com.bridle.configuration.common.processing;
 
 import com.bridle.properties.FreemarkerProducerConfiguration;
 import com.bridle.utils.ComponentCustomizerImpl;
@@ -8,6 +8,7 @@ import org.apache.camel.component.freemarker.FreemarkerComponent;
 import org.apache.camel.spi.ComponentCustomizer;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -30,28 +31,27 @@ public class FreemarkerConfiguration {
     }
 
     @Bean(name = FREEMARKER_COMPONENT_NAME)
-    @ConditionalOnProperty(value = FREEMARKER_COMPONENT_NAME + ".resource-uri")
+    @ConditionalOnBean(name = "freemarkerConfiguration")
     public FreemarkerComponent freemarkerComponent() {
         return new FreemarkerComponent();
     }
 
     @Bean
-    @ConditionalOnProperty(value = FREEMARKER_COMPONENT_NAME + ".resource-uri")
-    public EndpointProducerBuilder freemarkerTransformBuilder(@Qualifier("freemarkerConfiguration")
-                                                              FreemarkerProducerConfiguration configuration) {
-        EndpointProducerBuilder result = freemarker(FREEMARKER_COMPONENT_NAME,
-                configuration.getResourceUri());
-        configuration.getEndpointProperties()
-                .ifPresent(additional -> additional.forEach(result::doSetProperty));
+    @ConditionalOnBean(name = "freemarkerConfiguration")
+    public EndpointProducerBuilder freemarkerTransformBuilder(
+            @Qualifier("freemarkerConfiguration")
+            FreemarkerProducerConfiguration configuration) {
+        EndpointProducerBuilder result = freemarker(FREEMARKER_COMPONENT_NAME, configuration.getResourceUri());
+        configuration.getEndpointProperties().ifPresent(additional -> additional.forEach(result::doSetProperty));
         return result;
     }
 
     @Lazy
     @Bean
-    @ConditionalOnProperty(value = FREEMARKER_COMPONENT_NAME + ".resource-uri")
+    @ConditionalOnBean(name = "freemarkerConfiguration")
     public ComponentCustomizer configureFreemarkerComponent(CamelContext context,
-                                                            @Qualifier("freemarkerConfiguration")
-                                                            FreemarkerProducerConfiguration componentConfiguration) {
+            @Qualifier("freemarkerConfiguration")
+            FreemarkerProducerConfiguration componentConfiguration) {
         return new ComponentCustomizerImpl(context, componentConfiguration, FREEMARKER_COMPONENT_NAME);
     }
 

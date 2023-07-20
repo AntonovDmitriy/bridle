@@ -12,19 +12,21 @@ import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 import utils.KafkaContainerUtils;
 
 import static com.bridle.configuration.routes.HttpKafkaConfiguration.GATEWAY_TYPE_HTTP_KAFKA;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
+import static utils.KafkaContainerUtils.createKafkaContainer;
 import static utils.KafkaContainerUtils.readMessage;
 import static utils.MetricsTestUtils.verifyMetrics;
 import static utils.TestUtils.getStringResources;
 import static utils.TestUtils.sendPostHttpRequest;
 
-@SpringBootTest(classes = {App.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@TestPropertySource(properties = {"spring.config.location=classpath:routetest/http-kafka/application-with-header-collector.yml"})
+@SpringBootTest(classes = {App.class},
+        webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@TestPropertySource(properties = {
+        "spring.config.location=classpath:routetest/http-kafka/application-with-header-collector.yml"})
 @CamelSpringBootTest
 @Testcontainers
 @DirtiesContext
@@ -32,6 +34,7 @@ import static utils.TestUtils.sendPostHttpRequest;
 public class HttpKafkaRouteSuccessScenarioWithHeaderCollectorTest {
 
     public static final String HTTP_SERVER_URL = "http://localhost:8080/camel/myapi";
+
     public static final String EXPECTED_TRANSFORMED_MESSAGE = """
             {
               "system": {
@@ -60,12 +63,11 @@ public class HttpKafkaRouteSuccessScenarioWithHeaderCollectorTest {
               }
             }
             """;
+
     private static final String TOPIC_NAME = "routetest";
+
     @Container
-    private static final KafkaContainer kafka = new KafkaContainer(
-            DockerImageName.parse("confluentinc/cp-kafka:6.2.1"))
-            .withEnv("KAFKA_DELETE_TOPIC_ENABLE", "true")
-            .withEnv("KAFKA_AUTO_CREATE_TOPICS_ENABLE", "false");
+    private static final KafkaContainer kafka = createKafkaContainer();
 
     @BeforeAll
     public static void setUp() throws Exception {

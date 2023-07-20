@@ -15,11 +15,11 @@ import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 
 import java.util.concurrent.TimeUnit;
 
 import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
+import static utils.KafkaContainerUtils.createKafkaContainer;
 
 @SpringBootTest(classes = {App.class})
 @TestPropertySource(properties = {"spring.config.location=classpath:routetest/load-freemarker-kafka/application.yml"})
@@ -29,11 +29,13 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
 public class LoadFreemarkerKafkaRouteTest {
 
     private static final String TOPIC_NAME = "routetest";
+
     @Container
-    private static final KafkaContainer kafka = new KafkaContainer(
-            DockerImageName.parse("confluentinc/cp-kafka:6.2.1"));
+    private static final KafkaContainer kafka = createKafkaContainer();
+
     @Autowired
     private ProducerTemplate producerTemplate;
+
     @Autowired
     private CamelContext context;
 
@@ -41,9 +43,10 @@ public class LoadFreemarkerKafkaRouteTest {
     public static void setUp() throws Exception {
         kafka.start();
         System.setProperty("kafka-out.brokers", "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
-        kafka.execInContainer("/bin/bash", "-c",
-                String.format("kafka-topics --create --bootstrap-server localhost:9092" +
-                        " --topic %s --partitions 1 --replication-factor 1", TOPIC_NAME));
+        kafka.execInContainer("/bin/bash",
+                              "-c",
+                              String.format("kafka-topics --create --bootstrap-server localhost:9092" +
+                                                    " --topic %s --partitions 1 --replication-factor 1", TOPIC_NAME));
     }
 
     @Test

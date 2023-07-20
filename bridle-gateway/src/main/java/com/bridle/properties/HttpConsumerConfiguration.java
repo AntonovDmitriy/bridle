@@ -21,6 +21,7 @@ public class HttpConsumerConfiguration extends RestConfiguration {
 
     @Positive
     private int errorHttpResponseCode = 500;
+
     @Positive
     private int validationErrorHttpResponseCode = 400;
 

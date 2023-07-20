@@ -1,4 +1,4 @@
-package com.bridle.configuration.common;
+package com.bridle.configuration.common.producer;
 
 import com.bridle.properties.FreemarkerProducerConfiguration;
 import com.bridle.utils.ComponentCustomizerImpl;
@@ -33,11 +33,13 @@ public class SuccessResponseConfiguration {
     }
 
     @Bean
-    public EndpointProducerBuilder successResponseBuilder(@Qualifier("successResponseConfiguration")
-                                                          FreemarkerProducerConfiguration successResponseConfiguration) {
-        EndpointProducerBuilder result = freemarker(SUCCESS_RESPONSE_FREEMARKER_COMPONENT_NAME,
-                successResponseConfiguration.getResourceUri());
-        successResponseConfiguration.getEndpointProperties()
+    public EndpointProducerBuilder successResponseBuilder(
+            @Qualifier("successResponseConfiguration")
+            FreemarkerProducerConfiguration successResponseConfiguration) {
+        EndpointProducerBuilder result =
+                freemarker(SUCCESS_RESPONSE_FREEMARKER_COMPONENT_NAME, successResponseConfiguration.getResourceUri());
+        successResponseConfiguration
+                .getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(result::doSetProperty));
         return result;
     }
@@ -45,8 +47,8 @@ public class SuccessResponseConfiguration {
     @Lazy
     @Bean
     public ComponentCustomizer configureSuccessResponseComponent(CamelContext context,
-                                                                 @Qualifier("successResponseConfiguration")
-                                                                 FreemarkerProducerConfiguration componentConfiguration) {
+            @Qualifier("successResponseConfiguration")
+            FreemarkerProducerConfiguration componentConfiguration) {
         return new ComponentCustomizerImpl(context, componentConfiguration, SUCCESS_RESPONSE_FREEMARKER_COMPONENT_NAME);
     }
 

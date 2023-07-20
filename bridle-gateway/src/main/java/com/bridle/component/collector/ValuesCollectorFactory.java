@@ -20,5 +20,5 @@ public interface ValuesCollectorFactory {
      */
     @SuppressWarnings("rawtypes")
     ValuesCollector createValuesCollector(ExpressionFormat messageFormat,
-                                          Map<String, String> queryExpressionsByHeaderName);
+            Map<String, String> queryExpressionsByHeaderName);
 }

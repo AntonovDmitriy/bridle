@@ -10,6 +10,7 @@ import java.util.Map;
 public class FacadeHeaderCollectorConfiguration {
 
     private Map<String, String> queryExpressionsByHeaderName = new HashMap<>();
+
     private ExpressionFormat expressionFormat;
 
     public Map<String, String> getQueryExpressionsByHeaderName() {

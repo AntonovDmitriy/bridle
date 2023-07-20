@@ -10,9 +10,25 @@ camel:
       enabled: false
     scheduler:
       enabled: false
+    rest:
+      enabled: false
+    freemarker:
+      enabled: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,prometheus"
 
 gateway:
   type: "http-poll-http"
+redelivery-policy:
+  maximum-redeliveries: 2
+  redelivery-delay: 100
+  retry-attempted-log-level: "WARN"
+error-handler:
+  redelivery-policy-ref: "redelivery-policy"
 main-scheduler:
   endpoint-properties:
     delay: "1000"

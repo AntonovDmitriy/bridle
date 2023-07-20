@@ -15,9 +15,9 @@ public class HttpPollKafkaRoute extends BaseRouteBuilder {
     private final EndpointProducerBuilder kafka;
 
     public HttpPollKafkaRoute(ErrorHandlerFactory errorHandlerFactory,
-                              EndpointConsumerBuilder scheduler,
-                              EndpointProducerBuilder restPoll,
-                              EndpointProducerBuilder kafka) {
+            EndpointConsumerBuilder scheduler,
+            EndpointProducerBuilder restPoll,
+            EndpointProducerBuilder kafka) {
         super(errorHandlerFactory);
         this.scheduler = scheduler;
         this.restPoll = restPoll;
@@ -28,10 +28,6 @@ public class HttpPollKafkaRoute extends BaseRouteBuilder {
     public void configure() throws Exception {
         super.configure();
 
-        from(scheduler)
-                .routeId(GATEWAY_TYPE_HTTP_POLL_KAFKA)
-                .to(restPoll)
-                .log("Response poll: ${body}")
-                .to(kafka);
+        from(scheduler).routeId(GATEWAY_TYPE_HTTP_POLL_KAFKA).to(restPoll).log("Response poll: ${body}").to(kafka);
     }
 }

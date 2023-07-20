@@ -1,4 +1,4 @@
-package com.bridle.configuration.common;
+package com.bridle.configuration.common.producer;
 
 import com.bridle.properties.ValidatedKafkaProducerConfiguration;
 import com.bridle.utils.ComponentCustomizerImpl;
@@ -26,19 +26,17 @@ public class KafkaOutConfiguration {
         return new KafkaComponent();
     }
 
-
-    @Bean
-    public EndpointProducerBuilder kafkaProducerBuilder(ValidatedKafkaProducerConfiguration kafkaOutConfiguration) {
-        EndpointProducerBuilder result = kafka(KAFKA_OUT_COMPONENT_NAME, kafkaOutConfiguration.getTopic());
-        kafkaOutConfiguration.getEndpointProperties()
-                .ifPresent(additional -> additional.forEach(result::doSetProperty));
-        return result;
-    }
-
     @Lazy
     @Bean
     public ComponentCustomizer configureKafkaOutComponent(CamelContext context,
-                                                          ValidatedKafkaProducerConfiguration componentConfiguration) {
+            ValidatedKafkaProducerConfiguration componentConfiguration) {
         return new ComponentCustomizerImpl(context, componentConfiguration, KAFKA_OUT_COMPONENT_NAME);
+    }
+
+    @Bean
+    public EndpointProducerBuilder kafkaProducerBuilder(ValidatedKafkaProducerConfiguration configuration) {
+        EndpointProducerBuilder result = kafka(KAFKA_OUT_COMPONENT_NAME, configuration.getTopic());
+        configuration.getEndpointProperties().ifPresent(additional -> additional.forEach(result::doSetProperty));
+        return result;
     }
 }

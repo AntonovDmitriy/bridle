@@ -31,10 +31,11 @@ redelivery-policy:
   retry-attempted-log-level: "WARN"
 error-handler:
   redelivery-policy-ref: "redelivery-policy"
-inbound-validation:
-  format: "json-schema"
-  validator:
-    resource-uri: "/routetest/http-kafka/test.schema.json"
+processing:
+  after-consumer:
+    validation:
+      format: "json-schema"
+      resource-uri: "/routetest/http-kafka/test.schema.json"
 rest-in:
   clientRequestValidation: "true"
   component: "servlet"

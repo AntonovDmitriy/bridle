@@ -1,5 +1,7 @@
 # Bridle
 
+<img src="logo.png" width="500">
+
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/1dff818ad7d24c1ab49e16c78fc7f648)](https://app.codacy.com/gh/antonovdmitriy/bridle/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=AntonovDmitriy_bridle&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=AntonovDmitriy_bridle)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=AntonovDmitriy_bridle&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=AntonovDmitriy_bridle)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=AntonovDmitriy_bridle&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=AntonovDmitriy_bridle)
@@ -10,6 +12,8 @@
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=AntonovDmitriy_bridle&metric=bugs)](https://sonarcloud.io/summary/new_code?id=AntonovDmitriy_bridle)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=AntonovDmitriy_bridle&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=AntonovDmitriy_bridle)
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=AntonovDmitriy_bridle&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=AntonovDmitriy_bridle)
+
+
 
 ## Overview
 **Bridle** is a convenient, configurable application designed for handling the most common integration tasks, built on the experience of using Apache Camel and Spring Boot.

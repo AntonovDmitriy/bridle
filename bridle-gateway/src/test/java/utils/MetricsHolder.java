@@ -3,6 +3,7 @@ package utils;
 public class MetricsHolder<T> {
 
     private final T value;
+
     private final String metricRow;
 
     public MetricsHolder(String metricRow, T value) {

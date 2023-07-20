@@ -19,15 +19,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class XpathXmlValuesCollectorTest {
 
-    private static final String BAD_XML = "<CIT_REQUEST>" +
-            "  <SYSTEM>" +
-            "</SYSTEM>";
-    private static final String CORRECT_XML = "<CIT_REQUEST>" +
-            "  <SYSTEM>" +
-            "<" + RQ_UID_KEY + " Value=\"" + RQUID_VALUE + "\"/>" +
-            "<" + SYS_ID_KEY + " Value=\"" + SYS_ID_VALUE + "\"/>" +
-            "  </SYSTEM>" +
-            "</CIT_REQUEST>";
+    private static final String BAD_XML = "<CIT_REQUEST>" + "  <SYSTEM>" + "</SYSTEM>";
+
+    private static final String CORRECT_XML =
+            "<CIT_REQUEST>" + "  <SYSTEM>" + "<" + RQ_UID_KEY + " Value=\"" + RQUID_VALUE + "\"/>" + "<" + SYS_ID_KEY +
+                    " Value=\"" + SYS_ID_VALUE + "\"/>" + "  </SYSTEM>" + "</CIT_REQUEST>";
 
     @Test
     void constructorThrowsExceptionWhenXpathExpressionIsNotCorrect() {

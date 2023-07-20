@@ -1,4 +1,4 @@
-package com.bridle.configuration.common;
+package com.bridle.configuration.common.errorhandling;
 
 import com.bridle.properties.FreemarkerProducerConfiguration;
 import com.bridle.utils.ComponentCustomizerImpl;
@@ -33,11 +33,13 @@ public class ValidationErrorResponseConfiguration {
     }
 
     @Bean
-    public EndpointProducerBuilder validationErrorResponseBuilder(@Qualifier("validationErrorResponseConfiguration")
-                                                                  FreemarkerProducerConfiguration errorResponseConfiguration) {
-        EndpointProducerBuilder result = freemarker(VALIDATION_RESPONSE_FREEMARKER_COMPONENT_NAME,
-                errorResponseConfiguration.getResourceUri());
-        errorResponseConfiguration.getEndpointProperties()
+    public EndpointProducerBuilder validationErrorResponseBuilder(
+            @Qualifier("validationErrorResponseConfiguration")
+            FreemarkerProducerConfiguration errorResponseConfiguration) {
+        EndpointProducerBuilder result =
+                freemarker(VALIDATION_RESPONSE_FREEMARKER_COMPONENT_NAME, errorResponseConfiguration.getResourceUri());
+        errorResponseConfiguration
+                .getEndpointProperties()
                 .ifPresent(additional -> additional.forEach(result::doSetProperty));
         return result;
     }
@@ -45,9 +47,11 @@ public class ValidationErrorResponseConfiguration {
     @Lazy
     @Bean
     public ComponentCustomizer configureValidationErrorResponseComponent(CamelContext context,
-                                                                         @Qualifier("validationErrorResponseConfiguration")
-                                                                         FreemarkerProducerConfiguration componentConfiguration) {
-        return new ComponentCustomizerImpl(context, componentConfiguration, VALIDATION_RESPONSE_FREEMARKER_COMPONENT_NAME);
+            @Qualifier("validationErrorResponseConfiguration")
+            FreemarkerProducerConfiguration componentConfiguration) {
+        return new ComponentCustomizerImpl(context,
+                                           componentConfiguration,
+                                           VALIDATION_RESPONSE_FREEMARKER_COMPONENT_NAME);
     }
 
 }

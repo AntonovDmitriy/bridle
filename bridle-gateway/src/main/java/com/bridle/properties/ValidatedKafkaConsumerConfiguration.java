@@ -36,9 +36,8 @@ public class ValidatedKafkaConsumerConfiguration extends KafkaComponentConfigura
     @AssertTrue(message = "ssl configuration is not consistent")
     public boolean isSslSettingsConsistent() {
         boolean result = true;
-        if (getSecurityProtocol() == null
-                || (!getSecurityProtocol().equals("PLAINTEXT")
-                && StringUtils.isAnyBlank(getSslKeystoreLocation(),
+        if (getSecurityProtocol() == null || (!getSecurityProtocol().equals("PLAINTEXT") && StringUtils.isAnyBlank(
+                getSslKeystoreLocation(),
                 getSslKeystorePassword(),
                 getSslTruststoreLocation(),
                 getSslTruststorePassword()))) {
@@ -54,7 +53,8 @@ public class ValidatedKafkaConsumerConfiguration extends KafkaComponentConfigura
     }
 
     @Override
-    @Pattern(regexp = "earliest|latest|fail", flags = {CASE_INSENSITIVE})
+    @Pattern(regexp = "earliest|latest|fail",
+            flags = {CASE_INSENSITIVE})
     public String getAutoOffsetReset() {
         return super.getAutoOffsetReset();
     }

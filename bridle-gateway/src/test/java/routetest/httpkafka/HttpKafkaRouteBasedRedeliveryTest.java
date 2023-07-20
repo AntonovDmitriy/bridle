@@ -15,16 +15,17 @@ import org.springframework.web.client.RestClientResponseException;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 import routetest.utils.EndpointSendEventNotifier;
 import utils.KafkaContainerUtils;
 
 import static com.bridle.configuration.common.ComponentNameConstants.KAFKA_OUT_COMPONENT_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
+import static utils.KafkaContainerUtils.createKafkaContainer;
 import static utils.TestUtils.sendPostHttpRequest;
 
-@SpringBootTest(classes = {App.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(classes = {App.class},
+        webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(properties = {"spring.config.location=classpath:routetest/http-kafka/application-redelivery.yml"})
 @CamelSpringBootTest
 @Testcontainers
@@ -32,13 +33,14 @@ import static utils.TestUtils.sendPostHttpRequest;
 public class HttpKafkaRouteBasedRedeliveryTest {
 
     public static final String HTTP_SERVER_URL = "http://localhost:8080/camel/myapi";
+
     public static final String REQUEST_BODY = "Request Body";
+
     private static final String TOPIC_NAME = "routetest";
+
     @Container
-    private static final KafkaContainer kafka = new KafkaContainer(
-            DockerImageName.parse("confluentinc/cp-kafka:6.2.1"))
-            .withEnv("KAFKA_DELETE_TOPIC_ENABLE", "true")
-            .withEnv("KAFKA_AUTO_CREATE_TOPICS_ENABLE", "false");
+    private static final KafkaContainer kafka = createKafkaContainer();
+
     @Autowired
     private CamelContext context;
 
@@ -70,7 +72,8 @@ public class HttpKafkaRouteBasedRedeliveryTest {
         context.getManagementStrategy().addEventNotifier(notifierRedeliveredMessage);
 
         RestClientResponseException exception = Assertions.assertThrows(RestClientResponseException.class,
-                () -> sendPostHttpRequest(HTTP_SERVER_URL, REQUEST_BODY));
+                                                                        () -> sendPostHttpRequest(HTTP_SERVER_URL,
+                                                                                                  REQUEST_BODY));
 
         assertEquals(501, exception.getRawStatusCode());
         assertEquals(3, notifierRedeliveredMessage.getCounter());

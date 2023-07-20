@@ -14,11 +14,14 @@ import java.util.function.Consumer;
 public class FacadeHeadersCollector implements Processor {
 
     private final ValuesCollectorFactory collectorFactory;
+
     private final FacadeHeaderCollectorConfiguration configuration;
+
     @SuppressWarnings("rawtypes")
     private ValuesCollector collector;
 
-    public FacadeHeadersCollector(ValuesCollectorFactory collectorFactory, FacadeHeaderCollectorConfiguration configuration) {
+    public FacadeHeadersCollector(ValuesCollectorFactory collectorFactory,
+            FacadeHeaderCollectorConfiguration configuration) {
         this.collectorFactory = collectorFactory;
         this.configuration = configuration;
 
@@ -29,7 +32,8 @@ public class FacadeHeadersCollector implements Processor {
     @Override
     public void process(Exchange exchange) {
         if (collector != null) {
-            collector.collectValues(exchange.getIn().getBody(String.class))
+            collector
+                    .collectValues(exchange.getIn().getBody(String.class))
                     .ifPresent(putValuesToExchangeHeaders(exchange));
         }
     }
@@ -37,7 +41,7 @@ public class FacadeHeadersCollector implements Processor {
     private void initValuesCollectorForMessageFormat() {
         if (configuration.getExpressionFormat() != null) {
             collector = collectorFactory.createValuesCollector(configuration.getExpressionFormat(),
-                    configuration.getQueryExpressionsByHeaderName());
+                                                               configuration.getQueryExpressionsByHeaderName());
         }
     }
 

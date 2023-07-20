@@ -23,7 +23,6 @@ import org.springframework.web.client.RestTemplate;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 import routetest.utils.EndpointSendEventNotifier;
 import utils.KafkaContainerUtils;
 
@@ -32,8 +31,10 @@ import java.util.concurrent.TimeUnit;
 import static com.bridle.configuration.common.ComponentNameConstants.KAFKA_OUT_COMPONENT_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
+import static utils.KafkaContainerUtils.createKafkaContainer;
 
-@SpringBootTest(classes = {App.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(classes = {App.class},
+        webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(properties = {"spring.config.location=classpath:routetest/http-kafka/application-redelivery.yml"})
 @CamelSpringBootTest
 @Testcontainers
@@ -41,13 +42,14 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
 public class HttpKafkaClientTimeoutTest {
 
     public static final String HTTP_SERVER_URL = "http://localhost:8080/camel/myapi";
+
     public static final String REQUEST_BODY = "Request Body";
+
     private static final String TOPIC_NAME = "routetest";
+
     @Container
-    private static final KafkaContainer kafka = new KafkaContainer(
-            DockerImageName.parse("confluentinc/cp-kafka:6.2.1"))
-            .withEnv("KAFKA_DELETE_TOPIC_ENABLE", "true")
-            .withEnv("KAFKA_AUTO_CREATE_TOPICS_ENABLE", "false");
+    private static final KafkaContainer kafka = createKafkaContainer();
+
     @Autowired
     private CamelContext context;
 
@@ -67,12 +69,7 @@ public class HttpKafkaClientTimeoutTest {
         requestFactory.setReadTimeout(1);
 
         RestTemplate restTemplate = new RestTemplate(requestFactory);
-        return restTemplate.exchange(
-                HTTP_SERVER_URL,
-                HttpMethod.POST,
-                requestEntity,
-                String.class
-        );
+        return restTemplate.exchange(HTTP_SERVER_URL, HttpMethod.POST, requestEntity, String.class);
     }
 
     @Test
@@ -81,7 +78,7 @@ public class HttpKafkaClientTimeoutTest {
         NotifyBuilder notifier = new NotifyBuilder(context).whenDone(1).create();
 
         Assertions.assertThrows(ResourceAccessException.class,
-                HttpKafkaClientTimeoutTest::sendValidHttpRequestWithTinyTimeout);
+                                HttpKafkaClientTimeoutTest::sendValidHttpRequestWithTinyTimeout);
         notifier.matches(10, TimeUnit.SECONDS);
 
         assertEquals(REQUEST_BODY, KafkaContainerUtils.readMessage(kafka, TOPIC_NAME).stdOut().strip());
@@ -96,7 +93,7 @@ public class HttpKafkaClientTimeoutTest {
         NotifyBuilder notifier = new NotifyBuilder(context).whenFailed(1).create();
 
         Assertions.assertThrows(ResourceAccessException.class,
-                HttpKafkaClientTimeoutTest::sendValidHttpRequestWithTinyTimeout);
+                                HttpKafkaClientTimeoutTest::sendValidHttpRequestWithTinyTimeout);
         notifier.matches(10, TimeUnit.SECONDS);
 
         assertEquals(3, notifierRedeliveredMessage.getCounter());
@@ -116,7 +113,7 @@ public class HttpKafkaClientTimeoutTest {
         NotifyBuilder notifier = new NotifyBuilder(context).whenFailed(1).create();
 
         Assertions.assertThrows(ResourceAccessException.class,
-                HttpKafkaClientTimeoutTest::sendValidHttpRequestWithTinyTimeout);
+                                HttpKafkaClientTimeoutTest::sendValidHttpRequestWithTinyTimeout);
         notifier.matches(10, TimeUnit.SECONDS);
 
         assertEquals(3, notifierRedeliveredSuccess.getCounter());

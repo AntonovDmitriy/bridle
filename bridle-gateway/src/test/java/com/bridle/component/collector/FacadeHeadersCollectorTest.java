@@ -29,6 +29,7 @@ class FacadeHeadersCollectorTest {
 
     @Spy
     private FacadeHeaderCollectorConfiguration configuration = new FacadeHeaderCollectorConfiguration();
+
     @Mock
     private ValuesCollectorFactory collectorFactory;
 
@@ -53,7 +54,7 @@ class FacadeHeadersCollectorTest {
     }
 
     private void verifyThatAllValuesFromCollectorAnswerInMessageHeaders(Map<String, Object> valuesByName,
-                                                                        List<Invocation> invocationsOfSetHeaderMethod) {
+            List<Invocation> invocationsOfSetHeaderMethod) {
         invocationsOfSetHeaderMethod.forEach(invocation -> {
             String headerName = invocation.getArgument(0);
             Object value = invocation.getArgument(1);
@@ -63,7 +64,8 @@ class FacadeHeadersCollectorTest {
     }
 
     private List<Invocation> collectAllInvocationsOfSetHeaderMethod(Message mockMessage) {
-        return Mockito.mockingDetails(mockMessage)
+        return Mockito
+                .mockingDetails(mockMessage)
                 .getInvocations()
                 .stream()
                 .filter(invocation -> invocation.getMethod().getName().equals("setHeader"))

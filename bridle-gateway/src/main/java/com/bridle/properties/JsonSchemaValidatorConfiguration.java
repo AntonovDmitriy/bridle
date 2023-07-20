@@ -8,6 +8,7 @@ import java.util.Optional;
 public class JsonSchemaValidatorConfiguration extends JsonValidatorComponentConfiguration {
 
     private Map<String, Object> endpointProperties;
+
     private String resourceUri;
 
     public Optional<Map<String, Object>> getEndpointProperties() {

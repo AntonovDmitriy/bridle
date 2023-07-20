@@ -1,8 +1,10 @@
-package com.bridle.configuration.common;
+package com.bridle.configuration.common.consumer;
 
 import com.bridle.properties.SchedulerConsumerConfiguration;
 import com.bridle.utils.ComponentCustomizerImpl;
 import org.apache.camel.CamelContext;
+import org.apache.camel.builder.EndpointConsumerBuilder;
+import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.apache.camel.component.scheduler.SchedulerComponent;
 import org.apache.camel.spi.ComponentCustomizer;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -27,7 +29,16 @@ public class SchedulerConfiguration {
     @Lazy
     @Bean
     public ComponentCustomizer configureSchedulerComponent(CamelContext context,
-                                                           SchedulerConsumerConfiguration componentConfiguration) {
+            SchedulerConsumerConfiguration componentConfiguration) {
         return new ComponentCustomizerImpl(context, componentConfiguration, SCHEDULER_COMPONENT_NAME);
     }
+
+    @Bean
+    public EndpointConsumerBuilder schedulerConsumerBuilder(SchedulerConsumerConfiguration configuration) {
+        EndpointConsumerBuilder result =
+                StaticEndpointBuilders.scheduler(SCHEDULER_COMPONENT_NAME, SCHEDULER_COMPONENT_NAME);
+        configuration.getEndpointProperties().ifPresent(additional -> additional.forEach(result::doSetProperty));
+        return result;
+    }
+
 }

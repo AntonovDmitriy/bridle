@@ -26,6 +26,7 @@ import java.util.Optional;
 public class XpathXmlValuesCollector implements ValuesCollector<String> {
 
     private static final XPathFactory xPathFactory = XPathFactory.newInstance();
+
     private static final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
     static {
@@ -54,7 +55,7 @@ public class XpathXmlValuesCollector implements ValuesCollector<String> {
                 for (Map.Entry<String, XPathExpression> entry : xpathExpressionsByName.entrySet()) {
                     Object xpathResultNode = entry.getValue().evaluate(document, XPathConstants.NODE);
                     valuesByName.put(entry.getKey(),
-                            xpathResultNode != null ? ((Node) xpathResultNode).getNodeValue() : null);
+                                     xpathResultNode != null ? ((Node) xpathResultNode).getNodeValue() : null);
                 }
             } catch (Exception e) {
                 throw new XPathCollectorException("Error during evaluate XPath expression: " + e.getMessage(), e);
@@ -65,7 +66,8 @@ public class XpathXmlValuesCollector implements ValuesCollector<String> {
     }
 
     private Document createXmlDomDocument(String body) throws SAXException, IOException, ParserConfigurationException {
-        return documentBuilderFactory.newDocumentBuilder()
+        return documentBuilderFactory
+                .newDocumentBuilder()
                 .parse(new ByteArrayInputStream(body.getBytes(StandardCharsets.UTF_8)));
     }
 

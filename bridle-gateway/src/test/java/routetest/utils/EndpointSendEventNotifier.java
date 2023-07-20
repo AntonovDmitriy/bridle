@@ -9,8 +9,11 @@ import java.util.function.Consumer;
 
 public class EndpointSendEventNotifier extends EventNotifierSupport {
     private final AtomicInteger counter = new AtomicInteger(0);
+
     private final String endpointName;
+
     private int counterValueToStartAction;
+
     private Consumer<CamelEvent> action;
 
     public EndpointSendEventNotifier(String endpointName) {
@@ -28,8 +31,8 @@ public class EndpointSendEventNotifier extends EventNotifierSupport {
 
     @Override
     public void notify(CamelEvent event) {
-        if (event instanceof ExchangeSentEvent sentEvent
-                && sentEvent.getEndpoint().getEndpointUri().startsWith(endpointName)) {
+        if (event instanceof ExchangeSentEvent sentEvent &&
+                sentEvent.getEndpoint().getEndpointUri().startsWith(endpointName)) {
             if (counter.incrementAndGet() == counterValueToStartAction) {
                 action.accept(event);
             }
