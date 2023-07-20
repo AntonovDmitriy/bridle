@@ -68,10 +68,8 @@ public class KafkaContainerUtils {
 
     public static long getTopicEndOffset(KafkaContainer kafkaContainer, String topicName, int partition)
     throws IOException, InterruptedException {
-        String command = String.format(
-                "kafka-run-class kafka.tools.GetOffsetShell --broker-list localhost:9092 --topic %s --offsets -1 --partitions %d",
-                topicName,
-                partition);
+        String command = String.format("kafka-run-class kafka.tools.GetOffsetShell --broker-list localhost:9092" +
+                                               " --topic %s --offsets -1 --partitions %d", topicName, partition);
         Container.ExecResult execResult = kafkaContainer.execInContainer("/bin/bash", "-c", command);
         return Long.parseLong(execResult.getStdout().strip().split(":")[2]);
     }

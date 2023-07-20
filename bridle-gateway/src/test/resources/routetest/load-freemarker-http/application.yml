@@ -10,17 +10,28 @@ camel:
       enabled: false
     scheduler:
       enabled: false
+    rest:
+      enabled: false
     freemarker:
       enabled: false
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,prometheus"
+
 gateway:
-  type: "load-freemarker-http"
+  type: "scheduler-http"
 main-scheduler:
   poolSize: "1"
   endpoint-properties:
     delay: "100"
-main-freemarker:
-  resourceUri: "/routetest/load-freemarker-http/load.tmpl"
+    repeat-count: "3"
+processing:
+  after-consumer:
+    transform:
+      resource-uri: "/routetest/load-freemarker-http/load.tmpl"
 rest-call:
   host: "localhost"
   resource-path: "person"
