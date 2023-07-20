@@ -1,4 +1,4 @@
-package com.bridle.routes;
+package com.bridle.utils;
 
 import org.apache.camel.model.RouteDefinition;
 import org.apache.commons.lang3.Validate;

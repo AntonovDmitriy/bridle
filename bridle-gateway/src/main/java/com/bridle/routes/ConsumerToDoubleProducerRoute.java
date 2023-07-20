@@ -1,5 +1,8 @@
 package com.bridle.routes;
 
+import com.bridle.routes.model.ConsumerToDoubleProducerRouteParams;
+import com.bridle.utils.BaseRouteBuilder;
+import com.bridle.utils.ProcessingBuilder;
 import org.apache.camel.ErrorHandlerFactory;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.ValidationException;

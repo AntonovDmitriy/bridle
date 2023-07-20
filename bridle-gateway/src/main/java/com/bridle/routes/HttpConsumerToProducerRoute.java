@@ -1,6 +1,9 @@
 package com.bridle.routes;
 
 import com.bridle.properties.HttpConsumerConfiguration;
+import com.bridle.routes.model.HttpConsumerToProducerRouteParams;
+import com.bridle.utils.AbstractHttpConsumerRoute;
+import com.bridle.utils.ProcessingBuilder;
 import org.apache.camel.ErrorHandlerFactory;
 import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
@@ -10,7 +13,7 @@ import static com.bridle.configuration.common.ComponentNameConstants.REDELIVERY_
 import static org.apache.camel.component.rest.RestConstants.CONTENT_TYPE;
 import static org.apache.camel.component.rest.RestConstants.HTTP_RESPONSE_CODE;
 
-public class HttpConsumerToProducerRoute extends GenericHttpConsumerRoute {
+public class HttpConsumerToProducerRoute extends AbstractHttpConsumerRoute {
 
     public static final String PROCESSING_AFTER_CONSUMER = "direct:processingAfterConsumer";
 

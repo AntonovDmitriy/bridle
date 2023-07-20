@@ -49,11 +49,12 @@ public class KafkaContainerUtils {
         return Integer.parseInt(execResult.getStdout().strip().split(":")[2]);
     }
 
-    public static long getConsumerGroupOffset(KafkaContainer kafkaContainer, String topicName, String consumerGroup, int partition)
-    throws IOException, InterruptedException {
-        String command = String.format(
-                "kafka-consumer-groups --bootstrap-server localhost:9092 --group %s --describe",
-                consumerGroup);
+    public static long getConsumerGroupOffset(KafkaContainer kafkaContainer,
+            String topicName,
+            String consumerGroup,
+            int partition) throws IOException, InterruptedException {
+        String command = String.format("kafka-consumer-groups --bootstrap-server localhost:9092 --group %s --describe",
+                                       consumerGroup);
         Container.ExecResult execResult = kafkaContainer.execInContainer("/bin/bash", "-c", command);
         String[] lines = execResult.getStdout().split("\\r?\\n");
         for (String line : lines) {

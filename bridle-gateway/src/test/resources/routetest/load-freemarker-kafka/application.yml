@@ -10,17 +10,28 @@ camel:
       enabled: false
     scheduler:
       enabled: false
+    rest:
+      enabled: false
     freemarker:
       enabled: false
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,prometheus"
+
 gateway:
-  type: "load-freemarker-kafka"
+  type: "scheduler-kafka"
 main-scheduler:
   poolSize: "1"
   endpoint-properties:
     delay: "100"
-main-freemarker:
-  resourceUri: "/routetest/load-freemarker-kafka/load.tmpl"
+    repeat-count: "3"
+processing:
+  after-consumer:
+    transform:
+      resource-uri: "/routetest/load-freemarker-kafka/load.tmpl"
 kafka-out:
   brokers: "localhost:9090"
   topic: "routetest"

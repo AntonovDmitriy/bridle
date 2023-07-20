@@ -1,5 +1,6 @@
 package com.bridle.routes;
 
+import com.bridle.utils.BaseRouteBuilder;
 import org.apache.camel.ErrorHandlerFactory;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;

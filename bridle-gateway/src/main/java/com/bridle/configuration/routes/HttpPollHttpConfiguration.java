@@ -7,8 +7,8 @@ import com.bridle.configuration.common.processing.AfterProducerProcessingConfigu
 import com.bridle.configuration.common.producer.HttpPollConfiguration;
 import com.bridle.configuration.common.producer.RestCallConfiguration;
 import com.bridle.routes.ConsumerToDoubleProducerRoute;
-import com.bridle.routes.ConsumerToDoubleProducerRouteParams;
-import com.bridle.routes.ProcessingParams;
+import com.bridle.routes.model.ConsumerToDoubleProducerRouteParams;
+import com.bridle.utils.ProcessingParams;
 import org.apache.camel.ErrorHandlerFactory;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;

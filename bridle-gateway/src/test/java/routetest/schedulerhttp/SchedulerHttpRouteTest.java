@@ -1,4 +1,4 @@
-package routetest.loadfreemarkerhttp;
+package routetest.schedulerhttp;
 
 import com.bridle.App;
 import org.apache.camel.CamelContext;
@@ -36,7 +36,7 @@ import static utils.MockServerContainerUtils.createMockServerContainer;
 @DirtiesContext
 @Testcontainers
 @AutoConfigureMetrics
-public class LoadFreemarkerHttpRouteTest {
+public class SchedulerHttpRouteTest {
 
 
     public static final String MESSAGE_BODY = """
