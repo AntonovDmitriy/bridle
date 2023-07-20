@@ -2,6 +2,7 @@ package utils;
 
 import org.testcontainers.containers.Container;
 import org.testcontainers.containers.KafkaContainer;
+import org.testcontainers.utility.DockerImageName;
 
 import java.io.IOException;
 
@@ -41,5 +42,11 @@ public class KafkaContainerUtils {
     public static void setupKafka(KafkaContainer kafkaContainer, int kafkaPort) {
         kafkaContainer.start();
         System.setProperty("kafka-out.brokers", "localhost:" + kafkaContainer.getMappedPort(kafkaPort).toString());
+    }
+
+    public static KafkaContainer createKafkaContainer() {
+        return new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"))
+                .withEnv("KAFKA_DELETE_TOPIC_ENABLE", "true")
+                .withEnv("KAFKA_AUTO_CREATE_TOPICS_ENABLE", "false");
     }
 }

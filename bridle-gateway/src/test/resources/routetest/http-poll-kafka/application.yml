@@ -10,12 +10,22 @@ camel:
       enabled: false
     scheduler:
       enabled: false
+    rest:
+      enabled: false
+    freemarker:
+      enabled: false
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,prometheus"
 gateway:
   type: "http-poll-kafka"
 main-scheduler:
   endpoint-properties:
-    delay: "1000"
+    delay: "100"
+    repeat-count: "3"
 rest-poll:
   host: "localhost"
   resource-path: "salary"
@@ -25,3 +35,6 @@ rest-poll:
 kafka-out:
   brokers: "localhost:9090"
   topic: "routetest"
+  delivery-timeout-ms: 1000
+  request-timeout-ms: 500
+  max-block-ms: 1000

@@ -1,4 +1,4 @@
-package routetest.httppollhttp;
+package routetest.httppollkafka;
 
 import com.bridle.App;
 import org.apache.camel.CamelContext;
@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.actuate.metrics.AutoConfigure
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
+import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.MockServerContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -22,31 +23,35 @@ import utils.MockServerContainerUtils;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.bridle.configuration.routes.HttpPollHttpConfiguration.GATEWAY_TYPE_HTTP_POLL_HTTP;
+import static com.bridle.configuration.routes.HttpPollKafkaConfiguration.GATEWAY_TYPE_HTTP_POLL_KAFKA;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
+import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
+import static utils.KafkaContainerUtils.createKafkaContainer;
+import static utils.KafkaContainerUtils.setupKafka;
 import static utils.MetricsTestUtils.verifyMetrics;
 import static utils.MockServerContainerUtils.createMockServerClient;
 
 @SpringBootTest(classes = {App.class},
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@TestPropertySource(properties = {"spring.config.location=classpath:routetest/http-poll-http/application.yml"})
+@TestPropertySource(properties = {"spring.config.location=classpath:routetest/http-poll-kafka/application.yml"})
 @CamelSpringBootTest
-@DirtiesContext
 @Testcontainers
+@DirtiesContext
 @AutoConfigureMetrics
-public class HttpPollHttpRouteTest {
+public class HttpPollKafkaWithEmptyTopicScenarioTest {
 
-    public static final HttpRequest CALL_SERVER_REQUEST =
-            request().withMethod("POST").withPath("/person").withBody("52.255");
+    public static final String POLL_SERVER_RESPONSE = "52.255";
+
+    private static final String TOPIC_NAME = "routetest";
+
+    @Container
+    private static final KafkaContainer kafka = createKafkaContainer();
 
     private static final HttpRequest POLL_SERVER_REQUEST = request().withMethod("GET").withPath("/salary");
 
     @Container
     public static MockServerContainer mockPollServer = MockServerContainerUtils.createMockServerContainer();
-
-    @Container
-    public static MockServerContainer mockCallServer = MockServerContainerUtils.createMockServerContainer();
 
     @Autowired
     private CamelContext context;
@@ -55,34 +60,30 @@ public class HttpPollHttpRouteTest {
     public static void setUp() throws Exception {
         mockPollServer.start();
         System.setProperty("rest-poll.port", mockPollServer.getServerPort().toString());
-        var mockPollerverClient = createMockServerClient(mockPollServer);
-        mockPollerverClient.when(POLL_SERVER_REQUEST).respond(response().withBody("52.255").withStatusCode(200));
+        var mockPollerverClient = MockServerContainerUtils.createMockServerClient(mockPollServer);
+        mockPollerverClient
+                .when(POLL_SERVER_REQUEST)
+                .respond(response().withBody(POLL_SERVER_RESPONSE).withStatusCode(200));
 
-        mockCallServer.start();
-        System.setProperty("rest-call.port", mockCallServer.getServerPort().toString());
-        var mockCallServerClient = createMockServerClient(mockCallServer);
-        mockCallServerClient.when(CALL_SERVER_REQUEST).respond(response().withBody("OK").withStatusCode(200));
+        setupKafka(kafka, KAFKA_PORT);
     }
 
     @AfterAll
     public static void afterAll() throws Exception {
         mockPollServer.stop();
-        mockCallServer.stop();
     }
 
     @Test
-    void verifySuccessHttpPollHttpScenario() throws Exception {
+    void verifyErrorHttpPollKafkaScenarioWithEmptyTopic() throws Exception {
         int messageCount = 3;
-        NotifyBuilder notify = new NotifyBuilder(context).whenExactlyCompleted(messageCount).create();
+        NotifyBuilder notify = new NotifyBuilder(context).whenFailed(messageCount).create();
 
         boolean done = notify.matches(10, TimeUnit.SECONDS);
 
         Assertions.assertTrue(done);
         var mockPollServerClient = createMockServerClient(mockPollServer);
         mockPollServerClient.verify(POLL_SERVER_REQUEST, VerificationTimes.exactly(messageCount));
-        var mockCallServerClient = createMockServerClient(mockCallServer);
-        mockCallServerClient.verify(CALL_SERVER_REQUEST, VerificationTimes.exactly(messageCount));
-        verifyMetrics(GATEWAY_TYPE_HTTP_POLL_HTTP, messageCount, 0, 0);
+        verifyMetrics(GATEWAY_TYPE_HTTP_POLL_KAFKA, 0, messageCount, 0);
     }
 }
 

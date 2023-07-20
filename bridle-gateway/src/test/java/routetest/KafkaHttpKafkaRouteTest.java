@@ -18,7 +18,6 @@ import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.MockServerContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 import utils.MockServerContainerUtils;
 
 import java.util.concurrent.TimeUnit;
@@ -26,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
+import static utils.KafkaContainerUtils.createKafkaContainer;
 
 @SpringBootTest(classes = {App.class})
 @TestPropertySource(properties = {"spring.config.location=classpath:routetest/kafka-http-kafka/application.yml"})
@@ -39,8 +39,7 @@ public class KafkaHttpKafkaRouteTest {
     private static final String TOPIC_NAME_RESPONSE = "routetest_response";
 
     @Container
-    private static final KafkaContainer kafka =
-            new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"));
+    private static final KafkaContainer kafka = createKafkaContainer();
 
     @Container
     public static MockServerContainer mockServer = MockServerContainerUtils.createMockServerContainer();

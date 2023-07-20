@@ -15,13 +15,13 @@ import org.springframework.web.client.RestClientResponseException;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 import routetest.utils.EndpointSendEventNotifier;
 import utils.KafkaContainerUtils;
 
 import static com.bridle.configuration.common.ComponentNameConstants.KAFKA_OUT_COMPONENT_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
+import static utils.KafkaContainerUtils.createKafkaContainer;
 import static utils.TestUtils.sendPostHttpRequest;
 
 @SpringBootTest(classes = {App.class},
@@ -39,9 +39,7 @@ public class HttpKafkaRouteBasedRedeliveryTest {
     private static final String TOPIC_NAME = "routetest";
 
     @Container
-    private static final KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"))
-            .withEnv("KAFKA_DELETE_TOPIC_ENABLE", "true")
-            .withEnv("KAFKA_AUTO_CREATE_TOPICS_ENABLE", "false");
+    private static final KafkaContainer kafka = createKafkaContainer();
 
     @Autowired
     private CamelContext context;
