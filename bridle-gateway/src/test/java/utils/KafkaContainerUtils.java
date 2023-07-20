@@ -49,22 +49,23 @@ public class KafkaContainerUtils {
         return Integer.parseInt(execResult.getStdout().strip().split(":")[2]);
     }
 
-    public static long getConsumerGroupOffset(KafkaContainer kafkaContainer,
-            String topicName,
-            String consumerGroup,
-            int partition) throws IOException, InterruptedException {
-        String command = String.format("kafka-consumer-groups --bootstrap-server localhost:9092 --group %s --describe",
-                                       consumerGroup);
+    public static long getConsumerGroupOffset(KafkaContainer kafkaContainer, String topicName, String consumerGroup, int partition)
+    throws IOException, InterruptedException {
+        String command = String.format(
+                "kafka-consumer-groups --bootstrap-server localhost:9092 --group %s --describe",
+                consumerGroup);
         Container.ExecResult execResult = kafkaContainer.execInContainer("/bin/bash", "-c", command);
-        System.out.println(execResult.getStdout());
         String[] lines = execResult.getStdout().split("\\r?\\n");
         for (String line : lines) {
             System.out.println(line);
             if (line.contains(topicName) && line.contains(Integer.toString(partition))) {
                 String[] cols = line.split("\\s+");
-                String offset = cols[3];
-                System.out.println(offset);
-                return Long.parseLong(offset);
+                String offset = cols[3]; // COL[3] is the CURRENT-OFFSET
+                if (offset.equals("-")) {
+                    return -1; // Return -1 if the consumer group hasn't started consuming
+                } else {
+                    return Long.parseLong(offset);
+                }
             }
         }
         return -1; // Return -1 if no offset information found for consumer group
@@ -75,6 +76,7 @@ public class KafkaContainerUtils {
         String command = String.format("kafka-run-class kafka.tools.GetOffsetShell --broker-list localhost:9092" +
                                                " --topic %s --offsets -1 --partitions %d", topicName, partition);
         Container.ExecResult execResult = kafkaContainer.execInContainer("/bin/bash", "-c", command);
+        System.out.println(execResult.getStdout());
         return Long.parseLong(execResult.getStdout().strip().split(":")[2]);
     }
 
@@ -84,6 +86,8 @@ public class KafkaContainerUtils {
             int partition) throws IOException, InterruptedException {
         long consumerOffset = getConsumerGroupOffset(kafkaContainer, topicName, consumerGroup, partition);
         long endOffset = getTopicEndOffset(kafkaContainer, topicName, partition);
+        System.out.println("consumerOffset " + consumerOffset);
+        System.out.println("endOffset " + endOffset);
         if (consumerOffset == -1) {
             return endOffset;
         }
