@@ -1,4 +1,4 @@
-package routetest.utils;
+package utils;
 
 import org.apache.camel.impl.event.ExchangeSentEvent;
 import org.apache.camel.spi.CamelEvent;

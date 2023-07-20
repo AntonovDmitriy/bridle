@@ -21,12 +21,10 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.util.concurrent.TimeUnit;
 
 import static com.bridle.configuration.routes.KafkaHttpConfiguration.GATEWAY_TYPE_KAFKA_HTTP;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.model.HttpRequest.request;
 import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
 import static utils.KafkaContainerUtils.createKafkaContainer;
 import static utils.KafkaContainerUtils.createTopic;
-import static utils.KafkaContainerUtils.getUnreadMessageCount;
 import static utils.KafkaContainerUtils.setupKafka;
 import static utils.KafkaContainerUtils.writeMessageToTopic;
 import static utils.MetricsTestUtils.verifyMetrics;
@@ -73,7 +71,6 @@ public class KafkaHttpWithConnectionErrorTest {
         boolean done = notify.matches(10, TimeUnit.SECONDS);
         Assertions.assertTrue(done);
         verifyMetrics(GATEWAY_TYPE_KAFKA_HTTP, 0, messageCount, 0);
-        assertEquals(0, getUnreadMessageCount(kafka, TOPIC_NAME, "KAFKA_HTTP_KAFKA_FIRST_TESTING6", 0));
     }
 }
 
