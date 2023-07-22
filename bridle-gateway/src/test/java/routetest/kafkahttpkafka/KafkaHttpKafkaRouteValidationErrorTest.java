@@ -31,7 +31,6 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
 import static utils.KafkaContainerUtils.countMessages;
 import static utils.KafkaContainerUtils.createKafkaContainer;
 import static utils.KafkaContainerUtils.createTopic;
-import static utils.KafkaContainerUtils.readMessage;
 import static utils.KafkaContainerUtils.setupKafka;
 import static utils.MetricsTestUtils.verifyMetrics;
 import static utils.MockServerContainerUtils.createMockServerClient;
@@ -40,14 +39,17 @@ import static utils.TestUtils.getStringResources;
 
 @SpringBootTest(classes = {App.class},
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@TestPropertySource(properties = {"spring.config.location=classpath:routetest/kafka-http-kafka/application.yml"})
+@TestPropertySource(properties = {
+        "spring.config.location=classpath:routetest/kafka-http-kafka/application-with-validation.yml"})
 @CamelSpringBootTest
 @DirtiesContext
 @Testcontainers
 @AutoConfigureMetrics
-public class KafkaHttpKafkaRouteTest {
+public class KafkaHttpKafkaRouteValidationErrorTest {
 
     public static final String HTTP_RESPONSE_BODY = getStringResources("routetest/kafka-http-kafka/http-response.json");
+
+    public static final HttpRequest REST_CALL_REQUEST = request().withMethod("POST").withPath("/person");
 
     private static final String TOPIC_NAME_REQUST = "routetest_request";
 
@@ -56,10 +58,9 @@ public class KafkaHttpKafkaRouteTest {
     @Container
     private static final KafkaContainer kafka = createKafkaContainer();
 
-    private final static String MESSAGE_IN_KAFKA = getStringResources("routetest/kafka-http-kafka/test.json");
 
-    public static final HttpRequest REST_CALL_REQUEST =
-            request().withMethod("POST").withPath("/person").withBody(MESSAGE_IN_KAFKA);
+    private final static String MESSAGE_IN_KAFKA =
+            getStringResources("routetest/kafka-http-kafka/test-without-products.json");
 
     @Container
     public static MockServerContainer mockServer = createMockServerContainer();
@@ -89,19 +90,18 @@ public class KafkaHttpKafkaRouteTest {
     }
 
     @Test
-    void verifySuccessKafkaHttpKafkaScenarioWithoutProcessing() throws Exception {
+    void verifyErrorKafkaHttpKafkaScenarioWithValidationError() throws Exception {
         int messageCount = 1;
-        NotifyBuilder notify = new NotifyBuilder(context).whenExactlyCompleted(messageCount).create();
+        NotifyBuilder notify = new NotifyBuilder(context).whenFailed(messageCount).create();
 
         producerTemplate.sendBody("kafka-in:" + TOPIC_NAME_REQUST, MESSAGE_IN_KAFKA);
 
         boolean done = notify.matches(10, TimeUnit.SECONDS);
         Assertions.assertTrue(done);
         var mockCallServerClient = createMockServerClient(mockServer);
-        mockCallServerClient.verify(REST_CALL_REQUEST, VerificationTimes.exactly(messageCount));
-        assertEquals(HTTP_RESPONSE_BODY, readMessage(kafka, TOPIC_NAME_RESPONSE).stdOut().strip());
-        assertEquals(messageCount, countMessages(kafka, TOPIC_NAME_RESPONSE));
-        verifyMetrics(GATEWAY_TYPE_KAFKA_HTTP_KAFKA, messageCount, 0, 0);
+        mockCallServerClient.verify(REST_CALL_REQUEST, VerificationTimes.exactly(0));
+        assertEquals(0, countMessages(kafka, TOPIC_NAME_RESPONSE));
+        verifyMetrics(GATEWAY_TYPE_KAFKA_HTTP_KAFKA, 0, messageCount, 0);
     }
 }
 
