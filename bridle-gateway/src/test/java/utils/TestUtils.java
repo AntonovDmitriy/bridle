@@ -30,7 +30,11 @@ public class TestUtils {
         return sendHttpRequest(uri, String.class, HttpMethod.POST, requestEntity);
     }
 
-    public static String getStringResources(String path) throws IOException {
-        return new String(Files.readAllBytes(new ClassPathResource(path).getFile().toPath()));
+    public static String getStringResources(String path) {
+        try {
+            return new String(Files.readAllBytes(new ClassPathResource(path).getFile().toPath()));
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 }

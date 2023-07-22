@@ -32,6 +32,7 @@ public class KafkaContainerUtils {
 
     public static CommandResult writeMessageToTopic(KafkaContainer kafkaContainer, String topicName, String message)
     throws IOException, InterruptedException {
+
         String command = String.format(
                 "echo \"%s\" | kafka-console-producer --bootstrap-server localhost:9092 --topic %s",
                 message,
@@ -61,15 +62,15 @@ public class KafkaContainerUtils {
             System.out.println(line);
             if (line.contains(topicName) && line.contains(Integer.toString(partition))) {
                 String[] cols = line.split("\\s+");
-                String offset = cols[3]; // COL[3] is the CURRENT-OFFSET
+                String offset = cols[3];
                 if (offset.equals("-")) {
-                    return -1; // Return -1 if the consumer group hasn't started consuming
+                    break;
                 } else {
                     return Long.parseLong(offset);
                 }
             }
         }
-        return -1; // Return -1 if no offset information found for consumer group
+        return -1;
     }
 
     public static long getTopicEndOffset(KafkaContainer kafkaContainer, String topicName, int partition)
