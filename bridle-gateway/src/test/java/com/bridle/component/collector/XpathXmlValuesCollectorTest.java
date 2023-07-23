@@ -28,14 +28,16 @@ class XpathXmlValuesCollectorTest {
     @Test
     void collectValuesThrowsExceptionWhenBodyIsNull() {
         XpathXmlValuesCollector collector = new XpathXmlValuesCollector();
-        assertThrows(XPathCollectorException.class, () -> collector.collectValues(null, new HashMap<>()));
+        HashMap<String, String> expressionsByName = new HashMap<>();
+        assertThrows(XPathCollectorException.class, () -> collector.collectValues(null, expressionsByName));
     }
 
     @Test
     void collectValuesThrowsExceptionWhenBodyIsNotCorrectXml() {
         XpathXmlValuesCollector collector = new XpathXmlValuesCollector();
+        Map<String, String> correctXpathExpressionsByName = createCorrectXpathExpressionsByName();
         assertThrows(XPathCollectorException.class,
-                     () -> collector.collectValues(BAD_XML, createCorrectXpathExpressionsByName()));
+                     () -> collector.collectValues(BAD_XML, correctXpathExpressionsByName));
     }
 
     @Test
