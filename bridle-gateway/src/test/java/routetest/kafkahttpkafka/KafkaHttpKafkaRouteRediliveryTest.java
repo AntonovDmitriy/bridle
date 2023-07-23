@@ -147,11 +147,8 @@ public class KafkaHttpKafkaRouteRediliveryTest {
         mockServerClient.when(REST_CALL_REQUEST).respond(response(HTTP_RESPONSE_BODY).withStatusCode(500));
         EndpointSendEventNotifier notifierRedeliveredMessage = new EndpointSendEventNotifier("rest-call");
         notifierRedeliveredMessage.runActionWhenCounterExactlyEquals(2, e -> {
-            try {
-                mockServerClient.reset();
-                mockServerClient.when(REST_CALL_REQUEST).respond(response(HTTP_RESPONSE_BODY).withStatusCode(200));
-            } catch (Exception ignored) {
-            }
+            mockServerClient.reset();
+            mockServerClient.when(REST_CALL_REQUEST).respond(response(HTTP_RESPONSE_BODY).withStatusCode(200));
         });
         context.getManagementStrategy().addEventNotifier(notifierRedeliveredMessage);
         NotifyBuilder notify = new NotifyBuilder(context).whenCompleted(messageCount).create();
