@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -33,14 +34,15 @@ class JsonValuesCollectorTest {
     @Test
     void collectValuesThrowsExceptionWhenBodyIsNull() {
         JsonValuesCollector collector = new JsonValuesCollector();
-        assertThrows(JsonCollectorException.class, () -> collector.collectValues(null, new HashMap<>()));
+        Map<String, String> expressions = Collections.emptyMap();
+        assertThrows(JsonCollectorException.class, () -> collector.collectValues(null, expressions));
     }
 
     @Test
     void collectValuesThrowsExceptionWhenBodyIsNotCorrectJson() {
         JsonValuesCollector collector = new JsonValuesCollector();
-        assertThrows(JsonCollectorException.class,
-                     () -> collector.collectValues(BAD_JSON, createCorrectJsonExpressionsByName()));
+        Map<String, String> expressions = createIncorrectExpressionsByName();
+        assertThrows(JsonCollectorException.class, () -> collector.collectValues(BAD_JSON, expressions));
     }
 
     @Test
@@ -53,8 +55,8 @@ class JsonValuesCollectorTest {
     @Test
     void collectValuesThrowsExceptionWhenAnyExpressionIsNotCorrect() {
         JsonValuesCollector collector = new JsonValuesCollector();
-        assertThrows(JsonCollectorException.class,
-                     () -> collector.collectValues(CORRECT_JSON, createIncorrectExpressionsByName()));
+        Map<String, String> expressions = createIncorrectExpressionsByName();
+        assertThrows(JsonCollectorException.class, () -> collector.collectValues(CORRECT_JSON, expressions));
     }
 
     @Test

@@ -19,7 +19,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -36,7 +35,7 @@ class FacadeHeadersCollectorTest {
     void processPutResultValueCollectorToCamelMessageHeaders() {
         configuration.setExpressionFormat(ExpressionFormat.JSON);
         ValuesCollector<?> mockValuesCollector = mock(ValuesCollector.class);
-        when(collectorFactory.createValuesCollector(eq(ExpressionFormat.JSON))).thenReturn(mockValuesCollector);
+        when(collectorFactory.createValuesCollector(ExpressionFormat.JSON)).thenReturn(mockValuesCollector);
         Map<String, Object> valuesByName = createValuesByName();
         Exchange mockExchange = mock(Exchange.class);
         Message mockMessage = mock(Message.class);
