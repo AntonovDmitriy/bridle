@@ -33,15 +33,15 @@ public class FacadeHeadersCollector implements Processor {
     public void process(Exchange exchange) {
         if (collector != null) {
             collector
-                    .collectValues(exchange.getIn().getBody(String.class))
+                    .collectValues(exchange.getIn().getBody(String.class),
+                                   configuration.getQueryExpressionsByHeaderName())
                     .ifPresent(putValuesToExchangeHeaders(exchange));
         }
     }
 
     private void initValuesCollectorForMessageFormat() {
         if (configuration.getExpressionFormat() != null) {
-            collector = collectorFactory.createValuesCollector(configuration.getExpressionFormat(),
-                                                               configuration.getQueryExpressionsByHeaderName());
+            collector = collectorFactory.createValuesCollector(configuration.getExpressionFormat());
         }
     }
 

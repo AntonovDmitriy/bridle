@@ -1,16 +1,23 @@
 {
-  "employees": [
-    {
-      "firstName": "John",
-      "lastName": "Doe"
+  "person": {
+    "name": "John Doe",
+    "age": 30,
+    "address": {
+      "city": "San Francisco",
+      "street": "Market Street",
+      "building": "100"
     },
-    {
-      "firstName": "Anna",
-      "lastName": "Smith"
-    },
-    {
-      "firstName": "Peter",
-      "lastName": "Jones"
-    }
-  ]
+    "hobbies": [
+      {
+        "type": "Sport",
+        "name": "Basketball",
+        "yearsOfExperience": 5
+      },
+      {
+        "type": "Music",
+        "name": "Guitar",
+        "yearsOfExperience": 2
+      }
+    ]
+  }
 }

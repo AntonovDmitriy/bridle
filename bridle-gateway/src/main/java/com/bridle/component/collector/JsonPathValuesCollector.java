@@ -13,16 +13,9 @@ import java.util.Optional;
  */
 public class JsonPathValuesCollector implements ValuesCollector<String> {
 
-    private Map<String, String> queryExpressionsByName = new HashMap<>();
-
-    public JsonPathValuesCollector(Map<String, String> queryExpressionsByName) {
-        if (queryExpressionsByName != null) {
-            this.queryExpressionsByName = queryExpressionsByName;
-        }
-    }
 
     @Override
-    public Optional<Map<String, Object>> collectValues(String body) {
+    public Optional<Map<String, Object>> collectValues(String body, Map<String, String> queryExpressionsByName) {
         if (body == null) {
             throw new JsonCollectorException("body is null");
         }

@@ -1,0 +1,22 @@
+{
+  "system": {
+    "name": "${headers.systemName}",
+    "stream": "${headers.systemStream}"
+  },
+  "companyDetails": {
+    "name": "${headers.companyName}",
+    "founded": ${headers.companyFounded?c},
+    "locationCount": ${headers.locationCount?c},
+    "executiveCount": ${headers.executiveCount?c},
+    "products": [
+      <#list headers.products as product>
+      {
+        "name": "${product.name}",
+        "category": "${product.category}",
+        "price": ${product.price},
+        "versionCount": ${product.versions?size}
+      }<#if product_has_next>,</#if>
+      </#list>
+    ]
+  }
+}

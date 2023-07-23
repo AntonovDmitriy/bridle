@@ -30,7 +30,7 @@ import static utils.TestUtils.sendPostHttpRequest;
 @Testcontainers
 @DirtiesContext
 @AutoConfigureMetrics
-public class HttpKafkaRouteErrorWithEmptyTopicScenarioTest {
+public class HttpKafkaRouteErrorWithNoTopicScenarioTest {
 
     public static final String HTTP_SERVER_URL = "http://localhost:8080/camel/myapi";
 

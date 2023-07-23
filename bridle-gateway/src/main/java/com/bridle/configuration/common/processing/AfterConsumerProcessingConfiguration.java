@@ -197,7 +197,7 @@ public class AfterConsumerProcessingConfiguration {
     @Lazy
     @Bean
     @ConditionalOnBean(name = FREEMARKER_AFTER_CONSUMER_CONFIGURATION)
-    public ComponentCustomizer configureFreemarkerComponent(CamelContext context,
+    public ComponentCustomizer configureFreemarkerAfterConsumerComponent(CamelContext context,
             @Qualifier(FREEMARKER_AFTER_CONSUMER_CONFIGURATION)
             FreemarkerProducerConfiguration componentConfiguration) {
         return new ComponentCustomizerImpl(context, componentConfiguration, FREEMARKER_AFTER_CONSUMER_COMPONENT_NAME);

@@ -32,40 +32,36 @@ class JsonValuesCollectorTest {
 
     @Test
     void collectValuesThrowsExceptionWhenBodyIsNull() {
-        JsonValuesCollector collector = new JsonValuesCollector(new HashMap<>());
-        assertThrows(JsonCollectorException.class, () -> collector.collectValues(null));
+        JsonValuesCollector collector = new JsonValuesCollector();
+        assertThrows(JsonCollectorException.class, () -> collector.collectValues(null, new HashMap<>()));
     }
 
     @Test
     void collectValuesThrowsExceptionWhenBodyIsNotCorrectJson() {
-        JsonValuesCollector collector = new JsonValuesCollector(createCorrectJsonExpressionsByName());
-        assertThrows(JsonCollectorException.class, () -> collector.collectValues(BAD_JSON));
-    }
-
-    @Test
-    void collectValuesReturnsEmptyOptionalWhenExpressionMapIsNull() {
-        JsonValuesCollector collector = new JsonValuesCollector(null);
-        Optional<Map<String, Object>> result = collector.collectValues(CORRECT_JSON);
-        assertTrue(result.isEmpty());
+        JsonValuesCollector collector = new JsonValuesCollector();
+        assertThrows(JsonCollectorException.class,
+                     () -> collector.collectValues(BAD_JSON, createCorrectJsonExpressionsByName()));
     }
 
     @Test
     void collectValuesReturnsEmptyOptionalWhenExpressionMapIsEmpty() {
-        JsonValuesCollector collector = new JsonValuesCollector(new HashMap<>());
-        Optional<Map<String, Object>> result = collector.collectValues(CORRECT_JSON);
+        JsonValuesCollector collector = new JsonValuesCollector();
+        Optional<Map<String, Object>> result = collector.collectValues(CORRECT_JSON, new HashMap<>());
         assertTrue(result.isEmpty());
     }
 
     @Test
     void collectValuesThrowsExceptionWhenAnyExpressionIsNotCorrect() {
-        JsonValuesCollector collector = new JsonValuesCollector(createIncorrectExpressionsByName());
-        assertThrows(JsonCollectorException.class, () -> collector.collectValues(CORRECT_JSON));
+        JsonValuesCollector collector = new JsonValuesCollector();
+        assertThrows(JsonCollectorException.class,
+                     () -> collector.collectValues(CORRECT_JSON, createIncorrectExpressionsByName()));
     }
 
     @Test
     void collectValuesReturnsMapOfValues() {
-        JsonValuesCollector collector = new JsonValuesCollector(createCorrectJsonExpressionsByName());
-        Optional<Map<String, Object>> result = collector.collectValues(CORRECT_JSON);
+        JsonValuesCollector collector = new JsonValuesCollector();
+        Optional<Map<String, Object>> result =
+                collector.collectValues(CORRECT_JSON, createCorrectJsonExpressionsByName());
         assertTrue(result.isPresent());
         assertEquals(RQUID_VALUE, result.get().get(RQ_UID_KEY));
         assertEquals(SYS_ID_VALUE, result.get().get(SYS_ID_KEY));
@@ -77,8 +73,8 @@ class JsonValuesCollectorTest {
         Map<String, String> expressionsByName = new HashMap<>();
         String unknownKey = "unknownKey";
         expressionsByName.put(unknownKey, "/unknownKey");
-        JsonValuesCollector collector = new JsonValuesCollector(expressionsByName);
-        Optional<Map<String, Object>> result = collector.collectValues(CORRECT_JSON);
+        JsonValuesCollector collector = new JsonValuesCollector();
+        Optional<Map<String, Object>> result = collector.collectValues(CORRECT_JSON, expressionsByName);
         assertTrue(result.isPresent());
         assertNull(result.get().get(unknownKey));
         assertEquals(1, result.get().size());
@@ -89,9 +85,9 @@ class JsonValuesCollectorTest {
         Map<String, String> expressionsByName = new HashMap<>();
         String emptyKey = "empty";
         expressionsByName.put(emptyKey, "/empty");
-        JsonValuesCollector collector = new JsonValuesCollector(expressionsByName);
+        JsonValuesCollector collector = new JsonValuesCollector();
         String jsonWithEmptyValue = "{" + "\"" + emptyKey + "\": \"\"}";
-        Optional<Map<String, Object>> result = collector.collectValues(jsonWithEmptyValue);
+        Optional<Map<String, Object>> result = collector.collectValues(jsonWithEmptyValue, expressionsByName);
         assertTrue(result.isPresent());
         assertNull(result.get().get(""));
         assertEquals(1, result.get().size());

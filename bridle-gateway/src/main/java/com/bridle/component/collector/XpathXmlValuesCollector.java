@@ -7,10 +7,8 @@ import org.xml.sax.SAXException;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -34,26 +32,19 @@ public class XpathXmlValuesCollector implements ValuesCollector<String> {
         documentBuilderFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
     }
 
-    private final Map<String, XPathExpression> xpathExpressionsByName = new HashMap<>();
-
-    public XpathXmlValuesCollector(Map<String, String> queryExpressionsByName) {
-        if (queryExpressionsByName != null) {
-            initXPathExpressions(queryExpressionsByName);
-        }
-    }
-
     @Override
-    public Optional<Map<String, Object>> collectValues(String body) {
+    public Optional<Map<String, Object>> collectValues(String body, Map<String, String> queryExpressionsByName) {
         if (body == null) {
             throw new XPathCollectorException("body is null");
         }
         Optional<Map<String, Object>> result = Optional.empty();
-        if (!xpathExpressionsByName.isEmpty()) {
+        if (!queryExpressionsByName.isEmpty()) {
             Map<String, Object> valuesByName = new HashMap<>();
             try {
                 final Document document = createXmlDomDocument(body);
-                for (Map.Entry<String, XPathExpression> entry : xpathExpressionsByName.entrySet()) {
-                    Object xpathResultNode = entry.getValue().evaluate(document, XPathConstants.NODE);
+                for (Map.Entry<String, String> entry : queryExpressionsByName.entrySet()) {
+                    XPathExpression xPathExpression = xPathFactory.newXPath().compile(entry.getValue());
+                    Object xpathResultNode = xPathExpression.evaluate(document, XPathConstants.NODE);
                     valuesByName.put(entry.getKey(),
                                      xpathResultNode != null ? ((Node) xpathResultNode).getNodeValue() : null);
                 }
@@ -69,17 +60,5 @@ public class XpathXmlValuesCollector implements ValuesCollector<String> {
         return documentBuilderFactory
                 .newDocumentBuilder()
                 .parse(new ByteArrayInputStream(body.getBytes(StandardCharsets.UTF_8)));
-    }
-
-    private void initXPathExpressions(Map<String, String> queryExpressionsByName) {
-        try {
-            for (Map.Entry<String, String> entry : queryExpressionsByName.entrySet()) {
-                XPath xPathObject = xPathFactory.newXPath();
-                XPathExpression xPathExpression = xPathObject.compile(entry.getValue());
-                xpathExpressionsByName.put(entry.getKey(), xPathExpression);
-            }
-        } catch (XPathExpressionException e) {
-            throw new XPathCollectorException("Error during compile XPath expression: " + e.getMessage(), e);
-        }
     }
 }
