@@ -31,6 +31,30 @@ redelivery-policy:
   retry-attempted-log-level: "WARN"
 error-handler:
   redelivery-policy-ref: "redelivery-policy"
+processing:
+  after-consumer:
+    convert-body:
+      type-class: "java.lang.String"
+      charset: "UTF-8"
+    validation:
+      format: "json-schema"
+      resource-uri: "/routetest/kafka-http-kafka/test.schema.json"
+    unmarshalling-data-format":
+      data-format-name: "json"
+    transform:
+      resource-uri: "/routetest/kafka-http-kafka/transform-with-unmarshalling.tmpl"
+  after-producer:
+    convert-body:
+      type-class: "java.lang.String"
+      charset: "UTF-8"
+    validation:
+      format: "json-schema"
+      resource-uri: "/routetest/kafka-http-kafka/response.schema.json"
+    unmarshalling-data-format":
+      data-format-name: "json"
+    transform:
+      resource-uri: "/routetest/kafka-http-kafka/response-transform-with-unmarshalling.tmpl"
+
 kafka-in:
   brokers: "localhost:9090"
   topic: "routetest_request"

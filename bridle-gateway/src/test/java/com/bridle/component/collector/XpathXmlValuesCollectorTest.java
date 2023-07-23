@@ -26,53 +26,36 @@ class XpathXmlValuesCollectorTest {
                     " Value=\"" + SYS_ID_VALUE + "\"/>" + "  </SYSTEM>" + "</CIT_REQUEST>";
 
     @Test
-    void constructorThrowsExceptionWhenXpathExpressionIsNotCorrect() {
-        Map<String, String> expressions = createInCorrectXpathExpressionsByName();
-        assertThrows(XPathCollectorException.class, () -> new XpathXmlValuesCollector(expressions));
-    }
-
-    @Test
     void collectValuesThrowsExceptionWhenBodyIsNull() {
-        XpathXmlValuesCollector collector = new XpathXmlValuesCollector(new HashMap<>());
-        assertThrows(XPathCollectorException.class, () -> collector.collectValues(null));
+        XpathXmlValuesCollector collector = new XpathXmlValuesCollector();
+        HashMap<String, String> expressionsByName = new HashMap<>();
+        assertThrows(XPathCollectorException.class, () -> collector.collectValues(null, expressionsByName));
     }
 
     @Test
     void collectValuesThrowsExceptionWhenBodyIsNotCorrectXml() {
-        XpathXmlValuesCollector collector = new XpathXmlValuesCollector(createCorrectXpathExpressionsByName());
-        assertThrows(XPathCollectorException.class, () -> collector.collectValues(BAD_XML));
-    }
-
-    @Test
-    void collectValuesReturnsEmptyOptionalWhenExpressionMapIsNull() {
-        XpathXmlValuesCollector collector = new XpathXmlValuesCollector(null);
-        Optional<Map<String, Object>> result = collector.collectValues(CORRECT_XML);
-        assertTrue(result.isEmpty());
+        XpathXmlValuesCollector collector = new XpathXmlValuesCollector();
+        Map<String, String> correctXpathExpressionsByName = createCorrectXpathExpressionsByName();
+        assertThrows(XPathCollectorException.class,
+                     () -> collector.collectValues(BAD_XML, correctXpathExpressionsByName));
     }
 
     @Test
     void collectValuesReturnsEmptyOptionalWhenExpressionMapIsEmpty() {
-        XpathXmlValuesCollector collector = new XpathXmlValuesCollector(new HashMap<>());
-        Optional<Map<String, Object>> result = collector.collectValues(CORRECT_XML);
+        XpathXmlValuesCollector collector = new XpathXmlValuesCollector();
+        Optional<Map<String, Object>> result = collector.collectValues(CORRECT_XML, new HashMap<>());
         assertTrue(result.isEmpty());
     }
 
     @Test
     void collectValuesReturnsMapOfValues() {
-        XpathXmlValuesCollector collector = new XpathXmlValuesCollector(createCorrectXpathExpressionsByName());
-        Optional<Map<String, Object>> result = collector.collectValues(CORRECT_XML);
+        XpathXmlValuesCollector collector = new XpathXmlValuesCollector();
+        Optional<Map<String, Object>> result =
+                collector.collectValues(CORRECT_XML, createCorrectXpathExpressionsByName());
         assertTrue(result.isPresent());
         assertEquals(RQUID_VALUE, result.get().get(RQ_UID_KEY));
         assertEquals(SYS_ID_VALUE, result.get().get(SYS_ID_KEY));
         assertNull(result.get().get(MSG_ID_KEY));
-    }
-
-    private Map<String, String> createInCorrectXpathExpressionsByName() {
-        Map<String, String> expressionsByName = new HashMap<>();
-        expressionsByName.put(RQ_UID_KEY, "/System/" + RQ_UID_KEY);
-        expressionsByName.put(SYS_ID_KEY, "???????");
-        expressionsByName.put(MSG_ID_KEY, "/System/" + MSG_ID_KEY);
-        return expressionsByName;
     }
 
     private Map<String, String> createCorrectXpathExpressionsByName() {

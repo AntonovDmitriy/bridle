@@ -1,4 +1,4 @@
-package routetest.kafkahttp;
+package routetest.kafkahttpkafka;
 
 import com.bridle.App;
 import org.apache.camel.CamelContext;
@@ -23,37 +23,44 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.bridle.configuration.routes.KafkaHttpConfiguration.GATEWAY_TYPE_KAFKA_HTTP;
+import static com.bridle.configuration.routes.KafkaHttpKafkaConfiguration.GATEWAY_TYPE_KAFKA_HTTP_KAFKA;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
+import static utils.KafkaContainerUtils.countMessages;
 import static utils.KafkaContainerUtils.createKafkaContainer;
 import static utils.KafkaContainerUtils.createTopic;
 import static utils.KafkaContainerUtils.setupKafka;
-import static utils.KafkaContainerUtils.writeMessageToTopic;
 import static utils.MetricsTestUtils.verifyMetrics;
 import static utils.MockServerContainerUtils.createMockServerClient;
 import static utils.MockServerContainerUtils.createMockServerContainer;
-
+import static utils.TestUtils.getStringResources;
 
 @SpringBootTest(classes = {App.class},
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@TestPropertySource(properties = {"spring.config.location=classpath:routetest/kafka-http/application.yml"})
+@TestPropertySource(properties = {
+        "spring.config.location=classpath:routetest/kafka-http-kafka/application-with-validation.yml"})
 @CamelSpringBootTest
 @DirtiesContext
 @Testcontainers
 @AutoConfigureMetrics
-public class KafkaHttpRouteTest {
+public class KafkaHttpKafkaRouteValidationErrorTest {
 
-    public static final String MESSAGE_BODY = "52.255";
+    public static final String HTTP_RESPONSE_BODY = getStringResources("routetest/kafka-http-kafka/http-response.json");
 
-    public static final HttpRequest CALL_SERVER_REQUEST =
-            request().withMethod("POST").withPath("/person").withBody(MESSAGE_BODY);
+    public static final HttpRequest REST_CALL_REQUEST = request().withMethod("POST").withPath("/person");
 
-    private static final String TOPIC_NAME = "routetest";
+    private static final String TOPIC_NAME_REQUST = "routetest_request";
+
+    private static final String TOPIC_NAME_RESPONSE = "routetest_response";
 
     @Container
     private static final KafkaContainer kafka = createKafkaContainer();
+
+
+    private final static String MESSAGE_IN_KAFKA =
+            getStringResources("routetest/kafka-http-kafka/test-without-products.json");
 
     @Container
     public static MockServerContainer mockServer = createMockServerContainer();
@@ -67,12 +74,14 @@ public class KafkaHttpRouteTest {
     @BeforeAll
     public static void setUp() throws Exception {
         setupKafka(kafka, KAFKA_PORT);
+        createTopic(kafka, TOPIC_NAME_REQUST);
+        createTopic(kafka, TOPIC_NAME_RESPONSE);
 
         mockServer.start();
         System.setProperty("rest-call.port", mockServer.getServerPort().toString());
 
         var mockServerClient = createMockServerClient(mockServer);
-        mockServerClient.when(CALL_SERVER_REQUEST).respond(response("OK").withStatusCode(200));
+        mockServerClient.when(REST_CALL_REQUEST).respond(response(HTTP_RESPONSE_BODY).withStatusCode(200));
     }
 
     @AfterAll
@@ -81,18 +90,18 @@ public class KafkaHttpRouteTest {
     }
 
     @Test
-    void verifyThatRouteReadMessagesFromTopicAndInvokeHttpEndpoint() throws Exception {
+    void verifyErrorKafkaHttpKafkaScenarioWithValidationError() throws Exception {
         int messageCount = 1;
-        createTopic(kafka, TOPIC_NAME);
-        NotifyBuilder notify = new NotifyBuilder(context).whenExactlyCompleted(messageCount).create();
+        NotifyBuilder notify = new NotifyBuilder(context).whenFailed(messageCount).create();
 
-        writeMessageToTopic(kafka, TOPIC_NAME, MESSAGE_BODY);
+        producerTemplate.sendBody("kafka-in:" + TOPIC_NAME_REQUST, MESSAGE_IN_KAFKA);
 
         boolean done = notify.matches(10, TimeUnit.SECONDS);
         Assertions.assertTrue(done);
         var mockCallServerClient = createMockServerClient(mockServer);
-        mockCallServerClient.verify(CALL_SERVER_REQUEST, VerificationTimes.exactly(messageCount));
-        verifyMetrics(GATEWAY_TYPE_KAFKA_HTTP, messageCount, 0, 0);
+        mockCallServerClient.verify(REST_CALL_REQUEST, VerificationTimes.exactly(0));
+        assertEquals(0, countMessages(kafka, TOPIC_NAME_RESPONSE));
+        verifyMetrics(GATEWAY_TYPE_KAFKA_HTTP_KAFKA, 0, messageCount, 0);
     }
 }
 

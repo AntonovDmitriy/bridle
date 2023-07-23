@@ -1,6 +1,6 @@
 package com.bridle.routes;
 
-import com.bridle.routes.model.ConsumerToDoubleProducerRouteParams;
+import com.bridle.routes.model.ConsumerToProducerRouteParams;
 import com.bridle.utils.BaseRouteBuilder;
 import com.bridle.utils.ProcessingBuilder;
 import org.apache.camel.ErrorHandlerFactory;
@@ -9,16 +9,15 @@ import org.apache.camel.ValidationException;
 
 import static com.bridle.configuration.common.ComponentNameConstants.REDELIVERY_POLICY;
 
-public class ConsumerToDoubleProducerRoute extends BaseRouteBuilder {
+public class ConsumerToProducerRoute extends BaseRouteBuilder {
 
     public static final String PROCESSING_AFTER_CONSUMER = "direct:processingAfterConsumer";
 
     public static final String PROCESSING_AFTER_PRODUCER = "direct:processingAfterProducer";
 
-    private final ConsumerToDoubleProducerRouteParams routeParams;
+    private final ConsumerToProducerRouteParams routeParams;
 
-    public ConsumerToDoubleProducerRoute(ErrorHandlerFactory errorHandlerFactory,
-            ConsumerToDoubleProducerRouteParams routeParams) {
+    public ConsumerToProducerRoute(ErrorHandlerFactory errorHandlerFactory, ConsumerToProducerRouteParams routeParams) {
         super(errorHandlerFactory);
         this.routeParams = routeParams;
     }
@@ -48,8 +47,6 @@ public class ConsumerToDoubleProducerRoute extends BaseRouteBuilder {
                 .to(PROCESSING_AFTER_CONSUMER)
                 .to(routeParams.firstProducer())
                 .to(PROCESSING_AFTER_PRODUCER)
-                .log(LOG_BODY)
-                .to(routeParams.secondProducer())
                 .log(LOG_BODY);
     }
 }

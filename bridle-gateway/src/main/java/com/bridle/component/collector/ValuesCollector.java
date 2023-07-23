@@ -16,5 +16,5 @@ public interface ValuesCollector<T> {
      * @param body тело сообщения.
      * @return {@link Optional} {@link Map} собранных значений.
      */
-    Optional<Map<String, Object>> collectValues(T body);
+    Optional<Map<String, Object>> collectValues(T body, Map<String, String> queryExpressionsByName);
 }

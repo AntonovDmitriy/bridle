@@ -18,8 +18,7 @@ public class SingletonHeaderCollectorsFactory implements ValuesCollectorFactory 
 
     @SuppressWarnings("rawtypes")
     @Override
-    public ValuesCollector createValuesCollector(ExpressionFormat messageFormat,
-            Map<String, String> queryExpressionsByHeaderName) {
+    public ValuesCollector createValuesCollector(ExpressionFormat messageFormat) {
         checkMessageFormat(messageFormat);
         ValuesCollector result = collectorsByMessageFormat.get(messageFormat);
         if (result == null) {
@@ -27,9 +26,7 @@ public class SingletonHeaderCollectorsFactory implements ValuesCollectorFactory 
                 result = collectorsByMessageFormat.get(messageFormat);
                 if (result == null) {
                     result = collectorsByMessageFormat.computeIfAbsent(messageFormat,
-                                                                       format -> createValuesCollectorForMessageFormat(
-                                                                               format,
-                                                                               queryExpressionsByHeaderName));
+                                                                       this::createValuesCollectorForMessageFormat);
                 }
             }
         }
@@ -43,12 +40,11 @@ public class SingletonHeaderCollectorsFactory implements ValuesCollectorFactory 
     }
 
     @SuppressWarnings("rawtypes")
-    private ValuesCollector createValuesCollectorForMessageFormat(ExpressionFormat expressionFormat,
-            Map<String, String> queryExpressionsByHeaderName) {
+    private ValuesCollector createValuesCollectorForMessageFormat(ExpressionFormat expressionFormat) {
         return switch (expressionFormat) {
-            case XPATH -> new XpathXmlValuesCollector(queryExpressionsByHeaderName);
-            case JSON -> new JsonValuesCollector(queryExpressionsByHeaderName);
-            case JSON_PATH -> new JsonPathValuesCollector(queryExpressionsByHeaderName);
+            case XPATH -> new XpathXmlValuesCollector();
+            case JSON -> new JsonValuesCollector();
+            case JSON_PATH -> new JsonPathValuesCollector();
             default -> throw new IllegalArgumentException("Unknown format " + expressionFormat.name());
         };
     }

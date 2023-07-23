@@ -1,10 +1,10 @@
 package com.bridle.configuration.routes;
 
-import com.bridle.configuration.common.consumer.KafkaInConfiguration;
+import com.bridle.configuration.common.consumer.SchedulerConfiguration;
 import com.bridle.configuration.common.errorhandling.ErrorHandlerConfiguration;
 import com.bridle.configuration.common.processing.AfterConsumerProcessingConfiguration;
 import com.bridle.configuration.common.processing.AfterProducerProcessingConfiguration;
-import com.bridle.configuration.common.producer.RestCallConfiguration;
+import com.bridle.configuration.common.producer.KafkaOutConfiguration;
 import com.bridle.routes.ConsumerToProducerRoute;
 import com.bridle.routes.model.ConsumerToProducerRouteParams;
 import com.bridle.utils.ProcessingParams;
@@ -19,33 +19,32 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import static com.bridle.configuration.routes.KafkaHttpConfiguration.GATEWAY_TYPE_KAFKA_HTTP;
+import static com.bridle.configuration.routes.SchedulerKafkaConfiguration.GATEWAY_TYPE_SCHEDULER_KAFKA;
 
 @Configuration
-@Import({KafkaInConfiguration.class, RestCallConfiguration.class, ErrorHandlerConfiguration.class,
+@Import({SchedulerConfiguration.class, KafkaOutConfiguration.class, ErrorHandlerConfiguration.class,
         AfterConsumerProcessingConfiguration.class, AfterProducerProcessingConfiguration.class})
 @ConditionalOnProperty(name = "gateway.type",
-        havingValue = GATEWAY_TYPE_KAFKA_HTTP)
-public class KafkaHttpConfiguration {
+        havingValue = GATEWAY_TYPE_SCHEDULER_KAFKA)
+public class SchedulerKafkaConfiguration {
 
-    public static final String GATEWAY_TYPE_KAFKA_HTTP = "kafka-http";
+    public static final String GATEWAY_TYPE_SCHEDULER_KAFKA = "scheduler-kafka";
 
     @Bean
-    public RouteBuilder kafkaHttpRoute(ErrorHandlerFactory errorHandlerFactory,
-            EndpointConsumerBuilder kafkaConsumerBuilder,
-            @Qualifier("restCallBuilder")
-            EndpointProducerBuilder restCall,
-            @Autowired(required = false)
+    public RouteBuilder schedulerKafkaRoute(ErrorHandlerFactory errorHandlerFactory,
+            @Qualifier("schedulerConsumerBuilder")
+            EndpointConsumerBuilder scheduler,
+            EndpointProducerBuilder kafkaProducerBuilder,
             @Qualifier("afterConsumer")
             ProcessingParams processingAfterConsumerParams,
             @Autowired(required = false)
             @Qualifier("afterProducer")
             ProcessingParams processingAfterProducerParams) {
         return new ConsumerToProducerRoute(errorHandlerFactory,
-                                           new ConsumerToProducerRouteParams(GATEWAY_TYPE_KAFKA_HTTP,
-                                                                             kafkaConsumerBuilder,
+                                           new ConsumerToProducerRouteParams(GATEWAY_TYPE_SCHEDULER_KAFKA,
+                                                                             scheduler,
                                                                              processingAfterConsumerParams,
-                                                                             restCall,
+                                                                             kafkaProducerBuilder,
                                                                              processingAfterProducerParams));
     }
 }

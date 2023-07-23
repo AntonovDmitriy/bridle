@@ -1,4 +1,4 @@
-package com.bridle.routes;
+package com.bridle.utils;
 
 import org.apache.camel.ErrorHandlerFactory;
 import org.apache.camel.builder.RouteBuilder;

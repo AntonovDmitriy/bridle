@@ -18,7 +18,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.MockServerContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import utils.MockServerContainerUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -27,6 +26,7 @@ import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 import static utils.MetricsTestUtils.verifyMetrics;
 import static utils.MockServerContainerUtils.createMockServerClient;
+import static utils.MockServerContainerUtils.createMockServerContainer;
 
 @SpringBootTest(classes = {App.class},
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -43,10 +43,10 @@ public class HttpPollHttpRouteTest {
     private static final HttpRequest POLL_SERVER_REQUEST = request().withMethod("GET").withPath("/salary");
 
     @Container
-    public static MockServerContainer mockPollServer = MockServerContainerUtils.createMockServerContainer();
+    public static MockServerContainer mockPollServer = createMockServerContainer();
 
     @Container
-    public static MockServerContainer mockCallServer = MockServerContainerUtils.createMockServerContainer();
+    public static MockServerContainer mockCallServer = createMockServerContainer();
 
     @Autowired
     private CamelContext context;

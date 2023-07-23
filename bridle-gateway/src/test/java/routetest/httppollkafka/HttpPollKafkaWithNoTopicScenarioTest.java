@@ -39,7 +39,7 @@ import static utils.MockServerContainerUtils.createMockServerContainer;
 @Testcontainers
 @DirtiesContext
 @AutoConfigureMetrics
-public class HttpPollKafkaWithEmptyTopicScenarioTest {
+public class HttpPollKafkaWithNoTopicScenarioTest {
 
     public static final String POLL_SERVER_RESPONSE = "52.255";
 

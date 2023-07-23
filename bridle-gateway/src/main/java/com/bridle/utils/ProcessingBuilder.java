@@ -1,4 +1,4 @@
-package com.bridle.routes;
+package com.bridle.utils;
 
 import org.apache.camel.model.RouteDefinition;
 import org.apache.commons.lang3.Validate;
@@ -6,6 +6,7 @@ import org.apache.commons.lang3.Validate;
 public class ProcessingBuilder {
 
     private ProcessingBuilder() {
+        throw new IllegalStateException("Utility class");
     }
 
     public static RouteDefinition addProcessing(RouteDefinition route,

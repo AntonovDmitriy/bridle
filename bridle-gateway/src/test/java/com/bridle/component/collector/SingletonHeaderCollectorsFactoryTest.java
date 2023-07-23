@@ -20,7 +20,7 @@ class SingletonHeaderCollectorsFactoryTest {
         SingletonHeaderCollectorsFactory factory = new SingletonHeaderCollectorsFactory();
         Map<String, String> expressions = createCorrectJsonExpressionsByName();
 
-        assertThrows(IllegalArgumentException.class, () -> factory.createValuesCollector(null, expressions));
+        assertThrows(IllegalArgumentException.class, () -> factory.createValuesCollector(null));
     }
 
     @Test
@@ -28,13 +28,13 @@ class SingletonHeaderCollectorsFactoryTest {
         ValuesCollectorFactory collectorFactory = new SingletonHeaderCollectorsFactory();
 
         ValuesCollector<?> jsonCollectorFromFirstInvocation =
-                collectorFactory.createValuesCollector(ExpressionFormat.JSON, createCorrectJsonExpressionsByName());
+                collectorFactory.createValuesCollector(ExpressionFormat.JSON);
         ValuesCollector<?> jsonCollectorFromSecondInvocation =
-                collectorFactory.createValuesCollector(ExpressionFormat.JSON, createCorrectJsonExpressionsByName());
+                collectorFactory.createValuesCollector(ExpressionFormat.JSON);
         ValuesCollector<?> xmlCollectorFromFirstInvocation =
-                collectorFactory.createValuesCollector(ExpressionFormat.XPATH, createCorrectJsonExpressionsByName());
+                collectorFactory.createValuesCollector(ExpressionFormat.XPATH);
         ValuesCollector<?> xmlCollectorFromSecondInvocation =
-                collectorFactory.createValuesCollector(ExpressionFormat.XPATH, createCorrectJsonExpressionsByName());
+                collectorFactory.createValuesCollector(ExpressionFormat.XPATH);
 
         assertSame(jsonCollectorFromFirstInvocation, jsonCollectorFromSecondInvocation);
         assertSame(xmlCollectorFromFirstInvocation, xmlCollectorFromSecondInvocation);

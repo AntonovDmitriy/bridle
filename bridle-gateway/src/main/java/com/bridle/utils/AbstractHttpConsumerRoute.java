@@ -1,13 +1,13 @@
-package com.bridle.routes;
+package com.bridle.utils;
 
 import com.bridle.properties.HttpConsumerConfiguration;
 import org.apache.camel.ErrorHandlerFactory;
 
-public class GenericHttpConsumerRoute extends BaseRouteBuilder {
+public abstract class AbstractHttpConsumerRoute extends BaseRouteBuilder {
 
     protected final HttpConsumerConfiguration restConfiguration;
 
-    public GenericHttpConsumerRoute(ErrorHandlerFactory errorHandlerFactory,
+    protected AbstractHttpConsumerRoute(ErrorHandlerFactory errorHandlerFactory,
             HttpConsumerConfiguration restConfiguration) {
         super(errorHandlerFactory);
         this.restConfiguration = restConfiguration;

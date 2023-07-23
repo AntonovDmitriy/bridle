@@ -1,4 +1,4 @@
-package routetest.kafkahttp;
+package routetest.schedulerhttp;
 
 import com.bridle.App;
 import org.apache.camel.CamelContext;
@@ -16,58 +16,51 @@ import org.springframework.boot.test.autoconfigure.actuate.metrics.AutoConfigure
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
-import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.MockServerContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.bridle.configuration.routes.KafkaHttpConfiguration.GATEWAY_TYPE_KAFKA_HTTP;
+import static com.bridle.configuration.routes.SchedulerHttpConfiguration.GATEWAY_TYPE_SCHEDULER_HTTP;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
-import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
-import static utils.KafkaContainerUtils.createKafkaContainer;
-import static utils.KafkaContainerUtils.createTopic;
-import static utils.KafkaContainerUtils.setupKafka;
-import static utils.KafkaContainerUtils.writeMessageToTopic;
 import static utils.MetricsTestUtils.verifyMetrics;
 import static utils.MockServerContainerUtils.createMockServerClient;
 import static utils.MockServerContainerUtils.createMockServerContainer;
 
-
 @SpringBootTest(classes = {App.class},
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@TestPropertySource(properties = {"spring.config.location=classpath:routetest/kafka-http/application.yml"})
+@TestPropertySource(properties = {"spring.config.location=classpath:routetest/load-freemarker-http/application.yml"})
 @CamelSpringBootTest
 @DirtiesContext
 @Testcontainers
 @AutoConfigureMetrics
-public class KafkaHttpRouteTest {
+public class SchedulerHttpRouteTest {
 
-    public static final String MESSAGE_BODY = "52.255";
+
+    public static final String MESSAGE_BODY = """
+            {
+              "field1": "234",
+              "field2": "test",
+              "field3": "2022-01-24 12:35",
+              "field4": "something"
+            }""";
 
     public static final HttpRequest CALL_SERVER_REQUEST =
             request().withMethod("POST").withPath("/person").withBody(MESSAGE_BODY);
-
-    private static final String TOPIC_NAME = "routetest";
-
-    @Container
-    private static final KafkaContainer kafka = createKafkaContainer();
 
     @Container
     public static MockServerContainer mockServer = createMockServerContainer();
 
     @Autowired
-    private CamelContext context;
+    private ProducerTemplate producerTemplate;
 
     @Autowired
-    private ProducerTemplate producerTemplate;
+    private CamelContext context;
 
     @BeforeAll
     public static void setUp() throws Exception {
-        setupKafka(kafka, KAFKA_PORT);
-
         mockServer.start();
         System.setProperty("rest-call.port", mockServer.getServerPort().toString());
 
@@ -81,18 +74,16 @@ public class KafkaHttpRouteTest {
     }
 
     @Test
-    void verifyThatRouteReadMessagesFromTopicAndInvokeHttpEndpoint() throws Exception {
-        int messageCount = 1;
-        createTopic(kafka, TOPIC_NAME);
+    void verifySuccessSchedulerHttpScenario() throws Exception {
+        int messageCount = 3;
         NotifyBuilder notify = new NotifyBuilder(context).whenExactlyCompleted(messageCount).create();
 
-        writeMessageToTopic(kafka, TOPIC_NAME, MESSAGE_BODY);
-
         boolean done = notify.matches(10, TimeUnit.SECONDS);
+
         Assertions.assertTrue(done);
         var mockCallServerClient = createMockServerClient(mockServer);
         mockCallServerClient.verify(CALL_SERVER_REQUEST, VerificationTimes.exactly(messageCount));
-        verifyMetrics(GATEWAY_TYPE_KAFKA_HTTP, messageCount, 0, 0);
+        verifyMetrics(GATEWAY_TYPE_SCHEDULER_HTTP, messageCount, 0, 0);
     }
 }
 

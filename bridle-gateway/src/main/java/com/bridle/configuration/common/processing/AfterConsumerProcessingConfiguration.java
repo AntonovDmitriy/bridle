@@ -6,8 +6,8 @@ import com.bridle.component.collector.SingletonHeaderCollectorsFactory;
 import com.bridle.component.collector.ValuesCollectorFactory;
 import com.bridle.properties.FreemarkerProducerConfiguration;
 import com.bridle.properties.JsonSchemaValidatorConfiguration;
-import com.bridle.routes.ProcessingParams;
 import com.bridle.utils.ComponentCustomizerImpl;
+import com.bridle.utils.ProcessingParams;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.EndpointProducerBuilder;
@@ -197,7 +197,7 @@ public class AfterConsumerProcessingConfiguration {
     @Lazy
     @Bean
     @ConditionalOnBean(name = FREEMARKER_AFTER_CONSUMER_CONFIGURATION)
-    public ComponentCustomizer configureFreemarkerComponent(CamelContext context,
+    public ComponentCustomizer configureFreemarkerAfterConsumerComponent(CamelContext context,
             @Qualifier(FREEMARKER_AFTER_CONSUMER_CONFIGURATION)
             FreemarkerProducerConfiguration componentConfiguration) {
         return new ComponentCustomizerImpl(context, componentConfiguration, FREEMARKER_AFTER_CONSUMER_COMPONENT_NAME);

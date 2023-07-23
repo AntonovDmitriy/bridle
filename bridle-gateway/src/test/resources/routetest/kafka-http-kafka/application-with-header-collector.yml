@@ -1,0 +1,92 @@
+spring:
+  output:
+    ansi:
+      enabled: always
+camel:
+  component:
+    kafka:
+      enabled: false
+    http:
+      enabled: false
+    scheduler:
+      enabled: false
+    rest:
+      enabled: false
+    freemarker:
+      enabled: false
+    json-validator:
+      enabled: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,prometheus"
+
+gateway:
+  type: "kafka-http-kafka"
+redelivery-policy:
+  maximum-redeliveries: 2
+  redelivery-delay: 100
+  retry-attempted-log-level: "WARN"
+error-handler:
+  redelivery-policy-ref: "redelivery-policy"
+processing:
+  after-consumer:
+    convert-body:
+      type-class: "java.lang.String"
+      charset: "UTF-8"
+    validation:
+      format: "json-schema"
+      resource-uri: "/routetest/kafka-http-kafka/test.schema.json"
+    header-collector:
+      expression-format: "JSON_PATH"
+      query-expressions-by-header-name:
+        systemName: "$.system.name"
+        systemStream: "$.system.stream"
+        companyName: "$.company.name"
+        companyFounded: "$.company.founded"
+        locationCount: "$.company.locations.length()"
+        executiveCount: "$.company.executives.length()"
+        products: "$.company.products[*]"
+    transform:
+      resource-uri: "/routetest/kafka-http-kafka/transform-with-headers.tmpl"
+  after-producer:
+    convert-body:
+      type-class: "java.lang.String"
+      charset: "UTF-8"
+    validation:
+      format: "json-schema"
+      resource-uri: "/routetest/kafka-http-kafka/response.schema.json"
+    header-collector:
+      expression-format: "JSON_PATH"
+      query-expressions-by-header-name:
+        personName: "$.person.name"
+        personAge: "$.person.age"
+        personAddressCity: "$.person.address.city"
+        personAddressStreet: "$.person.address.street"
+        personAddressBuilding: "$.person.address.building"
+        hobbies: "$.person.hobbies[*]"
+    transform:
+      resource-uri: "/routetest/kafka-http-kafka/response-transform-with-headers.tmpl"
+
+kafka-in:
+  brokers: "localhost:9090"
+  topic: "routetest_request"
+  consumers-count: 1
+  group-id: "KAFKA_HTTP_KAFKA_FIRST_TESTING6"
+  break-on-error: false
+  auto-offset-reset: "earliest"
+  max-poll-records: 500
+  max-partition-fetch-bytes: 1048576
+  heartbeat-interval-ms: 3000
+  session-timeout-ms: 10000
+rest-call:
+  host: "localhost"
+  resource-path: "person"
+  port: "443"
+  endpoint-properties:
+    httpMethod: "POST"
+kafka-out:
+  brokers: "localhost:9090"
+  topic: "routetest_response"

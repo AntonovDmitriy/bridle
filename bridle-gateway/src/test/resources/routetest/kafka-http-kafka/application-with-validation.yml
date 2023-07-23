@@ -31,6 +31,11 @@ redelivery-policy:
   retry-attempted-log-level: "WARN"
 error-handler:
   redelivery-policy-ref: "redelivery-policy"
+processing:
+  after-consumer:
+    validation:
+      format: "json-schema"
+      resource-uri: "/routetest/kafka-http-kafka/test.schema.json"
 kafka-in:
   brokers: "localhost:9090"
   topic: "routetest_request"
