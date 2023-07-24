@@ -1,13 +1,14 @@
 package utils;
 
 import org.testcontainers.containers.Container;
+import org.testcontainers.containers.ContainerState;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import java.io.IOException;
 
 public class KafkaContainerUtils {
-    public static CommandResult createTopic(KafkaContainer kafkaContainer, String topicName)
+    public static CommandResult createTopic(ContainerState kafkaContainer, String topicName)
     throws IOException, InterruptedException {
         String command = String.format("kafka-topics --create --bootstrap-server localhost:9092" +
                                                " --topic %s --partitions 1 --replication-factor 1", topicName);
@@ -15,14 +16,14 @@ public class KafkaContainerUtils {
         return new CommandResult(execResult.getExitCode(), execResult.getStdout(), execResult.getStderr());
     }
 
-    public static CommandResult deleteTopic(KafkaContainer kafkaContainer, String topicName)
+    public static CommandResult deleteTopic(ContainerState kafkaContainer, String topicName)
     throws IOException, InterruptedException {
         String command = String.format("kafka-topics --delete --bootstrap-server localhost:9092 --topic %s", topicName);
         Container.ExecResult execResult = kafkaContainer.execInContainer("/bin/bash", "-c", command);
         return new CommandResult(execResult.getExitCode(), execResult.getStdout(), execResult.getStderr());
     }
 
-    public static CommandResult readMessage(KafkaContainer kafkaContainer, String topicName)
+    public static CommandResult readMessage(ContainerState kafkaContainer, String topicName)
     throws IOException, InterruptedException {
         String command = String.format("kafka-console-consumer --bootstrap-server localhost:9092" +
                                                " --topic %s --from-beginning --max-messages 1", topicName);
@@ -30,7 +31,7 @@ public class KafkaContainerUtils {
         return new CommandResult(execResult.getExitCode(), execResult.getStdout(), execResult.getStderr());
     }
 
-    public static CommandResult writeMessageToTopic(KafkaContainer kafkaContainer, String topicName, String message)
+    public static CommandResult writeMessageToTopic(ContainerState kafkaContainer, String topicName, String message)
     throws IOException, InterruptedException {
 
         String command = String.format(
@@ -41,16 +42,22 @@ public class KafkaContainerUtils {
         return new CommandResult(execResult.getExitCode(), execResult.getStdout(), execResult.getStderr());
     }
 
-    public static int countMessages(KafkaContainer kafkaContainer, String topicName)
+    public static int countMessages(ContainerState kafkaContainer, String topicName)
+    throws IOException, InterruptedException {
+        return countMessages(kafkaContainer, topicName, "localhost:9092");
+    }
+
+    public static int countMessages(ContainerState kafkaContainer, String topicName, String brokers)
     throws IOException, InterruptedException {
         String command = String.format(
-                "kafka-run-class kafka.tools.GetOffsetShell --broker-list localhost:9092 --topic %s --offsets -1",
+                "kafka-run-class kafka.tools.GetOffsetShell --broker-list %s --topic %s --offsets -1",
+                brokers,
                 topicName);
         Container.ExecResult execResult = kafkaContainer.execInContainer("/bin/bash", "-c", command);
         return Integer.parseInt(execResult.getStdout().strip().split(":")[2]);
     }
 
-    public static long getConsumerGroupOffset(KafkaContainer kafkaContainer,
+    public static long getConsumerGroupOffset(ContainerState kafkaContainer,
             String topicName,
             String consumerGroup,
             int partition) throws IOException, InterruptedException {
@@ -73,7 +80,7 @@ public class KafkaContainerUtils {
         return -1;
     }
 
-    public static long getTopicEndOffset(KafkaContainer kafkaContainer, String topicName, int partition)
+    public static long getTopicEndOffset(ContainerState kafkaContainer, String topicName, int partition)
     throws IOException, InterruptedException {
         String command = String.format("kafka-run-class kafka.tools.GetOffsetShell --broker-list localhost:9092" +
                                                " --topic %s --offsets -1 --partitions %d", topicName, partition);
@@ -82,7 +89,7 @@ public class KafkaContainerUtils {
         return Long.parseLong(execResult.getStdout().strip().split(":")[2]);
     }
 
-    public static long getUnreadMessageCount(KafkaContainer kafkaContainer,
+    public static long getUnreadMessageCount(ContainerState kafkaContainer,
             String topicName,
             String consumerGroup,
             int partition) throws IOException, InterruptedException {

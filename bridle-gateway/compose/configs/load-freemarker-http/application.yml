@@ -20,13 +20,21 @@ management:
         include: "health,info,prometheus"
 
 gateway:
-  type: "load-freemarker-http"
+  type: "scheduler-http"
+redelivery-policy:
+  maximum-redeliveries: 2
+  redelivery-delay: 1000
+  retry-attempted-log-level: "WARN"
+error-handler:
+  redelivery-policy-ref: "redelivery-policy"
 main-scheduler:
   poolSize: "1"
   endpoint-properties:
     delay: "1000"
-main-freemarker:
-  resourceUri: "file://app/load.tmpl"
+processing:
+  after-consumer:
+    transform:
+      resource-uri: "file://app/load.tmpl"
 rest-call:
   host: "gateway"
   resource-path: "/camel/api"

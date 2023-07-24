@@ -1,0 +1,13 @@
+{
+  "fullName": "${body.person.name}",
+  "age": ${body.person.age},
+  "location": "${body.person.address.city}, ${body.person.address.street}, ${body.person.address.building}",
+  "hobbiesSummary": [
+    <#list body.person.hobbies as hobby>
+    {
+      "hobby": "${hobby.type} - ${hobby.name}",
+      "experience": "${hobby.yearsOfExperience} years"
+    }<#if hobby_has_next>,</#if>
+    </#list>
+  ]
+}

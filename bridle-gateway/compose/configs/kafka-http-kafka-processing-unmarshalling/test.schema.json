@@ -1,0 +1,139 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "system": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "stream": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "stream"
+      ]
+    },
+    "company": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "founded": {
+          "type": "integer"
+        },
+        "locations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "country": {
+                "type": "string"
+              },
+              "city": {
+                "type": "string"
+              },
+              "address": {
+                "type": "string"
+              },
+              "postalCode": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "country",
+              "city",
+              "address",
+              "postalCode"
+            ]
+          }
+        },
+        "executives": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "startDate": {
+                "type": "string",
+                "format": "date"
+              }
+            },
+            "required": [
+              "name",
+              "title",
+              "email",
+              "startDate"
+            ]
+          }
+        },
+        "products": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string"
+              },
+              "price": {
+                "type": "number"
+              },
+              "versions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "version": {
+                      "type": "string"
+                    },
+                    "releaseDate": {
+                      "type": "string",
+                      "format": "date"
+                    }
+                  },
+                  "required": [
+                    "version",
+                    "releaseDate"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "name",
+              "category",
+              "price",
+              "versions"
+            ]
+          }
+        }
+      },
+      "required": [
+        "name",
+        "founded",
+        "locations",
+        "executives",
+        "products"
+      ]
+    }
+  },
+  "required": [
+    "system",
+    "company"
+  ]
+}

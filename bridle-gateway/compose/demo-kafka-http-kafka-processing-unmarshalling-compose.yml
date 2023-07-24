@@ -7,7 +7,7 @@ services:
     ports:
       - '80'
     volumes:
-      - ./configs/kafka-http-kafka/nginx-call.conf:/etc/nginx/nginx.conf:ro
+      - ./configs/kafka-http-kafka-processing-unmarshalling/nginx-call.conf:/etc/nginx/nginx.conf:ro
     networks:
       - gateway-network
 
@@ -24,7 +24,7 @@ services:
     environment:
       - SPRING_CONFIG=/app/config/application.yml
     volumes:
-      - ./configs/kafka-http-kafka/application.yml:/app/config/application.yml
+      - ./configs/kafka-http-kafka-processing-unmarshalling/:/app/config/
     depends_on:
       - nginx-call
       - kafka-topic

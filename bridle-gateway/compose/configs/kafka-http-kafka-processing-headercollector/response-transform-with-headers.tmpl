@@ -1,0 +1,13 @@
+{
+  "fullName": "${headers.personName}",
+  "age": ${headers.personAge},
+  "location": "${headers.personAddressCity}, ${headers.personAddressStreet}, ${headers.personAddressBuilding}",
+  "hobbiesSummary": [
+    <#list headers.hobbies as hobby>
+    {
+      "hobby": "${hobby.type} - ${hobby.name}",
+      "experience": "${hobby.yearsOfExperience} years"
+    }<#if hobby_has_next>,</#if>
+    </#list>
+  ]
+}

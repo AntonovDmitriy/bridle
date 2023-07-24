@@ -8,7 +8,7 @@ camel:
       enabled: false
     http:
       enabled: false
-    scheduler:
+    servlet:
       enabled: false
     rest:
       enabled: false
@@ -38,7 +38,7 @@ processing:
       charset: "UTF-8"
     validation:
       format: "json-schema"
-      resource-uri: "/routetest/kafka-http-kafka/test.schema.json"
+      resource-uri: "file:/app/config/test.schema.json"
     header-collector:
       expression-format: "JSON_PATH"
       query-expressions-by-header-name:
@@ -50,14 +50,14 @@ processing:
         executiveCount: "$.company.executives.length()"
         products: "$.company.products[*]"
     transform:
-      resource-uri: "/routetest/kafka-http-kafka/transform-with-headers.tmpl"
+      resource-uri: "file://app/config/transform-with-headers.tmpl"
   after-producer:
     convert-body:
       type-class: "java.lang.String"
       charset: "UTF-8"
     validation:
       format: "json-schema"
-      resource-uri: "/routetest/kafka-http-kafka/response.schema.json"
+      resource-uri: "file:/app/config/response.schema.json"
     header-collector:
       expression-format: "JSON_PATH"
       query-expressions-by-header-name:
@@ -68,11 +68,11 @@ processing:
         personAddressBuilding: "$.person.address.building"
         hobbies: "$.person.hobbies[*]"
     transform:
-      resource-uri: "/routetest/kafka-http-kafka/response-transform-with-headers.tmpl"
+      resource-uri: "file://app/config/response-transform-with-headers.tmpl"
 kafka-in:
-  brokers: "localhost:9090"
+  brokers: "kafka:9092"
   topic: "routetest_request"
-  consumers-count: 1
+  consumers-count: 3
   group-id: "KAFKA_HTTP_KAFKA_FIRST_TESTING6"
   break-on-error: false
   auto-offset-reset: "earliest"
@@ -81,11 +81,11 @@ kafka-in:
   heartbeat-interval-ms: 3000
   session-timeout-ms: 10000
 rest-call:
-  host: "localhost"
+  host: "nginx-call"
   resource-path: "person"
-  port: "443"
+  port: "80"
   endpoint-properties:
     httpMethod: "POST"
 kafka-out:
-  brokers: "localhost:9090"
+  brokers: "kafka:9092"
   topic: "routetest_response"

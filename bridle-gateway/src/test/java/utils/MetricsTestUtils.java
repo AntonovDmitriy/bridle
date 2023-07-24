@@ -6,10 +6,15 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.TestUtils.PROMETHEUS_URI;
 
 public class MetricsTestUtils {
@@ -25,21 +30,46 @@ public class MetricsTestUtils {
     public static final int PROCESS_EXCHANGE_TIMEOUT = 10;
 
     public static void verifyMetrics(String routeName, int successCount, int failedCount, int handledErrors) {
+        verifyMetrics(routeName, successCount, failedCount, handledErrors, PROMETHEUS_URI);
+    }
+
+    public static void verifyMetrics(String routeName,
+            int successCount,
+            int failedCount,
+            int handledErrors,
+            String prometheusUri) {
+        verifyMetrics(routeName,
+                      result -> Objects.equals(result, successCount),
+                      result -> Objects.equals(result, failedCount),
+                      result -> Objects.equals(result, handledErrors),
+                      prometheusUri);
+    }
+
+    public static void verifyMetrics(String routeName,
+            Predicate<Integer> successCount,
+            Predicate<Integer> failedCount,
+            Predicate<Integer> handledErrors,
+            String prometheusUri) {
         ResponseEntity<String> metricsResponse =
-                TestUtils.sendHttpRequest(PROMETHEUS_URI, String.class, HttpMethod.GET, null);
+                TestUtils.sendHttpRequest(prometheusUri, String.class, HttpMethod.GET, null);
+        parseMessagesAmount(metricsResponse.getBody(), routeName);
         int receivedFailedMessageCount =
                 MetricsTestUtils.parseFailedMessagesAmount(metricsResponse.getBody(), routeName);
-        assertEquals(failedCount, receivedFailedMessageCount);
+        assertTrue(failedCount.test(receivedFailedMessageCount));
         int handledErrorsCount =
                 MetricsTestUtils.parseMessagesWithHandledErrorAmount(metricsResponse.getBody(), routeName);
-        assertEquals(handledErrors, handledErrorsCount);
+        assertTrue(handledErrors.test(handledErrorsCount));
         int receivedSuccessMessageCount =
                 MetricsTestUtils.parseSuccessMessagesAmount(metricsResponse.getBody(), routeName);
-        assertEquals(successCount, receivedSuccessMessageCount - handledErrorsCount);
+        assertTrue(successCount.test(receivedSuccessMessageCount - handledErrorsCount));
     }
 
     public static int parseSuccessMessagesAmount(String metricsInfo, String routeName) {
         return extractDecimalMetric(metricsInfo, routeName, "CamelExchangesSucceeded_total").getValue().intValue();
+    }
+
+    public static int parseMessagesAmount(String metricsInfo, String routeName) {
+        return extractDecimalMetric(metricsInfo, routeName, "CamelExchangesTotal_total").getValue().intValue();
     }
 
     public static int parseFailedMessagesAmount(String metricsInfo, String routeName) {
@@ -64,14 +94,33 @@ public class MetricsTestUtils {
     }
 
     public static MetricsHolder<Double> extractDecimalMetric(String content, String routeId, String metricName) {
-        List<MetricsHolder<Double>> metrics = extractDecimalMetrics(content, routeId, metricName);
+        List<MetricsHolder<Double>> metrics;
+        if (content.lines().count() == 1) {
+            metrics = parseSingleRowMetrics(content, routeId, metricName);
+        } else {
+            metrics = extractDecimalMetrics(content, routeId, metricName);
+        }
         if (metrics.size() != 1) {
             throw new RuntimeException(String.format(
                     "MetricsForTest has found more than once. MetricsForTest: %s RouteId: %s",
                     metricName,
                     routeId));
         }
-        return metrics.get(0);
+        MetricsHolder<Double> result = metrics.get(0);
+        System.out.printf("metricName: %s: %s%n", metricName, result.getValue());
+        return result;
+    }
+
+    private static List<MetricsHolder<Double>> parseSingleRowMetrics(String content,
+            String routeId,
+            String metricName) {
+        Pattern pattern =
+                Pattern.compile("(%s\\{.+?routeId=\"%s\".+?\\}\\s)(\\d+\\.\\d+)".formatted(metricName, routeId));
+        Matcher matcher = pattern.matcher(content);
+        if (matcher.find()) {
+            return List.of(new MetricsHolder<>(matcher.group(1), Double.parseDouble(matcher.group(2))));
+        }
+        return Collections.emptyList();
     }
 
     public static List<MetricsHolder<Double>> extractDecimalMetricsFromMetricRows(List<String> metricRows) {
