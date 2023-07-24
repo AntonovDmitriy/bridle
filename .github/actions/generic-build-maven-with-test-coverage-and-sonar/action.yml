@@ -23,5 +23,8 @@ runs:
         GITHUB_TOKEN: ${{ inputs.github_token }}
         GITHUB_USERNAME: x-access-token
         SONAR_TOKEN: ${{ inputs.sonar_token }}
-      run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Pcoverage,sonar -Dsonar.projectKey=AntonovDmitriy_bridle test -DfailIfNoTests=false -Dtest=**/*Test,composetest/*Test
+      run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Pcoverage,sonar -Dsonar.projectKey=AntonovDmitriy_bridle
+      shell: bash
+    - name: Run compose tests
+      run: mvn -B test -DfailIfNoTests=false -Dtest=composetest/*Test
       shell: bash
