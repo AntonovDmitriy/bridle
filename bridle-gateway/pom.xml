@@ -63,6 +63,9 @@
                     <includes>
                         <include>**/*Test*.java</include>
                     </includes>
+                    <excludes>
+                        <exclude>**/composetest/*Test.java</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
         </plugins>

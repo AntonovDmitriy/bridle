@@ -20,13 +20,15 @@ management:
         include: "health,info,prometheus"
 
 gateway:
-  type: "load-freemarker-http"
+  type: "scheduler-http"
 main-scheduler:
   poolSize: "1"
   endpoint-properties:
     delay: "1000"
-main-freemarker:
-  resourceUri: "file://app/load.tmpl"
+processing:
+  after-consumer:
+    transform:
+      resource-uri: "file://app/load.tmpl"
 rest-call:
   host: "gateway"
   resource-path: "/camel/api"

@@ -7,9 +7,11 @@ import org.springframework.http.ResponseEntity;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.TestUtils.PROMETHEUS_URI;
 
 public class MetricsTestUtils {
@@ -25,21 +27,45 @@ public class MetricsTestUtils {
     public static final int PROCESS_EXCHANGE_TIMEOUT = 10;
 
     public static void verifyMetrics(String routeName, int successCount, int failedCount, int handledErrors) {
+        verifyMetrics(routeName, successCount, failedCount, handledErrors, PROMETHEUS_URI);
+    }
+
+    public static void verifyMetrics(String routeName,
+            int successCount,
+            int failedCount,
+            int handledErrors,
+            String prometheusUri) {
+        verifyMetrics(routeName,
+                      result -> Objects.equals(result, successCount),
+                      result -> Objects.equals(result, failedCount),
+                      result -> Objects.equals(result, handledErrors),
+                      prometheusUri);
+    }
+
+    public static void verifyMetrics(String routeName,
+            Predicate<Integer> successCount,
+            Predicate<Integer> failedCount,
+            Predicate<Integer> handledErrors,
+            String prometheusUri) {
         ResponseEntity<String> metricsResponse =
-                TestUtils.sendHttpRequest(PROMETHEUS_URI, String.class, HttpMethod.GET, null);
+                TestUtils.sendHttpRequest(prometheusUri, String.class, HttpMethod.GET, null);
         int receivedFailedMessageCount =
                 MetricsTestUtils.parseFailedMessagesAmount(metricsResponse.getBody(), routeName);
-        assertEquals(failedCount, receivedFailedMessageCount);
+        assertTrue(failedCount.test(receivedFailedMessageCount));
         int handledErrorsCount =
                 MetricsTestUtils.parseMessagesWithHandledErrorAmount(metricsResponse.getBody(), routeName);
-        assertEquals(handledErrors, handledErrorsCount);
+        assertTrue(handledErrors.test(handledErrorsCount));
         int receivedSuccessMessageCount =
                 MetricsTestUtils.parseSuccessMessagesAmount(metricsResponse.getBody(), routeName);
-        assertEquals(successCount, receivedSuccessMessageCount - handledErrorsCount);
+        assertTrue(successCount.test(receivedSuccessMessageCount - handledErrorsCount));
     }
 
     public static int parseSuccessMessagesAmount(String metricsInfo, String routeName) {
         return extractDecimalMetric(metricsInfo, routeName, "CamelExchangesSucceeded_total").getValue().intValue();
+    }
+
+    public static int parseMessagesAmount(String metricsInfo, String routeName) {
+        return extractDecimalMetric(metricsInfo, routeName, "CamelExchangesTotal_total").getValue().intValue();
     }
 
     public static int parseFailedMessagesAmount(String metricsInfo, String routeName) {
@@ -104,11 +130,18 @@ public class MetricsTestUtils {
         String preparedMetricName =
                 metricName.endsWith(START_TAG_BODY_SYMBOL) ? metricName : metricName + START_TAG_BODY_SYMBOL;
         String[] splitContent = content.split("\n");
+        if (splitContent.length == 1) {
+            splitContent = splitOneLineMetricsContent(content);
+        }
         return Arrays
                 .stream(splitContent)
                 .filter(entry -> routeId == null || entry.contains(routeId))
                 .filter(entry -> entry.contains(preparedMetricName))
                 .collect(Collectors.toList());
 
+    }
+
+    private static String[] splitOneLineMetricsContent(String content) {
+        return content.split("#");
     }
 }
