@@ -157,7 +157,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "count (\n    CamelRoutesRunning_routes{\n        job=~\"$job\",\n        cluster=\"$cluster\",\n        namespace=\"$namespace\",\n        camelContext=\"$context\",\n        app_kubernetes_io_part_of=\"$part_of\",\n        app_kubernetes_io_name=\"$app_name\",\n        app_kubernetes_io_component=\"$component\",\n        app_kubernetes_io_instance=\"$instance\", \n        app_kubernetes_io_version=\"$version\"\n    }\n)",
+          "expr": "count (\n    camel_routes_running_routes{\n        job=~\"$job\",\n        cluster=\"$cluster\",\n        namespace=\"$namespace\",\n        camelContext=\"$context\",\n        app_kubernetes_io_part_of=\"$part_of\",\n        app_kubernetes_io_name=\"$app_name\",\n        app_kubernetes_io_component=\"$component\",\n        app_kubernetes_io_instance=\"$instance\", \n        app_kubernetes_io_version=\"$version\"\n    }\n)",
           "format": "time_series",
           "hide": false,
           "instant": true,
@@ -172,7 +172,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(\n    CamelRoutesRunning_routes{\n        job=~\"$job\",\n        cluster=\"$cluster\",\n        namespace=\"$namespace\",\n        camelContext=\"$context\",\n        app_kubernetes_io_part_of=\"$part_of\",\n        app_kubernetes_io_name=\"$app_name\",\n        app_kubernetes_io_component=\"$component\",\n        app_kubernetes_io_instance=\"$instance\",\n        app_kubernetes_io_version=\"$version\"\n    }\n) \n/ \nsum(\n    CamelRoutesAdded_routes{\n        job=~\"$job\",\n        cluster=\"$cluster\",\n        namespace=\"$namespace\",\n        camelContext=\"$context\",\n        app_kubernetes_io_part_of=\"$part_of\",\n        app_kubernetes_io_name=\"$app_name\",\n        app_kubernetes_io_component=\"$component\",\n        app_kubernetes_io_instance=\"$instance\",\n        app_kubernetes_io_version=\"$version\"\n    }\n)\n*\n100",
+          "expr": "sum(\n    camel_routes_running_routes{\n        job=~\"$job\",\n        cluster=\"$cluster\",\n        namespace=\"$namespace\",\n        camelContext=\"$context\",\n        app_kubernetes_io_part_of=\"$part_of\",\n        app_kubernetes_io_name=\"$app_name\",\n        app_kubernetes_io_component=\"$component\",\n        app_kubernetes_io_instance=\"$instance\",\n        app_kubernetes_io_version=\"$version\"\n    }\n) \n/ \nsum(\n    camel_routes_added_routes{\n        job=~\"$job\",\n        cluster=\"$cluster\",\n        namespace=\"$namespace\",\n        camelContext=\"$context\",\n        app_kubernetes_io_part_of=\"$part_of\",\n        app_kubernetes_io_name=\"$app_name\",\n        app_kubernetes_io_component=\"$component\",\n        app_kubernetes_io_instance=\"$instance\",\n        app_kubernetes_io_version=\"$version\"\n    }\n)\n*\n100",
           "format": "time_series",
           "hide": false,
           "instant": true,
@@ -187,7 +187,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "max(\n    CamelRoutesAdded_routes{\n        job=~\"$job\",\n        cluster=\"$cluster\",\n        namespace=\"$namespace\",\n        camelContext=\"$context\",\n        app_kubernetes_io_part_of=\"$part_of\",\n        app_kubernetes_io_name=\"$app_name\",\n        app_kubernetes_io_component=\"$component\",\n        app_kubernetes_io_instance=\"$instance\",\n        app_kubernetes_io_version=\"$version\"\n    }\n)",
+          "expr": "max(\n    camel_routes_added_routes{\n        job=~\"$job\",\n        cluster=\"$cluster\",\n        namespace=\"$namespace\",\n        camelContext=\"$context\",\n        app_kubernetes_io_part_of=\"$part_of\",\n        app_kubernetes_io_name=\"$app_name\",\n        app_kubernetes_io_component=\"$component\",\n        app_kubernetes_io_instance=\"$instance\",\n        app_kubernetes_io_version=\"$version\"\n    }\n)",
           "format": "time_series",
           "hide": false,
           "instant": true,
@@ -750,7 +750,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "count by (node) (\n    CamelRoutesRunning_routes{\n        job=~\"$job\",\n        cluster=\"$cluster\",\n        namespace=\"$namespace\",\n        camelContext=\"$context\",\n        app_kubernetes_io_part_of=\"$part_of\",\n        app_kubernetes_io_name=\"$app_name\",\n        app_kubernetes_io_component=\"$component\",\n        app_kubernetes_io_instance=\"$instance\", \n        app_kubernetes_io_version=\"$version\"\n    }\n)\n",
+          "expr": "count by (node) (\n    camel_routes_running_routes{\n        job=~\"$job\",\n        cluster=\"$cluster\",\n        namespace=\"$namespace\",\n        camelContext=\"$context\",\n        app_kubernetes_io_part_of=\"$part_of\",\n        app_kubernetes_io_name=\"$app_name\",\n        app_kubernetes_io_component=\"$component\",\n        app_kubernetes_io_instance=\"$instance\", \n        app_kubernetes_io_version=\"$version\"\n    }\n)\n",
           "format": "table",
           "instant": true,
           "legendFormat": "__auto",
@@ -840,7 +840,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum(\n    CamelExchangesInflight{\n        job=~\"$job\",\n        cluster=\"$cluster\",\n        namespace=\"$namespace\",\n        camelContext=\"$context\",\n        app_kubernetes_io_part_of=\"$part_of\",\n        app_kubernetes_io_name=\"$app_name\",\n        app_kubernetes_io_component=\"$component\",\n        app_kubernetes_io_instance=\"$instance\",\n        app_kubernetes_io_version=\"$version\"\n    }\n)",
+          "expr": "sum(\n    camel_exchanges_inflight{\n        job=~\"$job\",\n        cluster=\"$cluster\",\n        namespace=\"$namespace\",\n        camelContext=\"$context\",\n        app_kubernetes_io_part_of=\"$part_of\",\n        app_kubernetes_io_name=\"$app_name\",\n        app_kubernetes_io_component=\"$component\",\n        app_kubernetes_io_instance=\"$instance\",\n        app_kubernetes_io_version=\"$version\"\n    }\n)",
           "format": "time_series",
           "instant": false,
           "intervalFactor": 1,
@@ -985,7 +985,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum by (routeId) (\n    increase (\n        CamelRoutePolicy_seconds_sum{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\"\n        }[$__range]\n    )\n) \n \n/ \n \nsum by (routeId) (\n    increase (\n        CamelRoutePolicy_seconds_count{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\"\n        }[$__range]\n    )\n)",
+          "expr": "sum by (routeId) (\n    increase (\n        camel_route_policy_seconds_sum{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\"\n        }[$__range]\n    )\n) \n \n/ \n \nsum by (routeId) (\n    increase (\n        camel_route_policy_seconds_count{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\"\n        }[$__range]\n    )\n)",
           "format": "time_series",
           "hide": false,
           "instant": false,
@@ -1524,7 +1524,7 @@
               },
               "editorMode": "code",
               "exemplar": false,
-              "expr": "sum by (camelContext) (\n    CamelExchangesInflight{\n        job=~\"$job\",\n        cluster=\"$cluster\",\n        namespace=\"$namespace\",\n        camelContext=\"$context\",\n        app_kubernetes_io_part_of=\"$part_of\",\n        app_kubernetes_io_name=\"$app_name\",\n        app_kubernetes_io_component=\"$component\",\n        app_kubernetes_io_instance=\"$instance\", \n        app_kubernetes_io_version=\"$version\",\n        routeId=~\"$route\"\n    }\n)",
+              "expr": "sum by (camelContext) (\n    camel_exchanges_inflight{\n        job=~\"$job\",\n        cluster=\"$cluster\",\n        namespace=\"$namespace\",\n        camelContext=\"$context\",\n        app_kubernetes_io_part_of=\"$part_of\",\n        app_kubernetes_io_name=\"$app_name\",\n        app_kubernetes_io_component=\"$component\",\n        app_kubernetes_io_instance=\"$instance\", \n        app_kubernetes_io_version=\"$version\",\n        routeId=~\"$route\"\n    }\n)",
               "format": "time_series",
               "instant": false,
               "intervalFactor": 1,
@@ -1623,7 +1623,7 @@
                 "uid": "${DS_PROMETHEUS}"
               },
               "editorMode": "code",
-              "expr": "sum by (kubernetes_pod_name) (CamelExchangesInflight{job=~\"$job\",namespace=\"$namespace\",camelContext=\"$context\",routeId=~\"$route\"})",
+              "expr": "sum by (kubernetes_pod_name) (camel_exchanges_inflight{job=~\"$job\",namespace=\"$namespace\",camelContext=\"$context\",routeId=~\"$route\"})",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "{{kubernetes_pod_name}}",
@@ -1723,7 +1723,7 @@
               },
               "editorMode": "code",
               "exemplar": false,
-              "expr": "sum by (camelContext) (\n    increase (\n        CamelRoutePolicy_seconds_sum{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\"\n        }[$__range]\n    )\n) \n\n/ \n\nsum by (camelContext) (\n    increase (\n        CamelRoutePolicy_seconds_count{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\"\n        }[$__range]\n    )\n)",
+              "expr": "sum by (camelContext) (\n    increase (\n        camel_route_policy_seconds_sum{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\"\n        }[$__range]\n    )\n) \n\n/ \n\nsum by (camelContext) (\n    increase (\n        camel_route_policy_seconds_count{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\"\n        }[$__range]\n    )\n)",
               "format": "time_series",
               "hide": false,
               "instant": false,
@@ -1825,7 +1825,7 @@
                 "uid": "${DS_PROMETHEUS}"
               },
               "editorMode": "code",
-              "expr": "sum by (camelContext) (\n    increase (\n        CamelRoutePolicy_seconds_sum{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\"\n        }[$__range]\n    )\n) \n \n/ \n \nsum by (camelContext) (\n    increase (\n        CamelRoutePolicy_seconds_count{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\"\n        }[$__range]\n    )\n)",
+              "expr": "sum by (camelContext) (\n    increase (\n        camel_route_policy_seconds_sum{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\"\n        }[$__range]\n    )\n) \n \n/ \n \nsum by (camelContext) (\n    increase (\n        camel_route_policy_seconds_count{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\"\n        }[$__range]\n    )\n)",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "__auto",
@@ -1925,7 +1925,7 @@
                 "uid": "${DS_PROMETHEUS}"
               },
               "editorMode": "code",
-              "expr": "sum by (pod) (\n    increase (\n        CamelRoutePolicy_seconds_sum{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\"\n        }[$__range]\n    )\n) \n \n/ \n \nsum by (pod) (\n    increase (\n        CamelRoutePolicy_seconds_count{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\"\n        }[$__range]\n    )\n)",
+              "expr": "sum by (pod) (\n    increase (\n        camel_route_policy_seconds_sum{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\"\n        }[$__range]\n    )\n) \n \n/ \n \nsum by (pod) (\n    increase (\n        camel_route_policy_seconds_count{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\"\n        }[$__range]\n    )\n)",
               "format": "time_series",
               "instant": false,
               "intervalFactor": 1,
@@ -2041,7 +2041,7 @@
                 "uid": "${DS_PROMETHEUS}"
               },
               "editorMode": "code",
-              "expr": "sum by (routeId,nodeId) (\n    increase (\n        CamelMessageHistory_seconds_sum{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\",\n            nodeId=~\"$processor\"\n        }[$__range]\n    )\n) \n/ \nsum by (routeId,nodeId) (\n    increase (\n        CamelMessageHistory_seconds_count{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\",\n            nodeId=~\"$processor\"\n        }[$__range]\n    )\n)\n",
+              "expr": "sum by (routeId,nodeId) (\n    increase (\n        camel_message_history_seconds_sum{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\",\n            nodeId=~\"$processor\"\n        }[$__range]\n    )\n) \n/ \nsum by (routeId,nodeId) (\n    increase (\n        camel_message_history_seconds_count{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\",\n            nodeId=~\"$processor\"\n        }[$__range]\n    )\n)\n",
               "format": "table",
               "hide": false,
               "instant": true,
@@ -2102,7 +2102,7 @@
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(CamelRoutesRunning_routes{eventType=\"RouteEvent\"},job)",
+        "definition": "label_values(camel_routes_running_routes{eventType=\"RouteEvent\"},job)",
         "description": "",
         "hide": 0,
         "includeAll": true,
@@ -2111,7 +2111,7 @@
         "name": "job",
         "options": [],
         "query": {
-          "query": "label_values(CamelRoutesRunning_routes{eventType=\"RouteEvent\"},job)",
+          "query": "label_values(camel_routes_running_routes{eventType=\"RouteEvent\"},job)",
           "refId": "StandardVariableQuery"
         },
         "refresh": 1,
@@ -2131,7 +2131,7 @@
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(CamelRoutesRunning_routes{eventType=\"RouteEvent\"},cluster)",
+        "definition": "label_values(camel_routes_running_routes{eventType=\"RouteEvent\"},cluster)",
         "hide": 0,
         "includeAll": false,
         "label": "Cluster",
@@ -2139,7 +2139,7 @@
         "name": "cluster",
         "options": [],
         "query": {
-          "query": "label_values(CamelRoutesRunning_routes{eventType=\"RouteEvent\"},cluster)",
+          "query": "label_values(camel_routes_running_routes{eventType=\"RouteEvent\"},cluster)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
@@ -2159,7 +2159,7 @@
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(CamelRoutesRunning_routes{eventType=\"RouteEvent\",job=~\"${job}\",cluster=\"${cluster}\"},namespace)",
+        "definition": "label_values(camel_routes_running_routes{eventType=\"RouteEvent\",job=~\"${job}\",cluster=\"${cluster}\"},namespace)",
         "hide": 0,
         "includeAll": false,
         "label": "Namespace",
@@ -2167,7 +2167,7 @@
         "name": "namespace",
         "options": [],
         "query": {
-          "query": "label_values(CamelRoutesRunning_routes{eventType=\"RouteEvent\",job=~\"${job}\",cluster=\"${cluster}\"},namespace)",
+          "query": "label_values(camel_routes_running_routes{eventType=\"RouteEvent\",job=~\"${job}\",cluster=\"${cluster}\"},namespace)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
@@ -2189,7 +2189,7 @@
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(CamelRoutesRunning_routes{eventType=\"RouteEvent\",job=~\"${job}\",cluster=\"${cluster}\",namespace=\"$namespace\"},camelContext)",
+        "definition": "label_values(camel_routes_running_routes{eventType=\"RouteEvent\",job=~\"${job}\",cluster=\"${cluster}\",namespace=\"$namespace\"},camelContext)",
         "hide": 0,
         "includeAll": false,
         "label": "Camel Context",
@@ -2197,7 +2197,7 @@
         "name": "context",
         "options": [],
         "query": {
-          "query": "label_values(CamelRoutesRunning_routes{eventType=\"RouteEvent\",job=~\"${job}\",cluster=\"${cluster}\",namespace=\"$namespace\"},camelContext)",
+          "query": "label_values(camel_routes_running_routes{eventType=\"RouteEvent\",job=~\"${job}\",cluster=\"${cluster}\",namespace=\"$namespace\"},camelContext)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
@@ -2249,7 +2249,7 @@
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(CamelMessageHistory_seconds_count{job=~\"${job}\",cluster=\"${cluster}\",namespace=\"$namespace\",camelContext=\"$context\",routeId=~\"$route\"},nodeId)",
+        "definition": "label_values(camel_message_history_seconds_count{job=~\"${job}\",cluster=\"${cluster}\",namespace=\"$namespace\",camelContext=\"$context\",routeId=~\"$route\"},nodeId)",
         "hide": 0,
         "includeAll": true,
         "label": "Camel Processor",
@@ -2257,7 +2257,7 @@
         "name": "processor",
         "options": [],
         "query": {
-          "query": "label_values(CamelMessageHistory_seconds_count{job=~\"${job}\",cluster=\"${cluster}\",namespace=\"$namespace\",camelContext=\"$context\",routeId=~\"$route\"},nodeId)",
+          "query": "label_values(camel_message_history_seconds_count{job=~\"${job}\",cluster=\"${cluster}\",namespace=\"$namespace\",camelContext=\"$context\",routeId=~\"$route\"},nodeId)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
@@ -2281,7 +2281,7 @@
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(CamelRoutesRunning_routes{job=~\"$job\",cluster=\"${cluster}\",eventType=\"RouteEvent\",camelContext=\"$context\"},app_kubernetes_io_part_of)",
+        "definition": "label_values(camel_routes_running_routes{job=~\"$job\",cluster=\"${cluster}\",eventType=\"RouteEvent\",camelContext=\"$context\"},app_kubernetes_io_part_of)",
         "hide": 0,
         "includeAll": false,
         "label": "Part of",
@@ -2289,7 +2289,7 @@
         "name": "part_of",
         "options": [],
         "query": {
-          "query": "label_values(CamelRoutesRunning_routes{job=~\"$job\",cluster=\"${cluster}\",eventType=\"RouteEvent\",camelContext=\"$context\"},app_kubernetes_io_part_of)",
+          "query": "label_values(camel_routes_running_routes{job=~\"$job\",cluster=\"${cluster}\",eventType=\"RouteEvent\",camelContext=\"$context\"},app_kubernetes_io_part_of)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
@@ -2310,7 +2310,7 @@
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(CamelRoutesRunning_routes{job=~\"$job\",cluster=\"${cluster}\",eventType=\"RouteEvent\",camelContext=\"$context\"},app_kubernetes_io_name)",
+        "definition": "label_values(camel_routes_running_routes{job=~\"$job\",cluster=\"${cluster}\",eventType=\"RouteEvent\",camelContext=\"$context\"},app_kubernetes_io_name)",
         "hide": 0,
         "includeAll": false,
         "label": "Name",
@@ -2318,7 +2318,7 @@
         "name": "app_name",
         "options": [],
         "query": {
-          "query": "label_values(CamelRoutesRunning_routes{job=~\"$job\",cluster=\"${cluster}\",eventType=\"RouteEvent\",camelContext=\"$context\"},app_kubernetes_io_name)",
+          "query": "label_values(camel_routes_running_routes{job=~\"$job\",cluster=\"${cluster}\",eventType=\"RouteEvent\",camelContext=\"$context\"},app_kubernetes_io_name)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
@@ -2339,7 +2339,7 @@
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(CamelRoutesRunning_routes{job=~\"$job\",cluster=\"${cluster}\",eventType=\"RouteEvent\",camelContext=\"$context\"},app_kubernetes_io_component)",
+        "definition": "label_values(camel_routes_running_routes{job=~\"$job\",cluster=\"${cluster}\",eventType=\"RouteEvent\",camelContext=\"$context\"},app_kubernetes_io_component)",
         "hide": 0,
         "includeAll": false,
         "label": "Component",
@@ -2347,7 +2347,7 @@
         "name": "component",
         "options": [],
         "query": {
-          "query": "label_values(CamelRoutesRunning_routes{job=~\"$job\",cluster=\"${cluster}\",eventType=\"RouteEvent\",camelContext=\"$context\"},app_kubernetes_io_component)",
+          "query": "label_values(camel_routes_running_routes{job=~\"$job\",cluster=\"${cluster}\",eventType=\"RouteEvent\",camelContext=\"$context\"},app_kubernetes_io_component)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
@@ -2368,7 +2368,7 @@
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(CamelRoutesRunning_routes{job=~\"$job\",cluster=\"${cluster}\",eventType=\"RouteEvent\",camelContext=\"$context\"},app_kubernetes_io_instance)",
+        "definition": "label_values(camel_routes_running_routes{job=~\"$job\",cluster=\"${cluster}\",eventType=\"RouteEvent\",camelContext=\"$context\"},app_kubernetes_io_instance)",
         "hide": 0,
         "includeAll": false,
         "label": "Instance",
@@ -2376,7 +2376,7 @@
         "name": "instance",
         "options": [],
         "query": {
-          "query": "label_values(CamelRoutesRunning_routes{job=~\"$job\",cluster=\"${cluster}\",eventType=\"RouteEvent\",camelContext=\"$context\"},app_kubernetes_io_instance)",
+          "query": "label_values(camel_routes_running_routes{job=~\"$job\",cluster=\"${cluster}\",eventType=\"RouteEvent\",camelContext=\"$context\"},app_kubernetes_io_instance)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
@@ -2397,7 +2397,7 @@
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(CamelRoutesRunning_routes{job=~\"$job\",cluster=\"${cluster}\",eventType=\"RouteEvent\",camelContext=\"$context\"},app_kubernetes_io_version)",
+        "definition": "label_values(camel_routes_running_routes{job=~\"$job\",cluster=\"${cluster}\",eventType=\"RouteEvent\",camelContext=\"$context\"},app_kubernetes_io_version)",
         "hide": 0,
         "includeAll": false,
         "label": "Version",
@@ -2405,7 +2405,7 @@
         "name": "version",
         "options": [],
         "query": {
-          "query": "label_values(CamelRoutesRunning_routes{job=~\"$job\",cluster=\"${cluster}\",eventType=\"RouteEvent\",camelContext=\"$context\"},app_kubernetes_io_version)",
+          "query": "label_values(camel_routes_running_routes{job=~\"$job\",cluster=\"${cluster}\",eventType=\"RouteEvent\",camelContext=\"$context\"},app_kubernetes_io_version)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
