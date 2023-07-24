@@ -21,6 +21,12 @@ management:
 
 gateway:
   type: "scheduler-http"
+redelivery-policy:
+  maximum-redeliveries: 2
+  redelivery-delay: 1000
+  retry-attempted-log-level: "WARN"
+error-handler:
+  redelivery-policy-ref: "redelivery-policy"
 main-scheduler:
   poolSize: "1"
   endpoint-properties:
