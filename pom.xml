@@ -7,7 +7,7 @@
     <groupId>com.bridle</groupId>
     <artifactId>bridle-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.5</version>
+    <version>0.1.0</version>
     <modules>
         <module>camel-springboot-dynamic-properties</module>
         <module>bridle-gateway</module>
@@ -16,8 +16,8 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <spring-boot-version>2.7.12</spring-boot-version>
-        <camel-version>3.20.6</camel-version>
+        <spring-boot-version>2.7.13</spring-boot-version>
+        <camel-version>3.21.0</camel-version>
         <jacoco-version>0.8.7</jacoco-version>
         <sonar.version>3.9.1.2184</sonar.version>
         <jacoco.reportDirectory>${project.basedir}/../target/site/jacoco-aggregate</jacoco.reportDirectory>

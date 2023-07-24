@@ -43,8 +43,8 @@ rest-in:
   error-http-response-code: 501
   routes:
     - path: "/myapi"
-      consumes: "text/plain"
-      produces: "text/plain"
+      consumes: "application/json"
+      produces: "application/json"
       httpMethod: "POST"
       id: "rest-in"
       to:

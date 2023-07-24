@@ -257,7 +257,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum(\n    increase(\n        CamelExchangesTotal_total{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\",\n            app_kubernetes_io_version=\"$version\"\n        }[$__range]\n    )\n)",
+          "expr": "sum(\n    increase(\n        camel_exchanges_total{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\",\n            app_kubernetes_io_version=\"$version\"\n        }[$__range]\n    )\n)",
           "format": "time_series",
           "instant": false,
           "interval": "",
@@ -353,7 +353,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum by (camelContext) (\n    increase(\n        CamelExchangesFailed_total{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\",\n            app_kubernetes_io_version=\"$version\"\n        }[$__range]\n    )\n)",
+          "expr": "sum by (camelContext) (\n    increase(\n        camel_exchanges_failed_total{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\",\n            app_kubernetes_io_version=\"$version\"\n        }[$__range]\n    )\n)",
           "format": "time_series",
           "instant": false,
           "interval": "",
@@ -368,7 +368,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum by (camelContext) (\n    increase(\n        CamelExchangesFailed_total{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\",\n            app_kubernetes_io_version=\"$version\"\n        }[$__range])\n    ) \n/ \nsum by (camelContext) (\n    increase(\n        CamelExchangesTotal_total{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\",\n            app_kubernetes_io_version=\"$version\"\n        }[$__range]\n    )\n)*100",
+          "expr": "sum by (camelContext) (\n    increase(\n        camel_exchanges_failed_total{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\",\n            app_kubernetes_io_version=\"$version\"\n        }[$__range])\n    ) \n/ \nsum by (camelContext) (\n    increase(\n        camel_exchanges_total{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\",\n            app_kubernetes_io_version=\"$version\"\n        }[$__range]\n    )\n)*100",
           "hide": false,
           "legendFormat": "__auto",
           "range": true,
@@ -917,7 +917,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum by (routeId) (\n    irate(\n        CamelExchangesTotal_total{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\"\n        }[$__rate_interval]\n    )\n)",
+          "expr": "sum by (routeId) (\n    irate(\n        camel_exchanges_total{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\"\n        }[$__rate_interval]\n    )\n)",
           "legendFormat": "{{routeId}}",
           "range": true,
           "refId": "A"
@@ -1059,7 +1059,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum by (routeId) (\n    increase(\n        CamelExchangesFailed_total{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\"\n        }[$__range]\n    )\n) \n/ \nsum by (routeId) (\n    increase(\n        CamelExchangesTotal_total{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\"\n        }[$__range]\n    ) > 0\n)",
+          "expr": "sum by (routeId) (\n    increase(\n        camel_exchanges_failed_total{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\"\n        }[$__range]\n    )\n) \n/ \nsum by (routeId) (\n    increase(\n        camel_exchanges_total{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\"\n        }[$__range]\n    ) > 0\n)",
           "instant": true,
           "legendFormat": "{{routeId}}",
           "range": false,
@@ -1146,7 +1146,7 @@
                 "uid": "${DS_PROMETHEUS}"
               },
               "editorMode": "code",
-              "expr": "sum(\n    irate(\n        CamelExchangesTotal_total{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\"\n        }[$__rate_interval]\n    )\n)",
+              "expr": "sum(\n    irate(\n        camel_exchanges_total{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\"\n        }[$__rate_interval]\n    )\n)",
               "format": "table",
               "instant": true,
               "intervalFactor": 1,
@@ -1241,7 +1241,7 @@
                 "uid": "${DS_PROMETHEUS}"
               },
               "editorMode": "code",
-              "expr": "sum by (camelContext) (\n    irate(\n        CamelExchangesTotal_total{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\"\n        }[$__rate_interval]\n    )\n)",
+              "expr": "sum by (camelContext) (\n    irate(\n        camel_exchanges_total{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\"\n        }[$__rate_interval]\n    )\n)",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "__auto",
@@ -1339,7 +1339,7 @@
                 "uid": "${DS_PROMETHEUS}"
               },
               "editorMode": "code",
-              "expr": "sum by (pod) (\n    irate(\n        CamelExchangesTotal_total{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\"\n        }[$__rate_interval]\n    )\n)",
+              "expr": "sum by (pod) (\n    irate(\n        camel_exchanges_total{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\"\n        }[$__rate_interval]\n    )\n)",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "__auto",
@@ -1440,7 +1440,7 @@
                 "uid": "${DS_PROMETHEUS}"
               },
               "editorMode": "code",
-              "expr": "sum by (routeId) (\n    increase(\n        CamelExchangesFailed_total{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\"\n        }[$__range]\n    )\n) \n/ \nsum by (routeId) (\n    increase(\n        CamelExchangesTotal_total{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\"\n        }[$__range]\n    )\n)",
+              "expr": "sum by (routeId) (\n    increase(\n        camel_exchanges_failed_total{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\"\n        }[$__range]\n    )\n) \n/ \nsum by (routeId) (\n    increase(\n        camel_exchanges_total{\n            job=~\"$job\",\n            cluster=\"$cluster\",\n            namespace=\"$namespace\",\n            camelContext=\"$context\",\n            app_kubernetes_io_part_of=\"$part_of\",\n            app_kubernetes_io_name=\"$app_name\",\n            app_kubernetes_io_component=\"$component\",\n            app_kubernetes_io_instance=\"$instance\", \n            app_kubernetes_io_version=\"$version\",\n            routeId=~\"$route\"\n        }[$__range]\n    )\n)",
               "format": "time_series",
               "intervalFactor": 1,
               "legendFormat": "__auto",
@@ -2219,7 +2219,7 @@
           "type": "prometheus",
           "uid": "${DS_PROMETHEUS}"
         },
-        "definition": "label_values(CamelExchangesSucceeded_total{job=~\"${job}\",cluster=\"${cluster}\",namespace=\"$namespace\",camelContext=\"$context\"},routeId)",
+        "definition": "label_values(camel_exchanges_succeeded_total{job=~\"${job}\",cluster=\"${cluster}\",namespace=\"$namespace\",camelContext=\"$context\"},routeId)",
         "hide": 0,
         "includeAll": true,
         "label": "Camel Route",
@@ -2227,7 +2227,7 @@
         "name": "route",
         "options": [],
         "query": {
-          "query": "label_values(CamelExchangesSucceeded_total{job=~\"${job}\",cluster=\"${cluster}\",namespace=\"$namespace\",camelContext=\"$context\"},routeId)",
+          "query": "label_values(camel_exchanges_succeeded_total{job=~\"${job}\",cluster=\"${cluster}\",namespace=\"$namespace\",camelContext=\"$context\"},routeId)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
