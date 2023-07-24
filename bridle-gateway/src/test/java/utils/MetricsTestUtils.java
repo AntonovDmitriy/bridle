@@ -65,19 +65,19 @@ public class MetricsTestUtils {
     }
 
     public static int parseSuccessMessagesAmount(String metricsInfo, String routeName) {
-        return extractDecimalMetric(metricsInfo, routeName, "CamelExchangesSucceeded_total").getValue().intValue();
+        return extractDecimalMetric(metricsInfo, routeName, "camel_exchanges_succeeded_total").getValue().intValue();
     }
 
     public static int parseMessagesAmount(String metricsInfo, String routeName) {
-        return extractDecimalMetric(metricsInfo, routeName, "CamelExchangesTotal_total").getValue().intValue();
+        return extractDecimalMetric(metricsInfo, routeName, "camel_exchanges_total").getValue().intValue();
     }
 
     public static int parseFailedMessagesAmount(String metricsInfo, String routeName) {
-        return extractDecimalMetric(metricsInfo, routeName, "CamelExchangesFailed_total").getValue().intValue();
+        return extractDecimalMetric(metricsInfo, routeName, "camel_exchanges_failed_total").getValue().intValue();
     }
 
     public static int parseMessagesWithHandledErrorAmount(String metricsInfo, String routeName) {
-        return extractDecimalMetric(metricsInfo, routeName, "CamelExchangesFailuresHandled_total")
+        return extractDecimalMetric(metricsInfo, routeName, "camel_exchanges_failures_handled_total")
                 .getValue()
                 .intValue();
     }
