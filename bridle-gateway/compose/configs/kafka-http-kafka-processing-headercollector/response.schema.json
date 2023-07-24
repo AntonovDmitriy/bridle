@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "person": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "age": {
+          "type": "integer"
+        },
+        "address": {
+          "type": "object",
+          "properties": {
+            "city": {
+              "type": "string"
+            },
+            "street": {
+              "type": "string"
+            },
+            "building": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "city",
+            "street",
+            "building"
+          ]
+        },
+        "hobbies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "yearsOfExperience": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "type",
+              "name",
+              "yearsOfExperience"
+            ]
+          }
+        }
+      },
+      "required": [
+        "name",
+        "age",
+        "address",
+        "hobbies"
+      ]
+    }
+  },
+  "required": [
+    "person"
+  ]
+}
