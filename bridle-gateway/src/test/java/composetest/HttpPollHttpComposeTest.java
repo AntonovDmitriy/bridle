@@ -1,19 +1,20 @@
 package composetest;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.DockerComposeContainer;
+import org.testcontainers.containers.output.OutputFrame;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.containers.wait.strategy.WaitAllStrategy;
 import org.testcontainers.junit.jupiter.Container;
 
 import java.io.File;
 import java.time.Duration;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import static com.bridle.configuration.routes.HttpPollHttpConfiguration.GATEWAY_TYPE_HTTP_POLL_HTTP;
-import static com.bridle.configuration.routes.HttpPollKafkaConfiguration.GATEWAY_TYPE_HTTP_POLL_KAFKA;
-import static org.testcontainers.containers.DockerComposeContainer.RemoveImages.ALL;
 import static utils.MetricsTestUtils.parseMessagesAmount;
 import static utils.MetricsTestUtils.verifyMetrics;
 
@@ -47,13 +48,23 @@ class HttpPollHttpComposeTest {
                                             .withStartupTimeout(Duration.ofMinutes(10)))
                 .withBuild(true)
                 .withLocalCompose(true)
-                .withRemoveImages(ALL)
-                .withStartupTimeout(Duration.ofMinutes(10));
+                .withStartupTimeout(Duration.ofMinutes(10))
+                .withLogConsumer(SERVICE_NAME_GATEWAY, new Consumer<OutputFrame>() {
+                    @Override
+                    public void accept(OutputFrame outputFrame) {
+                        System.out.println(outputFrame.getUtf8String());
+                    }
+                });
     }
 
     @BeforeAll
     static void init() {
         ENVIRONMENT.start();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        ENVIRONMENT.stop();
     }
 
     @Test

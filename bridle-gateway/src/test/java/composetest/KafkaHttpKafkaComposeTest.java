@@ -1,5 +1,6 @@
 package composetest;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,6 @@ import java.util.function.Predicate;
 
 import static com.bridle.configuration.routes.KafkaHttpKafkaConfiguration.GATEWAY_TYPE_KAFKA_HTTP_KAFKA;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.testcontainers.containers.DockerComposeContainer.RemoveImages.ALL;
 import static utils.KafkaContainerUtils.countMessages;
 import static utils.MetricsTestUtils.parseMessagesAmount;
 import static utils.MetricsTestUtils.verifyMetrics;
@@ -27,14 +27,14 @@ class KafkaHttpKafkaComposeTest {
     private static final Predicate<String> APP_STARTS_TO_RECIEVE_LOAD_PREDICATE =
             s -> parseMessagesAmount(s, ROUTE_NAME) > 0;
 
-    @Container
-    private static final DockerComposeContainer<?> ENVIRONMENT = initEnvironment();
-
     private static final String COMPOSE_FILE_PATH = "compose/demo-kafka-http-kafka-compose.yml";
 
     private static final String SERVICE_NAME_GATEWAY = "gateway";
 
     private static final int SERVICE_PORT = 8080;
+
+    @Container
+    private static final DockerComposeContainer<?> ENVIRONMENT = initEnvironment();
 
     private static final String ENDPOINT_NAME = "kafka";
 
@@ -52,13 +52,17 @@ class KafkaHttpKafkaComposeTest {
                                             .withStartupTimeout(Duration.ofMinutes(10)))
                 .withBuild(true)
                 .withLocalCompose(true)
-                .withRemoveImages(ALL)
                 .withStartupTimeout(Duration.ofMinutes(10));
     }
 
     @BeforeAll
     static void init() {
         ENVIRONMENT.start();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        ENVIRONMENT.stop();
     }
 
     @Test

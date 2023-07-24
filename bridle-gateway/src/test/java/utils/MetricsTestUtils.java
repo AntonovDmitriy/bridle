@@ -6,9 +6,12 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -49,6 +52,7 @@ public class MetricsTestUtils {
             String prometheusUri) {
         ResponseEntity<String> metricsResponse =
                 TestUtils.sendHttpRequest(prometheusUri, String.class, HttpMethod.GET, null);
+        parseMessagesAmount(metricsResponse.getBody(), routeName);
         int receivedFailedMessageCount =
                 MetricsTestUtils.parseFailedMessagesAmount(metricsResponse.getBody(), routeName);
         assertTrue(failedCount.test(receivedFailedMessageCount));
@@ -90,14 +94,33 @@ public class MetricsTestUtils {
     }
 
     public static MetricsHolder<Double> extractDecimalMetric(String content, String routeId, String metricName) {
-        List<MetricsHolder<Double>> metrics = extractDecimalMetrics(content, routeId, metricName);
+        List<MetricsHolder<Double>> metrics;
+        if (content.lines().count() == 1) {
+            metrics = parseSingleRowMetrics(content, routeId, metricName);
+        } else {
+            metrics = extractDecimalMetrics(content, routeId, metricName);
+        }
         if (metrics.size() != 1) {
             throw new RuntimeException(String.format(
                     "MetricsForTest has found more than once. MetricsForTest: %s RouteId: %s",
                     metricName,
                     routeId));
         }
-        return metrics.get(0);
+        MetricsHolder<Double> result = metrics.get(0);
+        System.out.printf("metricName: %s: %s%n", metricName, result.getValue());
+        return result;
+    }
+
+    private static List<MetricsHolder<Double>> parseSingleRowMetrics(String content,
+            String routeId,
+            String metricName) {
+        Pattern pattern =
+                Pattern.compile("(%s\\{.+?routeId=\"%s\".+?\\}\\s)(\\d+\\.\\d+)".formatted(metricName, routeId));
+        Matcher matcher = pattern.matcher(content);
+        if (matcher.find()) {
+            return List.of(new MetricsHolder<>(matcher.group(1), Double.parseDouble(matcher.group(2))));
+        }
+        return Collections.emptyList();
     }
 
     public static List<MetricsHolder<Double>> extractDecimalMetricsFromMetricRows(List<String> metricRows) {
@@ -130,18 +153,11 @@ public class MetricsTestUtils {
         String preparedMetricName =
                 metricName.endsWith(START_TAG_BODY_SYMBOL) ? metricName : metricName + START_TAG_BODY_SYMBOL;
         String[] splitContent = content.split("\n");
-        if (splitContent.length == 1) {
-            splitContent = splitOneLineMetricsContent(content);
-        }
         return Arrays
                 .stream(splitContent)
                 .filter(entry -> routeId == null || entry.contains(routeId))
                 .filter(entry -> entry.contains(preparedMetricName))
                 .collect(Collectors.toList());
 
-    }
-
-    private static String[] splitOneLineMetricsContent(String content) {
-        return content.split("#");
     }
 }

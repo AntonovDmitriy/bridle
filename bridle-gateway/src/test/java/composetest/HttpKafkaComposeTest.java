@@ -1,5 +1,6 @@
 package composetest;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.DockerComposeContainer;
@@ -12,7 +13,6 @@ import java.time.Duration;
 import java.util.function.Predicate;
 
 import static com.bridle.configuration.routes.HttpKafkaConfiguration.GATEWAY_TYPE_HTTP_KAFKA;
-import static org.testcontainers.containers.DockerComposeContainer.RemoveImages.ALL;
 import static utils.MetricsTestUtils.parseMessagesAmount;
 import static utils.MetricsTestUtils.verifyMetrics;
 
@@ -46,13 +46,17 @@ class HttpKafkaComposeTest {
                                             .withStartupTimeout(Duration.ofMinutes(10)))
                 .withBuild(true)
                 .withLocalCompose(true)
-                .withRemoveImages(ALL)
                 .withStartupTimeout(Duration.ofMinutes(10));
     }
 
     @BeforeAll
     static void init() {
         ENVIRONMENT.start();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        ENVIRONMENT.stop();
     }
 
     @Test
