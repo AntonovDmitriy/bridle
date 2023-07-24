@@ -7,7 +7,7 @@
     <groupId>com.bridle</groupId>
     <artifactId>bridle-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.5</version>
+    <version>0.1.0</version>
     <modules>
         <module>camel-springboot-dynamic-properties</module>
         <module>bridle-gateway</module>
