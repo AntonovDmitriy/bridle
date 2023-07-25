@@ -1,11 +1,9 @@
 package com.bridle.configuration.routes;
 
-import com.bridle.configuration.common.consumer.KafkaInConfiguration;
+import com.bridle.configuration.common.DynamicComponentsComfiguration;
 import com.bridle.configuration.common.errorhandling.ErrorHandlerConfiguration;
 import com.bridle.configuration.common.processing.AfterConsumerProcessingConfiguration;
 import com.bridle.configuration.common.processing.AfterProducerProcessingConfiguration;
-import com.bridle.configuration.common.producer.KafkaOutConfiguration;
-import com.bridle.configuration.common.producer.RestCallConfiguration;
 import com.bridle.routes.ConsumerToDoubleProducerRoute;
 import com.bridle.routes.model.ConsumerToDoubleProducerRouteParams;
 import com.bridle.utils.ProcessingParams;
@@ -23,21 +21,23 @@ import org.springframework.context.annotation.Import;
 import static com.bridle.configuration.routes.KafkaHttpKafkaConfiguration.GATEWAY_TYPE_KAFKA_HTTP_KAFKA;
 
 @Configuration
-@Import({KafkaInConfiguration.class, RestCallConfiguration.class, KafkaOutConfiguration.class,
-        ErrorHandlerConfiguration.class, AfterConsumerProcessingConfiguration.class,
-        AfterProducerProcessingConfiguration.class})
+@Import({ErrorHandlerConfiguration.class, AfterConsumerProcessingConfiguration.class,
+        AfterProducerProcessingConfiguration.class, DynamicComponentsComfiguration.class})
 @ConditionalOnProperty(name = "gateway.type",
         havingValue = GATEWAY_TYPE_KAFKA_HTTP_KAFKA)
 public class KafkaHttpKafkaConfiguration {
 
     public static final String GATEWAY_TYPE_KAFKA_HTTP_KAFKA = "kafka-http-kafka";
 
+
     @Bean
     public RouteBuilder kafkaHttpKafkaRoute(ErrorHandlerFactory errorHandlerFactory,
-            EndpointConsumerBuilder kafkaConsumerBuilder,
-            @Qualifier("restCallBuilder")
+            @Qualifier("kafka-in-endpoint")
+            EndpointConsumerBuilder kafkaInEndpoint,
+            @Qualifier("rest-call-endpoint")
             EndpointProducerBuilder restCall,
-            EndpointProducerBuilder kafkaProducerBuilder,
+            @Qualifier("kafka-out-endpoint")
+            EndpointProducerBuilder kafkaOutEndpoint,
             @Autowired(required = false)
             @Qualifier("afterConsumer")
             ProcessingParams processingAfterConsumerParams,
@@ -46,10 +46,10 @@ public class KafkaHttpKafkaConfiguration {
             ProcessingParams processingAfterProducerParams) {
         return new ConsumerToDoubleProducerRoute(errorHandlerFactory,
                                                  new ConsumerToDoubleProducerRouteParams(GATEWAY_TYPE_KAFKA_HTTP_KAFKA,
-                                                                                         kafkaConsumerBuilder,
+                                                                                         kafkaInEndpoint,
                                                                                          processingAfterConsumerParams,
                                                                                          restCall,
                                                                                          processingAfterProducerParams,
-                                                                                         kafkaProducerBuilder));
+                                                                                         kafkaOutEndpoint));
     }
 }

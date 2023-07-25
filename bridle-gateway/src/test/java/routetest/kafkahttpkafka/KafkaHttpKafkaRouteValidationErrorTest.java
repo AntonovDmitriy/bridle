@@ -74,11 +74,15 @@ public class KafkaHttpKafkaRouteValidationErrorTest {
     @BeforeAll
     public static void setUp() throws Exception {
         setupKafka(kafka, KAFKA_PORT);
+        System.setProperty("components.kafka.kafka-out.brokers",
+                           "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
+        System.setProperty("components.kafka.kafka-in.brokers",
+                           "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
         createTopic(kafka, TOPIC_NAME_REQUST);
         createTopic(kafka, TOPIC_NAME_RESPONSE);
 
         mockServer.start();
-        System.setProperty("rest-call.port", mockServer.getServerPort().toString());
+        System.setProperty("endpoints.rest-call-endpoint.mandatory.port", mockServer.getServerPort().toString());
 
         var mockServerClient = createMockServerClient(mockServer);
         mockServerClient.when(REST_CALL_REQUEST).respond(response(HTTP_RESPONSE_BODY).withStatusCode(200));

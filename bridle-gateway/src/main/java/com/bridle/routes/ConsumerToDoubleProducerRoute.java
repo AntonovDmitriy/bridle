@@ -39,6 +39,7 @@ public class ConsumerToDoubleProducerRoute extends BaseRouteBuilder {
         ProcessingBuilder.addProcessing(from(PROCESSING_AFTER_CONSUMER),
                                         routeParams.afterConsumerProcessingParams(),
                                         "processingAfterConsumer");
+
         ProcessingBuilder.addProcessing(from(PROCESSING_AFTER_PRODUCER),
                                         routeParams.afterProducerProcessingParams(),
                                         "processingAfterProducer");
