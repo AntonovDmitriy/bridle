@@ -21,17 +21,17 @@ public class KafkaOutConfiguration {
         return new ValidatedKafkaProducerConfiguration();
     }
 
-    @Bean(name = KAFKA_OUT_COMPONENT_NAME)
-    public KafkaComponent kafkaOutComponent() {
-        return new KafkaComponent();
-    }
-
-    @Lazy
-    @Bean
-    public ComponentCustomizer configureKafkaOutComponent(CamelContext context,
-            ValidatedKafkaProducerConfiguration componentConfiguration) {
-        return new ComponentCustomizerImpl(context, componentConfiguration, KAFKA_OUT_COMPONENT_NAME);
-    }
+//    @Bean(name = KAFKA_OUT_COMPONENT_NAME)
+//    public KafkaComponent kafkaOutComponent() {
+//        return new KafkaComponent();
+//    }
+//
+//    @Lazy
+//    @Bean
+//    public ComponentCustomizer configureKafkaOutComponent(CamelContext context,
+//            ValidatedKafkaProducerConfiguration componentConfiguration) {
+//        return new ComponentCustomizerImpl(context, componentConfiguration, KAFKA_OUT_COMPONENT_NAME);
+//    }
 
     @Bean
     public EndpointProducerBuilder kafkaProducerBuilder(ValidatedKafkaProducerConfiguration configuration) {

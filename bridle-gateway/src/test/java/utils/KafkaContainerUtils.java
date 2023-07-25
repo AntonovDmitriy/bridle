@@ -105,8 +105,10 @@ public class KafkaContainerUtils {
 
     public static void setupKafka(KafkaContainer kafkaContainer, int kafkaPort) {
         kafkaContainer.start();
-        System.setProperty("kafka-out.brokers", "localhost:" + kafkaContainer.getMappedPort(kafkaPort).toString());
-        System.setProperty("kafka-in.brokers", "localhost:" + kafkaContainer.getMappedPort(kafkaPort).toString());
+        System.setProperty("components.kafka.kafka-out.brokers",
+                           "localhost:" + kafkaContainer.getMappedPort(kafkaPort).toString());
+        System.setProperty("components.kafka.kafka-in.brokers",
+                           "localhost:" + kafkaContainer.getMappedPort(kafkaPort).toString());
     }
 
     public static KafkaContainer createKafkaContainer() {

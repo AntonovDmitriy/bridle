@@ -59,7 +59,7 @@ public class HttpPollHttpRouteTest {
         mockPollerverClient.when(POLL_SERVER_REQUEST).respond(response().withBody("52.255").withStatusCode(200));
 
         mockCallServer.start();
-        System.setProperty("rest-call.port", mockCallServer.getServerPort().toString());
+        System.setProperty("endpoints.rest-call-endpoint.mandatory.port", mockCallServer.getServerPort().toString());
         var mockCallServerClient = createMockServerClient(mockCallServer);
         mockCallServerClient.when(CALL_SERVER_REQUEST).respond(response().withBody("OK").withStatusCode(200));
     }

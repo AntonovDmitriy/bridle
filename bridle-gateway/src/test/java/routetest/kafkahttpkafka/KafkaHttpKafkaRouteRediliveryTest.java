@@ -76,7 +76,7 @@ public class KafkaHttpKafkaRouteRediliveryTest {
         setupKafka(kafka, KAFKA_PORT);
 
         mockServer.start();
-        System.setProperty("rest-call.port", mockServer.getServerPort().toString());
+        System.setProperty("endpoints.rest-call-endpoint.mandatory.port", mockServer.getServerPort().toString());
 
     }
 

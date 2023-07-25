@@ -78,7 +78,7 @@ public class KafkaHttpKafkaRouteValidationErrorTest {
         createTopic(kafka, TOPIC_NAME_RESPONSE);
 
         mockServer.start();
-        System.setProperty("rest-call.port", mockServer.getServerPort().toString());
+        System.setProperty("endpoints.rest-call-endpoint.mandatory.port", mockServer.getServerPort().toString());
 
         var mockServerClient = createMockServerClient(mockServer);
         mockServerClient.when(REST_CALL_REQUEST).respond(response(HTTP_RESPONSE_BODY).withStatusCode(200));
