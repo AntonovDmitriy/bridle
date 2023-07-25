@@ -1,11 +1,11 @@
-package com.bridle.routes;
+package com.bridle.utils;
 
-import com.bridle.utils.ComponentCustomizerImpl;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.component.http.HttpComponent;
 import org.apache.camel.component.kafka.KafkaComponent;
+import org.apache.camel.component.sql.SqlComponent;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 
@@ -16,6 +16,7 @@ import java.util.stream.Stream;
 
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.http;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.kafka;
+import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.sql;
 
 public class ComponentRegistrator {
 
@@ -60,11 +61,9 @@ public class ComponentRegistrator {
                 endpointProperties.getAdditional().forEach(consumer::doSetProperty);
                 result = consumer;
             }
-        } else {
-            if (builder instanceof EndpointProducerBuilder producer) {
-                endpointProperties.getAdditional().forEach(producer::doSetProperty);
-                result = producer;
-            }
+        } else if (builder instanceof EndpointProducerBuilder producer) {
+            endpointProperties.getAdditional().forEach(producer::doSetProperty);
+            result = producer;
         }
         return result;
     }
@@ -81,6 +80,8 @@ public class ComponentRegistrator {
                                         endpointProperties.getMandatory().get("host"),
                                         endpointProperties.getMandatory().get("port"),
                                         endpointProperties.getMandatory().get("resource-path")));
+        } else if (clazz == SqlComponent.class) {
+            result = sql((String) endpointProperties.getMandatory().get("sql-template-uri"));
         }
         return result;
     }
@@ -95,6 +96,10 @@ public class ComponentRegistrator {
                 .getHttp()
                 .forEach((componentName, configuration) -> factory.registerSingleton(componentName,
                                                                                      new HttpComponent()));
+        componentProperties
+                .getSql()
+                .forEach((componentName, configuration) -> factory.registerSingleton(componentName,
+                                                                                     new SqlComponent()));
     }
 
     @PostConstruct

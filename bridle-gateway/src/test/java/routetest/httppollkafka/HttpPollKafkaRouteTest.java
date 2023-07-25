@@ -70,10 +70,8 @@ public class HttpPollKafkaRouteTest {
                 .respond(response().withBody(POLL_SERVER_RESPONSE).withStatusCode(200));
 
         setupKafka(kafka, KAFKA_PORT);
-        System.setProperty("kafka-out.brokers",
-                           "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
-        System.setProperty("kafka-in.brokers",
-                           "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
+        System.setProperty("kafka-out.brokers", "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
+        System.setProperty("kafka-in.brokers", "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
         createTopic(kafka, TOPIC_NAME);
         assertEquals(0, countMessages(kafka, TOPIC_NAME));
     }

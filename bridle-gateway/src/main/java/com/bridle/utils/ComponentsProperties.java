@@ -1,7 +1,8 @@
-package com.bridle.routes;
+package com.bridle.utils;
 
 import org.apache.camel.component.http.springboot.HttpComponentConfiguration;
 import org.apache.camel.component.kafka.springboot.KafkaComponentConfiguration;
+import org.apache.camel.component.sql.springboot.SqlComponentConfiguration;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +13,7 @@ public class ComponentsProperties {
 
     private Map<String, HttpComponentConfiguration> http = new HashMap<>();
 
+    private Map<String, SqlComponentConfiguration> sql = new HashMap<>();
     public Map<String, KafkaComponentConfiguration> getKafka() {
         return kafka;
     }
@@ -26,5 +28,13 @@ public class ComponentsProperties {
 
     public void setHttp(Map<String, HttpComponentConfiguration> http) {
         this.http = http;
+    }
+
+    public Map<String, SqlComponentConfiguration> getSql() {
+        return sql;
+    }
+
+    public void setSql(Map<String, SqlComponentConfiguration> sql) {
+        this.sql = sql;
     }
 }
