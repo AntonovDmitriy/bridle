@@ -10,6 +10,7 @@ public class EndpointProperties {
     private boolean consumer;
 
     private Map<String, Object> mandatory = new HashMap<>();
+
     private Map<String, Object> additional = new HashMap<>();
 
     public String getComponentName() {

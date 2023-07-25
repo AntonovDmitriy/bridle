@@ -4,7 +4,6 @@ import org.apache.camel.component.http.springboot.HttpComponentConfiguration;
 import org.apache.camel.component.kafka.springboot.KafkaComponentConfiguration;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ComponentsProperties {
