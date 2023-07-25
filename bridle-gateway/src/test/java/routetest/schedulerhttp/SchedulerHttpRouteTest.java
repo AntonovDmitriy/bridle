@@ -62,7 +62,7 @@ public class SchedulerHttpRouteTest {
     @BeforeAll
     public static void setUp() throws Exception {
         mockServer.start();
-        System.setProperty("endpoints.rest-call-endpoint.mandatory.port", mockServer.getServerPort().toString());
+        System.setProperty("rest-call.port", mockServer.getServerPort().toString());
 
         var mockServerClient = createMockServerClient(mockServer);
         mockServerClient.when(CALL_SERVER_REQUEST).respond(response("OK").withStatusCode(200));

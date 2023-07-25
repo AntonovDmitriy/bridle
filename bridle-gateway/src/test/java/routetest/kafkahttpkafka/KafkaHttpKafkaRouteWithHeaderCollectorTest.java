@@ -118,6 +118,10 @@ public class KafkaHttpKafkaRouteWithHeaderCollectorTest {
     @BeforeAll
     public static void setUp() throws Exception {
         setupKafka(kafka, KAFKA_PORT);
+        System.setProperty("components.kafka.kafka-out.brokers",
+                           "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
+        System.setProperty("components.kafka.kafka-in.brokers",
+                           "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
         createTopic(kafka, TOPIC_NAME_REQUST);
         createTopic(kafka, TOPIC_NAME_RESPONSE);
 
