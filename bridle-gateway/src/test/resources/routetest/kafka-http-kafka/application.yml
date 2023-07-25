@@ -31,7 +31,6 @@ redelivery-policy:
   retry-attempted-log-level: "WARN"
 error-handler:
   redelivery-policy-ref: "redelivery-policy"
-
 components:
   kafka:
     kafka-in:
@@ -69,10 +68,3 @@ endpoints:
       port: "443"
     additional:
       httpMethod: "POST"
-
-#rest-call:
-#  host: "localhost"
-#  resource-path: "person"
-#  port: "443"
-#  endpoint-properties:
-#    httpMethod: "POST"

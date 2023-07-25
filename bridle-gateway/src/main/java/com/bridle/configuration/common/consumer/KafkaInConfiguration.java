@@ -21,19 +21,19 @@ public class KafkaInConfiguration {
         return new ValidatedKafkaConsumerConfiguration();
     }
 
-//    @Bean(name = ComponentNameConstants.KAFKA_IN_COMPONENT_NAME)
-//    public KafkaComponent kafkaInComponent() {
-//        return new KafkaComponent();
-//    }
-//
-//    @Lazy
-//    @Bean
-//    public ComponentCustomizer configureKafkaComponent(CamelContext context,
-//            ValidatedKafkaConsumerConfiguration componentConfiguration) {
-//        return new ComponentCustomizerImpl(context,
-//                                           componentConfiguration,
-//                                           ComponentNameConstants.KAFKA_IN_COMPONENT_NAME);
-//    }
+    @Bean(name = ComponentNameConstants.KAFKA_IN_COMPONENT_NAME)
+    public KafkaComponent kafkaInComponent() {
+        return new KafkaComponent();
+    }
+
+    @Lazy
+    @Bean
+    public ComponentCustomizer configureKafkaComponent(CamelContext context,
+            ValidatedKafkaConsumerConfiguration componentConfiguration) {
+        return new ComponentCustomizerImpl(context,
+                                           componentConfiguration,
+                                           ComponentNameConstants.KAFKA_IN_COMPONENT_NAME);
+    }
 
     @Bean
     public EndpointConsumerBuilder kafkaConsumerBuilder(ValidatedKafkaConsumerConfiguration configuration) {

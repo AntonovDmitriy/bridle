@@ -54,23 +54,39 @@ processing:
       data-format-name: "json"
     transform:
       resource-uri: "file://app/config/response-transform-with-unmarshalling.tmpl"
-kafka-in:
-  brokers: "kafka:9092"
-  topic: "routetest_request"
-  consumers-count: 3
-  group-id: "KAFKA_HTTP_KAFKA_FIRST_TESTING6"
-  break-on-error: false
-  auto-offset-reset: "earliest"
-  max-poll-records: 500
-  max-partition-fetch-bytes: 1048576
-  heartbeat-interval-ms: 3000
-  session-timeout-ms: 10000
-rest-call:
-  host: "nginx-call"
-  resource-path: "person"
-  port: "80"
-  endpoint-properties:
-    httpMethod: "POST"
-kafka-out:
-  brokers: "kafka:9092"
-  topic: "routetest_response"
+components:
+  kafka:
+    kafka-in:
+      brokers: "kafka:9092"
+      consumers-count: 1
+      group-id: "KAFKA_HTTP_KAFKA_FIRST_TESTING6"
+      break-on-error: false
+      max-poll-records: 500
+      max-partition-fetch-bytes: 1048576
+      heartbeat-interval-ms: 3000
+      session-timeout-ms: 10000
+    kafka-out:
+      brokers: "kafka:9092"
+  http:
+    rest-call:
+      connection-request-timeout: -1
+      connect-timeout: -1
+      socket-timeout: -1
+endpoints:
+  kafka-in-endpoint:
+    component-name: "kafka-in"
+    consumer: true
+    mandatory:
+      topic: "routetest_request"
+  kafka-out-endpoint:
+    component-name: "kafka-out"
+    mandatory:
+      topic: "routetest_response"
+  rest-call-endpoint:
+    component-name: "rest-call"
+    mandatory:
+      host: "nginx-call"
+      resource-path: "person"
+      port: "80"
+    additional:
+      httpMethod: "POST"
