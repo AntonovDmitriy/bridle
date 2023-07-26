@@ -25,6 +25,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.util.concurrent.TimeUnit;
 
 import static com.bridle.configuration.routes.KafkaHttpConfiguration.GATEWAY_TYPE_KAFKA_HTTP;
+import static com.bridle.configuration.routes.KafkaSqlConfiguration.GATEWAY_TYPE_KAFKA_SQL;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
@@ -36,11 +37,12 @@ import static utils.MetricsTestUtils.verifyMetrics;
 import static utils.MockServerContainerUtils.createMockServerClient;
 import static utils.MockServerContainerUtils.createMockServerContainer;
 import static utils.OracleContainerUtils.createOracleContainer;
+import static utils.TestUtils.getStringResources;
 
 
 @SpringBootTest(classes = {App.class},
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@TestPropertySource(properties = {"spring.config.location=classpath:routetest/kafka-http/application.yml"})
+@TestPropertySource(properties = {"spring.config.location=classpath:routetest/kafka-sql/application.yml"})
 @CamelSpringBootTest
 @DirtiesContext
 @Testcontainers
@@ -53,8 +55,8 @@ public class KafkaSqlRouteTest {
     private static final KafkaContainer kafka = createKafkaContainer();
 
     @Container
-    public static OracleContainer oracle = createOracleContainer();
-
+    public static OracleContainer oracle = createOracleContainer().withInitScript("routetest/kafka-sql/init.sql");
+    private final static String MESSAGE_IN_KAFKA = getStringResources("routetest/kafka-sql/test.json");
     @Autowired
     private CamelContext context;
 
@@ -81,13 +83,11 @@ public class KafkaSqlRouteTest {
         createTopic(kafka, TOPIC_NAME);
         NotifyBuilder notify = new NotifyBuilder(context).whenExactlyCompleted(messageCount).create();
 
-        writeMessageToTopic(kafka, TOPIC_NAME, MESSAGE_BODY);
+        writeMessageToTopic(kafka, TOPIC_NAME, MESSAGE_IN_KAFKA);
 
         boolean done = notify.matches(10, TimeUnit.SECONDS);
         Assertions.assertTrue(done);
-        var mockCallServerClient = createMockServerClient(mockServer);
-        mockCallServerClient.verify(CALL_SERVER_REQUEST, VerificationTimes.exactly(messageCount));
-        verifyMetrics(GATEWAY_TYPE_KAFKA_HTTP, messageCount, 0, 0);
+        verifyMetrics(GATEWAY_TYPE_KAFKA_SQL, messageCount, 0, 0);
     }
 }
 

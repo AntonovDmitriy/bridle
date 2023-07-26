@@ -8,6 +8,6 @@ public class OracleContainerUtils {
         return new OracleContainer("gvenzl/oracle-xe:21-slim-faststart")
                 .withDatabaseName("testDB")
                 .withUsername("testUser")
-                .withPassword("testPassword").;
+                .withPassword("testPassword");
     }
 }
