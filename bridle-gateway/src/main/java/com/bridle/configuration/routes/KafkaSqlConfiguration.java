@@ -1,6 +1,7 @@
 package com.bridle.configuration.routes;
 
 import com.bridle.configuration.common.DynamicComponentsComfiguration;
+import com.bridle.configuration.common.datasource.DataSourceConfiguration;
 import com.bridle.configuration.common.errorhandling.ErrorHandlerConfiguration;
 import com.bridle.configuration.common.processing.AfterConsumerProcessingConfiguration;
 import com.bridle.routes.ConsumerToProducerRoute;
@@ -20,7 +21,7 @@ import org.springframework.context.annotation.Import;
 import static com.bridle.configuration.routes.KafkaHttpConfiguration.GATEWAY_TYPE_KAFKA_HTTP;
 
 @Configuration
-@Import({ErrorHandlerConfiguration.class, AfterConsumerProcessingConfiguration.class,
+@Import({ErrorHandlerConfiguration.class, AfterConsumerProcessingConfiguration.class, DataSourceConfiguration.class,
         DynamicComponentsComfiguration.class})
 @ConditionalOnProperty(name = "gateway.type",
         havingValue = GATEWAY_TYPE_KAFKA_HTTP)
