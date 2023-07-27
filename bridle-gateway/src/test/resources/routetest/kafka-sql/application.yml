@@ -50,11 +50,11 @@ endpoints:
     component-name: "kafka-in"
     consumer: true
     mandatory:
-      topic: "routetest_request"
+      topic: "routetest"
   sql-out-endpoint:
-    component-name: "sql-out-endpoint"
+    component-name: "main-jdbc-call"
     mandatory:
-      sql-template-uri: "routetest/kafka-sql/insert.sql"
+      sql-template-uri: "classpath:/routetest/kafka-sql/insert.sql"
 
 datasources:
   hikari:

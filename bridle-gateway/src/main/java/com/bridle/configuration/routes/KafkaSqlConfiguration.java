@@ -18,13 +18,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import static com.bridle.configuration.routes.KafkaHttpConfiguration.GATEWAY_TYPE_KAFKA_HTTP;
-
 @Configuration
 @Import({ErrorHandlerConfiguration.class, AfterConsumerProcessingConfiguration.class, DataSourceConfiguration.class,
         DynamicComponentsComfiguration.class})
 @ConditionalOnProperty(name = "gateway.type",
-        havingValue = GATEWAY_TYPE_KAFKA_HTTP)
+        havingValue = KafkaSqlConfiguration.GATEWAY_TYPE_KAFKA_SQL)
 public class KafkaSqlConfiguration {
 
     public static final String GATEWAY_TYPE_KAFKA_SQL = "kafka-sql";
@@ -34,7 +32,7 @@ public class KafkaSqlConfiguration {
             @Qualifier("kafka-in-endpoint")
             EndpointConsumerBuilder kafkaConsumerBuilder,
             @Qualifier("sql-out-endpoint")
-            EndpointProducerBuilder restCall,
+            EndpointProducerBuilder sqlCall,
             @Autowired(required = false)
             @Qualifier("afterConsumer")
             ProcessingParams processingAfterConsumerParams) {
@@ -42,7 +40,7 @@ public class KafkaSqlConfiguration {
                                            new ConsumerToProducerRouteParams(GATEWAY_TYPE_KAFKA_SQL,
                                                                              kafkaConsumerBuilder,
                                                                              processingAfterConsumerParams,
-                                                                             restCall,
+                                                                             sqlCall,
                                                                              null));
     }
 }

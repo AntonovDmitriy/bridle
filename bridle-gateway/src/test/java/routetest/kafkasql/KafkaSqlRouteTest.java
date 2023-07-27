@@ -37,6 +37,7 @@ import static utils.MetricsTestUtils.verifyMetrics;
 import static utils.MockServerContainerUtils.createMockServerClient;
 import static utils.MockServerContainerUtils.createMockServerContainer;
 import static utils.OracleContainerUtils.createOracleContainer;
+import static utils.TestUtils.PROMETHEUS_URI;
 import static utils.TestUtils.getStringResources;
 
 

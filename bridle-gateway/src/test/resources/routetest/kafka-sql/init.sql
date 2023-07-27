@@ -1,48 +1,54 @@
-CREATE TABLE System (
-    id INT PRIMARY KEY,
-    name VARCHAR(255),
-    stream VARCHAR(255)
+-- System table
+CREATE TABLE system (
+    id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name VARCHAR2(255),
+    stream VARCHAR2(255)
 );
 
-CREATE TABLE Company (
-    id INT PRIMARY KEY,
-    name VARCHAR(255),
-    founded YEAR
+-- Company table
+CREATE TABLE company (
+    id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name VARCHAR2(255),
+    founded NUMBER(4)
 );
 
-CREATE TABLE Location (
-    id INT PRIMARY KEY,
-    company_id INT,
-    country VARCHAR(50),
-    city VARCHAR(50),
-    address VARCHAR(255),
-    postal_code VARCHAR(20),
-    FOREIGN KEY (company_id) REFERENCES Company(id)
+-- Locations table
+CREATE TABLE locations (
+    id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    company_id NUMBER,
+    country VARCHAR2(255),
+    city VARCHAR2(255),
+    address VARCHAR2(255),
+    postal_code VARCHAR2(20),
+    FOREIGN KEY (company_id) REFERENCES company(id)
 );
 
-CREATE TABLE Executive (
-    id INT PRIMARY KEY,
-    company_id INT,
-    name VARCHAR(255),
-    title VARCHAR(255),
-    email VARCHAR(255),
+-- Executives table
+CREATE TABLE executives (
+    id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    company_id NUMBER,
+    name VARCHAR2(255),
+    title VARCHAR2(255),
+    email VARCHAR2(255),
     start_date DATE,
-    FOREIGN KEY (company_id) REFERENCES Company(id)
+    FOREIGN KEY (company_id) REFERENCES company(id)
 );
 
-CREATE TABLE Product (
-    id INT PRIMARY KEY,
-    company_id INT,
-    name VARCHAR(255),
-    category VARCHAR(255),
-    price DECIMAL(10, 2),
-    FOREIGN KEY (company_id) REFERENCES Company(id)
+-- Products table
+CREATE TABLE products (
+    id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    company_id NUMBER,
+    name VARCHAR2(255),
+    category VARCHAR2(255),
+    price NUMBER(10,2),
+    FOREIGN KEY (company_id) REFERENCES company(id)
 );
 
-CREATE TABLE Version (
-    id INT PRIMARY KEY,
-    product_id INT,
-    version VARCHAR(20),
+-- Versions table
+CREATE TABLE versions (
+    id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    product_id NUMBER,
+    version VARCHAR2(10),
     release_date DATE,
-    FOREIGN KEY (product_id) REFERENCES Product(id)
+    FOREIGN KEY (product_id) REFERENCES products(id)
 );

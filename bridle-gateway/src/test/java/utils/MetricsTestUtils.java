@@ -53,15 +53,21 @@ public class MetricsTestUtils {
         ResponseEntity<String> metricsResponse =
                 TestUtils.sendHttpRequest(prometheusUri, String.class, HttpMethod.GET, null);
         parseMessagesAmount(metricsResponse.getBody(), routeName);
-        int receivedFailedMessageCount =
-                MetricsTestUtils.parseFailedMessagesAmount(metricsResponse.getBody(), routeName);
-        assertTrue(failedCount.test(receivedFailedMessageCount));
+        if(failedCount!=null) {
+            int receivedFailedMessageCount =
+                    MetricsTestUtils.parseFailedMessagesAmount(metricsResponse.getBody(), routeName);
+            assertTrue(failedCount.test(receivedFailedMessageCount));
+        }
         int handledErrorsCount =
                 MetricsTestUtils.parseMessagesWithHandledErrorAmount(metricsResponse.getBody(), routeName);
-        assertTrue(handledErrors.test(handledErrorsCount));
+        if(handledErrors!=null) {
+            assertTrue(handledErrors.test(handledErrorsCount));
+        }
         int receivedSuccessMessageCount =
                 MetricsTestUtils.parseSuccessMessagesAmount(metricsResponse.getBody(), routeName);
-        assertTrue(successCount.test(receivedSuccessMessageCount - handledErrorsCount));
+        if(successCount!=null) {
+            assertTrue(successCount.test(receivedSuccessMessageCount - handledErrorsCount));
+        }
     }
 
     public static int parseSuccessMessagesAmount(String metricsInfo, String routeName) {
