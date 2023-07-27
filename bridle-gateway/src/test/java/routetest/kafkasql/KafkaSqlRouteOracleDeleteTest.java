@@ -6,58 +6,55 @@ import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.NotifyBuilder;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.mockserver.model.HttpRequest;
-import org.mockserver.verify.VerificationTimes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.actuate.metrics.AutoConfigureMetrics;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.KafkaContainer;
-import org.testcontainers.containers.MockServerContainer;
 import org.testcontainers.containers.OracleContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static com.bridle.configuration.routes.KafkaHttpConfiguration.GATEWAY_TYPE_KAFKA_HTTP;
 import static com.bridle.configuration.routes.KafkaSqlConfiguration.GATEWAY_TYPE_KAFKA_SQL;
-import static org.mockserver.model.HttpRequest.request;
-import static org.mockserver.model.HttpResponse.response;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
 import static utils.KafkaContainerUtils.createKafkaContainer;
 import static utils.KafkaContainerUtils.createTopic;
 import static utils.KafkaContainerUtils.setupKafka;
-import static utils.KafkaContainerUtils.writeMessageToTopic;
 import static utils.MetricsTestUtils.verifyMetrics;
-import static utils.MockServerContainerUtils.createMockServerClient;
-import static utils.MockServerContainerUtils.createMockServerContainer;
 import static utils.OracleContainerUtils.createOracleContainer;
-import static utils.TestUtils.PROMETHEUS_URI;
 import static utils.TestUtils.getStringResources;
 
 
 @SpringBootTest(classes = {App.class},
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@TestPropertySource(properties = {"spring.config.location=classpath:routetest/kafka-sql/application.yml"})
+@TestPropertySource(properties = {"spring.config.location=classpath:routetest/kafka-sql/application-for-delete.yml"})
 @CamelSpringBootTest
 @DirtiesContext
 @Testcontainers
 @AutoConfigureMetrics
-public class KafkaSqlRouteTest {
+public class KafkaSqlRouteOracleDeleteTest {
 
     private static final String TOPIC_NAME = "routetest";
 
     @Container
     private static final KafkaContainer kafka = createKafkaContainer();
 
-    @Container
-    public static OracleContainer oracle = createOracleContainer().withInitScript("routetest/kafka-sql/init.sql");
     private final static String MESSAGE_IN_KAFKA = getStringResources("routetest/kafka-sql/test.json");
+
+    @Container
+    public static OracleContainer oracle =
+            createOracleContainer().withInitScript("routetest/kafka-sql/init-for-delete.sql");
+
     @Autowired
     private CamelContext context;
 
@@ -67,7 +64,9 @@ public class KafkaSqlRouteTest {
     @BeforeAll
     public static void setUp() throws Exception {
         setupKafka(kafka, KAFKA_PORT);
-        System.setProperty("components.kafka.kafka-in.brokers", "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
+        System.setProperty("components.kafka.kafka-in.brokers",
+                           "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
+        createTopic(kafka, TOPIC_NAME);
 
         oracle.start();
         System.setProperty("datasources.hikari.main-datasource.jdbc-url", oracle.getJdbcUrl());
@@ -80,15 +79,33 @@ public class KafkaSqlRouteTest {
 
     @Test
     void verifyThatRouteReadMessagesFromTopicAndInvokeHttpEndpoint() throws Exception {
+        String query = "SELECT * FROM COMPANY";
+        List<Map<String, Object>> result = selectMessages(query);
+        assertEquals(1, result.size());
+        Map<String, Object> row = result.get(0);
+        assertEquals(3, row.size());
+        assertEquals("XYZ Corp", row.get("NAME"));
+        assertEquals(new BigDecimal(1995), row.get("FOUNDED"));
+        assertEquals(new BigDecimal(1), row.get("ID"));
+
         int messageCount = 1;
-        createTopic(kafka, TOPIC_NAME);
         NotifyBuilder notify = new NotifyBuilder(context).whenExactlyCompleted(messageCount).create();
 
-        writeMessageToTopic(kafka, TOPIC_NAME, MESSAGE_IN_KAFKA);
+        producerTemplate.sendBody("kafka-in:" + TOPIC_NAME, MESSAGE_IN_KAFKA);
 
         boolean done = notify.matches(10, TimeUnit.SECONDS);
-        Assertions.assertTrue(done);
+        assertTrue(done);
+        result = selectMessages(query);
+        assertEquals(0, result.size());
         verifyMetrics(GATEWAY_TYPE_KAFKA_SQL, messageCount, 0, 0);
+    }
+
+    private List<Map<String, Object>> selectMessages(String query) {
+        List<Map<String, Object>> result =
+                producerTemplate.requestBody("main-jdbc-call:" + query + "?dataSource=#mainDataSource",
+                                             null,
+                                             List.class);
+        return result;
     }
 }
 

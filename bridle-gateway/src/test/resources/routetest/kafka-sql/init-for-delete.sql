@@ -4,6 +4,8 @@ CREATE TABLE company (
     name VARCHAR2(255),
     founded INTEGER
 );
+
+INSERT INTO COMPANY (NAME, FOUNDED) VALUES ('XYZ Corp', 1995)
 --
 ---- Company table
 

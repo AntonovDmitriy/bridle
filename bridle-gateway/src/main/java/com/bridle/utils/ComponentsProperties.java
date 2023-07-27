@@ -14,6 +14,7 @@ public class ComponentsProperties {
     private Map<String, HttpComponentConfiguration> http = new HashMap<>();
 
     private Map<String, SqlComponentConfiguration> sql = new HashMap<>();
+
     public Map<String, KafkaComponentConfiguration> getKafka() {
         return kafka;
     }

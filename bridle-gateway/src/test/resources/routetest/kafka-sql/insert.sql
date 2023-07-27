@@ -1,1 +1,1 @@
-select * from products where id=:#${body}
+INSERT INTO COMPANY (NAME, FOUNDED) VALUES (:#${body['company']['name']}, :#${body['company']['founded']})

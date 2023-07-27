@@ -56,7 +56,7 @@ endpoints:
   sql-out-endpoint:
     component-name: "main-jdbc-call"
     mandatory:
-      sql-template-uri: "classpath:/routetest/kafka-sql/insert.sql"
+      sql-template-uri: "classpath:/routetest/kafka-sql/delete.sql"
 processing:
   after-consumer:
     convert-body:

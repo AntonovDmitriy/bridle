@@ -2,7 +2,6 @@ package com.bridle.configuration.common.datasource;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
@@ -26,7 +25,7 @@ public class DataSourceConfiguration {
     }
 
     @PostConstruct
-    public void post(){
+    public void post() {
         int a = 3;
     }
 }
