@@ -1,0 +1,17 @@
+<#if (!body??) || (body?size == 0)>
+    <#stop "User is not found with id ${headers.userId}">
+</#if>
+
+<#if body?size gt 1>
+    <#stop "Expected only one result, but got more">
+</#if>
+
+{
+  "user": {
+    "userId": "${body[0]['USER_ID']}",
+    "firstName": "${body[0]['FIRST_NAME']}",
+    "lastName": "${body[0]['LAST_NAME']}",
+    "email": "${body[0]['EMAIL']}",
+    "phoneNumber": "${body[0]['PHONE_NUMBER']}"
+  }
+}

@@ -6,7 +6,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 
-import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 public class DataSourceConfiguration {
@@ -20,12 +19,6 @@ public class DataSourceConfiguration {
     @Bean(name = "mainDataSource")
     @Lazy
     public DataSource mainDataSource(HikariConfig hikariConfigFirst) {
-        DataSource dataSource = new HikariDataSource(hikariConfigFirst);
-        return dataSource;
-    }
-
-    @PostConstruct
-    public void post() {
-        int a = 3;
+        return new HikariDataSource(hikariConfigFirst);
     }
 }
