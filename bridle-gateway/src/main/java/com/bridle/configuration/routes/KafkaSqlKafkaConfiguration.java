@@ -31,7 +31,7 @@ public class KafkaSqlKafkaConfiguration {
 
 
     @Bean
-    public RouteBuilder kafkaHttpKafkaRoute(ErrorHandlerFactory errorHandlerFactory,
+    public RouteBuilder kafkaSqlKafkaRoute(ErrorHandlerFactory errorHandlerFactory,
             @Qualifier("kafka-in-endpoint")
             EndpointConsumerBuilder kafkaInEndpoint,
             @Qualifier("sql-out-endpoint")

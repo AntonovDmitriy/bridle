@@ -6,6 +6,7 @@ import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.camel.component.http.HttpComponent;
 import org.apache.camel.component.kafka.KafkaComponent;
 import org.apache.camel.component.sql.SqlComponent;
+import org.apache.camel.component.sql.stored.SqlStoredComponent;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 
@@ -17,6 +18,7 @@ import java.util.stream.Stream;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.http;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.kafka;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.sql;
+import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.sqlStored;
 
 public class ComponentRegistrator {
 
@@ -82,6 +84,8 @@ public class ComponentRegistrator {
                                         endpointProperties.getMandatory().get("resource-path")));
         } else if (clazz == SqlComponent.class) {
             result = sql((String) endpointProperties.getMandatory().get("sql-template-uri"));
+        } else if (clazz == SqlStoredComponent.class) {
+            result = sqlStored((String) endpointProperties.getMandatory().get("sql-template-uri"));
         }
         return result;
     }
@@ -100,6 +104,10 @@ public class ComponentRegistrator {
                 .getSql()
                 .forEach((componentName, configuration) -> factory.registerSingleton(componentName,
                                                                                      new SqlComponent()));
+        componentProperties
+                .getProcedure()
+                .forEach((componentName, configuration) -> factory.registerSingleton(componentName,
+                                                                                     new SqlStoredComponent()));
     }
 
     @PostConstruct

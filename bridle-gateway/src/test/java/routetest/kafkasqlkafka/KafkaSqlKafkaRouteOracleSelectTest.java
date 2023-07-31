@@ -49,7 +49,7 @@ public class KafkaSqlKafkaRouteOracleSelectTest {
     @Container
     private static final KafkaContainer kafka = createKafkaContainer();
 
-    private final static String MESSAGE_IN_KAFKA = getStringResources("routetest/kafka-sql-kafka/test.json");
+    private final static String MESSAGE_IN_KAFKA = getStringResources("routetest/kafka-sql-kafka/test-for-select.json");
 
     private final static String EXPECTED_TRANSFORMED_MESSAGE_AFTER_PRODUCER = """
             {

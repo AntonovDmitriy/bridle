@@ -15,6 +15,8 @@ public class ComponentsProperties {
 
     private Map<String, SqlComponentConfiguration> sql = new HashMap<>();
 
+    private Map<String, SqlComponentConfiguration> procedure = new HashMap<>();
+
     public Map<String, KafkaComponentConfiguration> getKafka() {
         return kafka;
     }
@@ -37,5 +39,13 @@ public class ComponentsProperties {
 
     public void setSql(Map<String, SqlComponentConfiguration> sql) {
         this.sql = sql;
+    }
+
+    public Map<String, SqlComponentConfiguration> getProcedure() {
+        return procedure;
+    }
+
+    public void setProcedure(Map<String, SqlComponentConfiguration> procedure) {
+        this.procedure = procedure;
     }
 }
