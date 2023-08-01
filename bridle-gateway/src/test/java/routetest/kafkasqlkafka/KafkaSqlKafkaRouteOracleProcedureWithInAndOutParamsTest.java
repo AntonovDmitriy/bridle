@@ -56,8 +56,16 @@ public class KafkaSqlKafkaRouteOracleProcedureWithInAndOutParamsTest {
 
     private final static String EXPECTED_TRANSFORMED_MESSAGE_AFTER_PRODUCER = """
             {
-              "correlationId": "abc123",
-              "status": "OK"
+              "system": {
+                "correlationId": "abc123"
+              },
+              "person": {
+                "first_name": "John",
+                "last_name": "Doe",
+                "age": 30,
+                "city": "New York",
+                "occupation": "Engineer"
+              }
             }""";
 
     @Container

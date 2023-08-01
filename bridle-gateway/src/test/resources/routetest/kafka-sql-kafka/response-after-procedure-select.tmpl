@@ -5,8 +5,8 @@
   "person": {
     "first_name": "${body['person']['first_name']}",
     "last_name": "${body['person']['last_name']}",
-    "age": ${headers.personAgeHeader},
-    "city": "${headers.personCityHeader}",
-    "occupation": "${headers.personOccupationHeader}"
+    "age": ${headers.procedureResult.personAgeHeader},
+    "city": "${headers.procedureResult.personCityHeader}",
+    "occupation": "${headers.procedureResult.personOccupationHeader}"
   }
 }

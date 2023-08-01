@@ -62,8 +62,7 @@ public class KafkaSqlKafkaRouteOracleProcedureWithOnlyInParamsTest {
     @Container
     public static OracleContainer oracle =
             createOracleContainer().withCopyFileToContainer(MountableFile.forClasspathResource(
-                                                            "routetest/kafka-sql-kafka/init-for-procedure-in"),
-                                                            "/container-entrypoint-startdb.d/");
+                    "routetest/kafka-sql-kafka/init-for-procedure-in"), "/container-entrypoint-startdb.d/");
 
     @Autowired
     private CamelContext context;

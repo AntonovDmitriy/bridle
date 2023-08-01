@@ -63,6 +63,8 @@ endpoints:
     component-name: "main-procedure-call"
     mandatory:
       sql-template-uri: "classpath:/routetest/kafka-sql-kafka/select-procedure.sql"
+    additional:
+      output-header: "procedureResult"
 processing:
   after-consumer:
     header-collector:
