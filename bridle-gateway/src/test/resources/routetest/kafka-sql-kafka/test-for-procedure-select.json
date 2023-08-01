@@ -1,0 +1,9 @@
+{
+  "system": {
+    "correlationId": "abc123"
+  },
+  "person": {
+    "first_name": "John",
+    "last_name": "Doe"
+  }
+}
