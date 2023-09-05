@@ -29,7 +29,6 @@ public class KafkaSqlKafkaConfiguration {
 
     public static final String GATEWAY_TYPE_KAFKA_SQL_KAFKA = "kafka-sql-kafka";
 
-
     @Bean
     public RouteBuilder kafkaSqlKafkaRoute(ErrorHandlerFactory errorHandlerFactory,
             @Qualifier("kafka-in-endpoint")

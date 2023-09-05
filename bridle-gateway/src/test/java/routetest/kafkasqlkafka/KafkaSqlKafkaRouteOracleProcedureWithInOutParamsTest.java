@@ -37,12 +37,12 @@ import static utils.TestUtils.getStringResources;
 @SpringBootTest(classes = {App.class},
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(properties = {
-        "spring.config.location=classpath:routetest/kafka-sql-kafka/application-for-procedure-in-and-out.yml"})
+        "spring.config.location=classpath:routetest/kafka-sql-kafka/application-for-procedure-in-out.yml"})
 @CamelSpringBootTest
 @DirtiesContext
 @Testcontainers
 @AutoConfigureMetrics
-public class KafkaSqlKafkaRouteOracleProcedureWithInAndOutParamsTest {
+public class KafkaSqlKafkaRouteOracleProcedureWithInOutParamsTest {
 
     private static final String TOPIC_NAME_REQUST = "routetest_request";
 
@@ -52,7 +52,7 @@ public class KafkaSqlKafkaRouteOracleProcedureWithInAndOutParamsTest {
     private static final KafkaContainer kafka = createKafkaContainer();
 
     private final static String MESSAGE_IN_KAFKA =
-            getStringResources("routetest/kafka-sql-kafka/test-for-procedure-select.json");
+            getStringResources("routetest/kafka-sql-kafka/test-for-procedure-merge.json");
 
     private final static String EXPECTED_TRANSFORMED_MESSAGE_AFTER_PRODUCER = """
             {
@@ -60,7 +60,8 @@ public class KafkaSqlKafkaRouteOracleProcedureWithInAndOutParamsTest {
                 "correlationId": "abc123"
               },
               "person": {
-                "first_name": "John",
+                "id": 1,
+                "first_name": "Ivan",
                 "last_name": "Doe",
                 "age": 30,
                 "city": "New York",
@@ -71,7 +72,7 @@ public class KafkaSqlKafkaRouteOracleProcedureWithInAndOutParamsTest {
     @Container
     public static OracleContainer oracle =
             createOracleContainer().withCopyFileToContainer(MountableFile.forClasspathResource(
-                    "routetest/kafka-sql-kafka/init-for-procedure-in-and-out"), "/container-entrypoint-startdb.d/");
+                    "routetest/kafka-sql-kafka/init-for-procedure-inout"), "/container-entrypoint-startdb.d/");
 
     @Autowired
     private CamelContext context;
@@ -99,7 +100,7 @@ public class KafkaSqlKafkaRouteOracleProcedureWithInAndOutParamsTest {
     }
 
     @Test
-    void verifyKafkaSqlKafkaOracleProcedureWithInAndOutParams() throws Exception {
+    void verifyKafkaSqlKafkaOracleProcedureWithInOutParams() throws Exception {
         int messageCount = 1;
         NotifyBuilder notify = new NotifyBuilder(context).whenExactlyCompleted(messageCount).create();
 
