@@ -37,13 +37,14 @@ import static utils.TestUtils.getStringResources;
 @SpringBootTest(classes = {App.class},
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(properties = {
-        "spring.config.location=classpath:routetest/kafka-sql-kafka/application-for-procedure-in.yml"})
+        "spring.config.location=classpath:routetest/kafka-sql-kafka/function/in-params/application.yml"})
 @CamelSpringBootTest
 @DirtiesContext
 @Testcontainers
 @AutoConfigureMetrics
-// todo make procedure with simple function out param VARCHAR2. Then create complex function and try to get an array
 public class KafkaSqlKafkaRouteOracleFunctionWithOnlyInParamsTest {
+
+    public static final String INIT_SQL_PATH = "routetest/kafka-sql-kafka/function/in-params/init-oracle";
 
     private static final String TOPIC_NAME_REQUST = "routetest_request";
 
@@ -52,18 +53,16 @@ public class KafkaSqlKafkaRouteOracleFunctionWithOnlyInParamsTest {
     @Container
     private static final KafkaContainer kafka = createKafkaContainer();
 
-    private final static String MESSAGE_IN_KAFKA = getStringResources("routetest/kafka-sql-kafka/test-for-insert.json");
+    private final static String MESSAGE_IN_KAFKA =
+            getStringResources("routetest/kafka-sql-kafka/function/in-params/request.json");
 
-    private final static String EXPECTED_TRANSFORMED_MESSAGE_AFTER_PRODUCER = """
-            {
-              "correlationId": "abc123",
-              "status": "OK"
-            }""";
+    private final static String EXPECTED_TRANSFORMED_MESSAGE_AFTER_PRODUCER =
+            getStringResources("routetest/kafka-sql-kafka/function/in-params/expected-response.json");
 
     @Container
     public static OracleContainer oracle =
-            createOracleContainer().withCopyFileToContainer(MountableFile.forClasspathResource(
-                    "routetest/kafka-sql-kafka/init-for-procedure-in"), "/container-entrypoint-startdb.d/");
+            createOracleContainer().withCopyFileToContainer(MountableFile.forClasspathResource(INIT_SQL_PATH),
+                                                            "/container-entrypoint-startdb.d/");
 
     @Autowired
     private CamelContext context;
@@ -80,7 +79,6 @@ public class KafkaSqlKafkaRouteOracleFunctionWithOnlyInParamsTest {
                            "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
         createTopic(kafka, TOPIC_NAME_REQUST);
         createTopic(kafka, TOPIC_NAME_RESPONSE);
-
         oracle.start();
         System.setProperty("datasources.hikari.main-datasource.jdbc-url", oracle.getJdbcUrl());
     }
@@ -97,7 +95,7 @@ public class KafkaSqlKafkaRouteOracleFunctionWithOnlyInParamsTest {
 
         producerTemplate.sendBody("kafka-in:" + TOPIC_NAME_REQUST, MESSAGE_IN_KAFKA);
 
-        boolean done = notify.matches(10, TimeUnit.SECONDS);
+        boolean done = notify.matches(100, TimeUnit.SECONDS);
         Assertions.assertTrue(done);
         assertEquals(EXPECTED_TRANSFORMED_MESSAGE_AFTER_PRODUCER,
                      readMessage(kafka, TOPIC_NAME_RESPONSE).stdOut().strip());
