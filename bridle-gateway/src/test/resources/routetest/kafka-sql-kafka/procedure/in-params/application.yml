@@ -16,6 +16,10 @@ camel:
       enabled: false
     json-validator:
       enabled: false
+    sql-stored:
+      enabled: false
+    sql:
+      enabled: false
 
 management:
   endpoints:
@@ -62,7 +66,7 @@ endpoints:
   sql-out-endpoint:
     component-name: "main-procedure-call"
     mandatory:
-      sql-template-uri: "classpath:/routetest/kafka-sql-kafka/insert-procedure.sql"
+      sql-template-uri: "classpath:/routetest/kafka-sql-kafka/procedure/in-params/integration-mapping.sql"
 processing:
   after-consumer:
     header-collector:
@@ -73,7 +77,7 @@ processing:
       data-format-name: "json"
   after-producer:
     transform:
-      resource-uri: "/routetest/kafka-sql-kafka/response-after-insert.tmpl"
+      resource-uri: "/routetest/kafka-sql-kafka/procedure/in-params/response-mapping.tmpl"
 datasources:
   hikari:
     main-datasource:

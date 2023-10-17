@@ -35,7 +35,8 @@ import static utils.TestUtils.getStringResources;
 
 @SpringBootTest(classes = {App.class},
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@TestPropertySource(properties = {"spring.config.location=classpath:routetest/kafka-sql-kafka/application.yml"})
+@TestPropertySource(properties = {
+        "spring.config.location=classpath:routetest/kafka-sql-kafka/sql/data-select/application.yml"})
 @CamelSpringBootTest
 @DirtiesContext
 @Testcontainers
@@ -49,21 +50,15 @@ public class KafkaSqlKafkaRouteOracleSelectTest {
     @Container
     private static final KafkaContainer kafka = createKafkaContainer();
 
-    private final static String MESSAGE_IN_KAFKA = getStringResources("routetest/kafka-sql-kafka/test-for-select.json");
+    private final static String MESSAGE_IN_KAFKA =
+            getStringResources("routetest/kafka-sql-kafka/sql/data-select/test-message.json");
 
-    private final static String EXPECTED_TRANSFORMED_MESSAGE_AFTER_PRODUCER = """
-            {
-              "user": {
-                "userId": "1234",
-                "firstName": "John",
-                "lastName": "Doe",
-                "email": "john.doe@example.com",
-                "phoneNumber": "+1 555 123 4567"
-              }
-            }""";
+    private final static String EXPECTED_TRANSFORMED_MESSAGE_AFTER_PRODUCER =
+            getStringResources("routetest/kafka-sql-kafka/sql/data-select/expected-response.json");
 
     @Container
-    public static OracleContainer oracle = createOracleContainer().withInitScript("routetest/kafka-sql-kafka/init.sql");
+    public static OracleContainer oracle = createOracleContainer().withInitScript(
+            "routetest/kafka-sql-kafka/sql/data-select/init-oracle.sql");
 
     @Autowired
     private CamelContext context;

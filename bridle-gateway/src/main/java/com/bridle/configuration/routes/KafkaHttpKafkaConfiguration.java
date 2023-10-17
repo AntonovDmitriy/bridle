@@ -4,6 +4,7 @@ import com.bridle.configuration.common.DynamicComponentsComfiguration;
 import com.bridle.configuration.common.errorhandling.ErrorHandlerConfiguration;
 import com.bridle.configuration.common.processing.AfterConsumerProcessingConfiguration;
 import com.bridle.configuration.common.processing.AfterProducerProcessingConfiguration;
+import com.bridle.converter.ClobStringConverter;
 import com.bridle.routes.ConsumerToDoubleProducerRoute;
 import com.bridle.routes.model.ConsumerToDoubleProducerRouteParams;
 import com.bridle.utils.ProcessingParams;
@@ -17,6 +18,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.convert.converter.Converter;
+
+import java.sql.Clob;
 
 import static com.bridle.configuration.routes.KafkaHttpKafkaConfiguration.GATEWAY_TYPE_KAFKA_HTTP_KAFKA;
 
@@ -51,5 +55,10 @@ public class KafkaHttpKafkaConfiguration {
                                                                                          restCall,
                                                                                          processingAfterProducerParams,
                                                                                          kafkaOutEndpoint));
+    }
+
+    @Bean
+    public Converter<Clob, String> stringClobConverter() {
+        return new ClobStringConverter();
     }
 }

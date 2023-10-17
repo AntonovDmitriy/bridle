@@ -1,0 +1,8 @@
+{
+  "system": {
+    "correlationId": "0746010e-8128-4e55-8e71-d3e2f5ce1b42"
+  },
+  "data": {
+    "error": "User is not found with id 1234"
+  }
+}

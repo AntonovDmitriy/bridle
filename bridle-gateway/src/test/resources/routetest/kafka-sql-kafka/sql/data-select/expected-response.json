@@ -1,0 +1,14 @@
+{
+  "system": {
+    "correlationId": "0746010e-8128-4e55-8e71-d3e2f5ce1b42"
+  },
+  "data": {
+    "user": {
+      "userId": "1234",
+      "firstName": "John",
+      "lastName": "Doe",
+      "email": "john.doe@example.com",
+      "phoneNumber": "+1 555 123 4567"
+    }
+  }
+}

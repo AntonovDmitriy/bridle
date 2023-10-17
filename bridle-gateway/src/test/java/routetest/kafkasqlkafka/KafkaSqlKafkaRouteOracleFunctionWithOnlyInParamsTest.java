@@ -54,7 +54,7 @@ public class KafkaSqlKafkaRouteOracleFunctionWithOnlyInParamsTest {
     private static final KafkaContainer kafka = createKafkaContainer();
 
     private final static String MESSAGE_IN_KAFKA =
-            getStringResources("routetest/kafka-sql-kafka/function/in-params/request.json");
+            getStringResources("routetest/kafka-sql-kafka/function/in-params/test-message.json");
 
     private final static String EXPECTED_TRANSFORMED_MESSAGE_AFTER_PRODUCER =
             getStringResources("routetest/kafka-sql-kafka/function/in-params/expected-response.json");

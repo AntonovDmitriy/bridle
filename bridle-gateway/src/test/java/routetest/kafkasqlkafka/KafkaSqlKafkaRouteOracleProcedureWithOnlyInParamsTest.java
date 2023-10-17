@@ -37,7 +37,7 @@ import static utils.TestUtils.getStringResources;
 @SpringBootTest(classes = {App.class},
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(properties = {
-        "spring.config.location=classpath:routetest/kafka-sql-kafka/application-for-procedure-in.yml"})
+        "spring.config.location=classpath:routetest/kafka-sql-kafka/procedure/in-params/application.yml"})
 @CamelSpringBootTest
 @DirtiesContext
 @Testcontainers
@@ -51,18 +51,17 @@ public class KafkaSqlKafkaRouteOracleProcedureWithOnlyInParamsTest {
     @Container
     private static final KafkaContainer kafka = createKafkaContainer();
 
-    private final static String MESSAGE_IN_KAFKA = getStringResources("routetest/kafka-sql-kafka/test-for-insert.json");
+    private final static String MESSAGE_IN_KAFKA = getStringResources(
+            "routetest/kafka-sql-kafka/procedure/in-params/test-message.json");
 
-    private final static String EXPECTED_TRANSFORMED_MESSAGE_AFTER_PRODUCER = """
-            {
-              "correlationId": "abc123",
-              "status": "OK"
-            }""";
+    private final static String EXPECTED_TRANSFORMED_MESSAGE_AFTER_PRODUCER = getStringResources(
+            "routetest/kafka-sql-kafka/procedure/in-params/expected-response.json");
+
 
     @Container
     public static OracleContainer oracle =
             createOracleContainer().withCopyFileToContainer(MountableFile.forClasspathResource(
-                    "routetest/kafka-sql-kafka/init-for-procedure-in"), "/container-entrypoint-startdb.d/");
+                    "routetest/kafka-sql-kafka/procedure/in-params/init-oracle"), "/container-entrypoint-startdb.d/");
 
     @Autowired
     private CamelContext context;

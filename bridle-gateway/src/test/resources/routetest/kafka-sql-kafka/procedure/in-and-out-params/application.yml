@@ -16,6 +16,10 @@ camel:
       enabled: false
     json-validator:
       enabled: false
+    sql-stored:
+      enabled: false
+    sql:
+      enabled: false
 
 management:
   endpoints:
@@ -62,7 +66,7 @@ endpoints:
   sql-out-endpoint:
     component-name: "main-procedure-call"
     mandatory:
-      sql-template-uri: "classpath:/routetest/kafka-sql-kafka/mapping-merge-procedure.sql"
+      sql-template-uri: "classpath:/routetest/kafka-sql-kafka/procedure/in-and-out-params/integration-mapping.sql"
     additional:
       output-header: "procedureResult"
 processing:
@@ -75,7 +79,7 @@ processing:
       data-format-name: "json"
   after-producer:
     transform:
-      resource-uri: "/routetest/kafka-sql-kafka/response-after-merge-procedure.tmpl"
+      resource-uri: "/routetest/kafka-sql-kafka/procedure/in-and-out-params/response-mapping.tmpl"
 datasources:
   hikari:
     main-datasource:

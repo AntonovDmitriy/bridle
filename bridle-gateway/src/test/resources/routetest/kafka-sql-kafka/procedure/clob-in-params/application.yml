@@ -16,6 +16,10 @@ camel:
       enabled: false
     json-validator:
       enabled: false
+    sql-stored:
+      enabled: false
+    sql:
+      enabled: false
 
 management:
   endpoints:
@@ -44,10 +48,11 @@ components:
       max-partition-fetch-bytes: 1048576
       heartbeat-interval-ms: 3000
       session-timeout-ms: 10000
+      max-request-size: 40000000
     kafka-out:
       brokers: "localhost:9090"
-  sql:
-    main-jdbc-call:
+  procedure:
+    main-procedure-call:
       dataSource: "#mainDataSource"
 endpoints:
   kafka-in-endpoint:
@@ -60,21 +65,23 @@ endpoints:
     mandatory:
       topic: "routetest_response"
   sql-out-endpoint:
-    component-name: "main-jdbc-call"
+    component-name: "main-procedure-call"
     mandatory:
-      sql-template-uri: "classpath:/routetest/kafka-sql-kafka/select.sql"
+      sql-template-uri: "classpath:/routetest/kafka-sql-kafka/procedure/clob-in-params/integration-mapping.sql"
+    additional:
+      outputHeader: "result_sql"
 processing:
   after-consumer:
-    validation:
-      format: "json-schema"
-      resource-uri: "/routetest/kafka-sql-kafka/test.schema.json"
     header-collector:
       expression-format: "JSON_PATH"
       query-expressions-by-header-name:
-        userId: "$.userId"
+        correlationId: "$.system.correlationId"
   after-producer:
+    convert-body:
+      type-class: "java.lang.String"
+      charset: "UTF-8"
     transform:
-      resource-uri: "/routetest/kafka-sql-kafka/response-after-select.tmpl"
+      resource-uri: "/routetest/kafka-sql-kafka/procedure/clob-in-params/response-mapping.tmpl"
 datasources:
   hikari:
     main-datasource:

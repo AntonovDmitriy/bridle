@@ -35,7 +35,8 @@ import static utils.TestUtils.getStringResources;
 
 @SpringBootTest(classes = {App.class},
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@TestPropertySource(properties = {"spring.config.location=classpath:routetest/kafka-sql-kafka/application.yml"})
+@TestPropertySource(properties = {
+        "spring.config.location=classpath:routetest/kafka-sql-kafka/sql/empty-select" + "/application.yml"})
 @CamelSpringBootTest
 @DirtiesContext
 @Testcontainers
@@ -49,16 +50,15 @@ public class KafkaSqlKafkaRouteOracleEmptySelectTest {
     @Container
     private static final KafkaContainer kafka = createKafkaContainer();
 
-    private final static String MESSAGE_IN_KAFKA = getStringResources("routetest/kafka-sql-kafka/test-for-select.json");
+    private final static String MESSAGE_IN_KAFKA =
+            getStringResources("routetest/kafka-sql-kafka/sql/empty-select/test-message.json");
 
-    private final static String EXPECTED_TRANSFORMED_MESSAGE_AFTER_PRODUCER = """
-            {
-              "error": "User is not found with id 1234"
-            }""";
+    private final static String EXPECTED_TRANSFORMED_MESSAGE_AFTER_PRODUCER =
+            getStringResources("routetest/kafka-sql-kafka/sql/empty-select/expected-response.json");
 
     @Container
     public static OracleContainer oracle =
-            createOracleContainer().withInitScript("routetest/kafka-sql-kafka/init-for-empty-select.sql");
+            createOracleContainer().withInitScript("routetest/kafka-sql-kafka/sql/empty-select/init-oracle.sql");
 
     @Autowired
     private CamelContext context;
@@ -86,7 +86,7 @@ public class KafkaSqlKafkaRouteOracleEmptySelectTest {
     }
 
     @Test
-    void verifyKafkaSqlKafkaOracleSelect() throws Exception {
+    void verifyKafkaSqlKafkaOracleEmptySelect() throws Exception {
         int messageCount = 1;
         NotifyBuilder notify = new NotifyBuilder(context).whenExactlyCompleted(messageCount).create();
 

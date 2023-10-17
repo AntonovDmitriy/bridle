@@ -37,7 +37,7 @@ import static utils.TestUtils.getStringResources;
 @SpringBootTest(classes = {App.class},
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(properties = {
-        "spring.config.location=classpath:routetest/kafka-sql-kafka/application-for-procedure-in-out.yml"})
+        "spring.config.location=classpath:routetest/kafka-sql-kafka/procedure/inout-params/application.yml"})
 @CamelSpringBootTest
 @DirtiesContext
 @Testcontainers
@@ -52,27 +52,17 @@ public class KafkaSqlKafkaRouteOracleProcedureWithInOutParamsTest {
     private static final KafkaContainer kafka = createKafkaContainer();
 
     private final static String MESSAGE_IN_KAFKA =
-            getStringResources("routetest/kafka-sql-kafka/test-for-procedure-merge.json");
+            getStringResources("routetest/kafka-sql-kafka/procedure/inout-params/test-message.json");
 
-    private final static String EXPECTED_TRANSFORMED_MESSAGE_AFTER_PRODUCER = """
-            {
-              "system": {
-                "correlationId": "abc123"
-              },
-              "person": {
-                "id": 1,
-                "first_name": "Ivan",
-                "last_name": "Doe",
-                "age": 30,
-                "city": "New York",
-                "occupation": "Engineer"
-              }
-            }""";
+    private final static String EXPECTED_TRANSFORMED_MESSAGE_AFTER_PRODUCER =
+            getStringResources("routetest/kafka-sql-kafka/procedure/inout-params/expected-response.json");
+
 
     @Container
     public static OracleContainer oracle =
             createOracleContainer().withCopyFileToContainer(MountableFile.forClasspathResource(
-                    "routetest/kafka-sql-kafka/init-for-procedure-inout"), "/container-entrypoint-startdb.d/");
+                                                                    "routetest/kafka-sql-kafka/procedure/inout-params/init-oracle"),
+                                                            "/container-entrypoint-startdb.d/");
 
     @Autowired
     private CamelContext context;
