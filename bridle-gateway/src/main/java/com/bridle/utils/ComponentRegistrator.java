@@ -60,11 +60,37 @@ public class ComponentRegistrator {
 
         if (endpointProperties.isConsumer()) {
             if (builder instanceof EndpointConsumerBuilder consumer) {
-                endpointProperties.getAdditional().forEach(consumer::doSetProperty);
+                endpointProperties.getAdditional().forEach((s, o) -> {
+                    if (o instanceof Map) {
+                        Map<?, ?> mapWithPrefix = (Map<?, ?>) o;
+                        if (mapWithPrefix.size() == 1) {
+                            String prefix = (String) mapWithPrefix.keySet().iterator().next();
+                            Object values = mapWithPrefix.values().iterator().next();
+                            if (values instanceof Map) {
+                                consumer.doSetMultiValueProperties(s, prefix + ".", (Map<String, Object>) values);
+                            }
+                        }
+                    } else {
+                        consumer.doSetProperty(s, o);
+                    }
+                });
                 result = consumer;
             }
         } else if (builder instanceof EndpointProducerBuilder producer) {
-            endpointProperties.getAdditional().forEach(producer::doSetProperty);
+            endpointProperties.getAdditional().forEach((s, o) -> {
+                if (o instanceof Map) {
+                    Map<?, ?> mapWithPrefix = (Map<?, ?>) o;
+                    if (mapWithPrefix.size() == 1) {
+                        String prefix = (String) mapWithPrefix.keySet().iterator().next();
+                        Object values = mapWithPrefix.values().iterator().next();
+                        if (values instanceof Map) {
+                            producer.doSetMultiValueProperties(s, prefix + ".", (Map<String, Object>) values);
+                        }
+                    }
+                } else {
+                    producer.doSetProperty(s, o);
+                }
+            });
             result = producer;
         }
         return result;
