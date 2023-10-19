@@ -37,7 +37,7 @@ import static utils.TestUtils.getStringResources;
 
 @SpringBootTest(classes = {App.class},
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@TestPropertySource(properties = {"spring.config.location=classpath:routetest/kafka-sql/application-for-delete.yml"})
+@TestPropertySource(properties = {"spring.config.location=classpath:routetest/kafka-sql/delete/application.yml"})
 @CamelSpringBootTest
 @DirtiesContext
 @Testcontainers
@@ -49,11 +49,11 @@ public class KafkaSqlRouteOracleDeleteTest {
     @Container
     private static final KafkaContainer kafka = createKafkaContainer();
 
-    private final static String MESSAGE_IN_KAFKA = getStringResources("routetest/kafka-sql/test.json");
+    private final static String MESSAGE_IN_KAFKA = getStringResources("routetest/kafka-sql/delete/test-message.json");
 
     @Container
     public static OracleContainer oracle =
-            createOracleContainer().withInitScript("routetest/kafka-sql/init-for-delete.sql");
+            createOracleContainer().withInitScript("routetest/kafka-sql/delete/init-oracle.sql");
 
     @Autowired
     private CamelContext context;

@@ -16,7 +16,10 @@ camel:
       enabled: false
     json-validator:
       enabled: false
-
+    sql-stored:
+      enabled: false
+    sql:
+      enabled: false
 management:
   endpoints:
     web:
@@ -56,7 +59,7 @@ endpoints:
   sql-out-endpoint:
     component-name: "main-jdbc-call"
     mandatory:
-      sql-template-uri: "classpath:/routetest/kafka-sql/delete.sql"
+      sql-template-uri: "classpath:/routetest/kafka-sql/delete/integration-mapping.sql"
 processing:
   after-consumer:
     convert-body:
@@ -64,7 +67,7 @@ processing:
       charset: "UTF-8"
     validation:
       format: "json-schema"
-      resource-uri: "/routetest/kafka-sql/test-message.schema.json"
+      resource-uri: "/routetest/kafka-sql/delete/test-message.schema.json"
     unmarshalling-data-format":
       data-format-name: "json"
 datasources:
