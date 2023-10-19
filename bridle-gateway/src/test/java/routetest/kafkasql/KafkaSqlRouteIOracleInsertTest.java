@@ -37,7 +37,7 @@ import static utils.TestUtils.getStringResources;
 
 @SpringBootTest(classes = {App.class},
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@TestPropertySource(properties = {"spring.config.location=classpath:routetest/kafka-sql/application-for-insert.yml"})
+@TestPropertySource(properties = {"spring.config.location=classpath:routetest/kafka-sql/insert/application.yml"})
 @CamelSpringBootTest
 @DirtiesContext
 @Testcontainers
@@ -49,10 +49,11 @@ public class KafkaSqlRouteIOracleInsertTest {
     @Container
     private static final KafkaContainer kafka = createKafkaContainer();
 
-    private final static String MESSAGE_IN_KAFKA = getStringResources("routetest/kafka-sql/test.json");
+    private final static String MESSAGE_IN_KAFKA = getStringResources("routetest/kafka-sql/insert/test-message.json");
 
     @Container
-    public static OracleContainer oracle = createOracleContainer().withInitScript("routetest/kafka-sql/init.sql");
+    public static OracleContainer oracle = createOracleContainer().withInitScript(
+            "routetest/kafka-sql/insert/init-oracle.sql");
 
     @Autowired
     private CamelContext context;

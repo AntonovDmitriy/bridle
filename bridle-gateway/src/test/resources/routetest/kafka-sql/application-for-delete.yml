@@ -64,7 +64,7 @@ processing:
       charset: "UTF-8"
     validation:
       format: "json-schema"
-      resource-uri: "/routetest/kafka-sql/test.schema.json"
+      resource-uri: "/routetest/kafka-sql/test-message.schema.json"
     unmarshalling-data-format":
       data-format-name: "json"
 datasources:
