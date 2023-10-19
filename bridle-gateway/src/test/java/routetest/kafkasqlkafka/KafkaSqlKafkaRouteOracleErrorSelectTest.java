@@ -34,8 +34,8 @@ import static utils.TestUtils.getStringResources;
 
 @SpringBootTest(classes = {App.class},
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@TestPropertySource(properties = {"spring.config.location=classpath:routetest/kafka-sql-kafka/sql/error-select" +
-        "/application.yml"})
+@TestPropertySource(properties = {
+        "spring.config.location=classpath:routetest/kafka-sql-kafka/sql/error-select" + "/application.yml"})
 @CamelSpringBootTest
 @DirtiesContext
 @Testcontainers
@@ -49,8 +49,8 @@ public class KafkaSqlKafkaRouteOracleErrorSelectTest {
     @Container
     private static final KafkaContainer kafka = createKafkaContainer();
 
-    private final static String MESSAGE_IN_KAFKA = getStringResources(
-            "routetest/kafka-sql-kafka/sql/error-select/test-message.json");
+    private final static String MESSAGE_IN_KAFKA =
+            getStringResources("routetest/kafka-sql-kafka/sql/error-select/test-message.json");
 
     @Container
     public static OracleContainer oracle = createOracleContainer();

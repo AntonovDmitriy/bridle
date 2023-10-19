@@ -27,15 +27,15 @@ class KafkaHttpKafkaProcessingHeaderCollectorComposeTest {
     private static final Predicate<String> APP_STARTS_TO_RECIEVE_LOAD_PREDICATE =
             s -> parseMessagesAmount(s, ROUTE_NAME) > 0;
 
-    @Container
-    private static final DockerComposeContainer<?> ENVIRONMENT = initEnvironment();
-
     private static final String COMPOSE_FILE_PATH =
             "compose/demo-kafka-http-kafka-processing-headercollector-compose.yml";
 
     private static final String SERVICE_NAME_GATEWAY = "gateway";
 
     private static final int SERVICE_PORT = 8080;
+
+    @Container
+    private static final DockerComposeContainer<?> ENVIRONMENT = initEnvironment();
 
     private static final String ENDPOINT_NAME = "kafka";
 

@@ -58,12 +58,12 @@ public class HttpConsumerToProducerRoute extends AbstractHttpConsumerRoute {
                                         "processingAfterProducer");
 
         from("direct:process")
-                .routeId(routeParams.routeId())
-                .setHeader(CONTENT_TYPE, constant(restConfiguration.getContentType()))
-                .to(PROCESSING_AFTER_CONSUMER)
-                .to(routeParams.mainProducer())
-                .to(PROCESSING_AFTER_PRODUCER)
-                .to(routeParams.successResponseBuilder())
-                .log(LOG_BODY);
+            .routeId(routeParams.routeId())
+            .setHeader(CONTENT_TYPE, constant(restConfiguration.getContentType()))
+            .to(PROCESSING_AFTER_CONSUMER)
+            .to(routeParams.mainProducer())
+            .to(PROCESSING_AFTER_PRODUCER)
+            .to(routeParams.successResponseBuilder())
+            .log(LOG_BODY);
     }
 }

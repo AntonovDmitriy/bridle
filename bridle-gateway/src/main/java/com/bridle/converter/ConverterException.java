@@ -1,6 +1,6 @@
 package com.bridle.converter;
 
-public class ConverterException extends RuntimeException{
+public class ConverterException extends RuntimeException {
     public ConverterException(String message) {
         super(message);
     }

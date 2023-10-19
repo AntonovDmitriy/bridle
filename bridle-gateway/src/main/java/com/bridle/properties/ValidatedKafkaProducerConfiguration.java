@@ -25,14 +25,11 @@ public class ValidatedKafkaProducerConfiguration extends KafkaComponentConfigura
 
     @AssertTrue(message = "ssl configuration is not consistent")
     public boolean isSslSettingsConsistent() {
-        boolean result = true;
-        if (getSecurityProtocol() == null || (!getSecurityProtocol().equals("PLAINTEXT") && StringUtils.isAnyBlank(
-                getSslKeystoreLocation(),
-                getSslKeystorePassword(),
-                getSslTruststoreLocation(),
-                getSslTruststorePassword()))) {
-            result = false;
-        }
+        boolean result = getSecurityProtocol() != null && (getSecurityProtocol().equals("PLAINTEXT") ||
+                !StringUtils.isAnyBlank(getSslKeystoreLocation(),
+                                        getSslKeystorePassword(),
+                                        getSslTruststoreLocation(),
+                                        getSslTruststorePassword()));
         return result;
     }
 

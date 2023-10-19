@@ -52,8 +52,8 @@ public class KafkaSqlRouteIOracleInsertTest {
     private final static String MESSAGE_IN_KAFKA = getStringResources("routetest/kafka-sql/insert/test-message.json");
 
     @Container
-    public static OracleContainer oracle = createOracleContainer().withInitScript(
-            "routetest/kafka-sql/insert/init-oracle.sql");
+    public static OracleContainer oracle =
+            createOracleContainer().withInitScript("routetest/kafka-sql/insert/init-oracle.sql");
 
     @Autowired
     private CamelContext context;

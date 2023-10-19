@@ -60,7 +60,8 @@ public class KafkaSqlKafkaRouteOracleProcedureWithInAndOutParamsTest {
     @Container
     public static OracleContainer oracle =
             createOracleContainer().withCopyFileToContainer(MountableFile.forClasspathResource(
-                    "routetest/kafka-sql-kafka/procedure/in-and-out-params/init-oracle"), "/container-entrypoint-startdb.d/");
+                                                                    "routetest/kafka-sql-kafka/procedure/in-and-out-params/init-oracle"),
+                                                            "/container-entrypoint-startdb.d/");
 
     @Autowired
     private CamelContext context;

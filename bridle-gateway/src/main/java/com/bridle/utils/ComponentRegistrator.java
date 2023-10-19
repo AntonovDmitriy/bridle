@@ -61,8 +61,7 @@ public class ComponentRegistrator {
         if (endpointProperties.isConsumer()) {
             if (builder instanceof EndpointConsumerBuilder consumer) {
                 endpointProperties.getAdditional().forEach((s, o) -> {
-                    if (o instanceof Map) {
-                        Map<?, ?> mapWithPrefix = (Map<?, ?>) o;
+                    if (o instanceof Map<?, ?> mapWithPrefix) {
                         if (mapWithPrefix.size() == 1) {
                             String prefix = (String) mapWithPrefix.keySet().iterator().next();
                             Object values = mapWithPrefix.values().iterator().next();
@@ -78,8 +77,7 @@ public class ComponentRegistrator {
             }
         } else if (builder instanceof EndpointProducerBuilder producer) {
             endpointProperties.getAdditional().forEach((s, o) -> {
-                if (o instanceof Map) {
-                    Map<?, ?> mapWithPrefix = (Map<?, ?>) o;
+                if (o instanceof Map<?, ?> mapWithPrefix) {
                     if (mapWithPrefix.size() == 1) {
                         String prefix = (String) mapWithPrefix.keySet().iterator().next();
                         Object values = mapWithPrefix.values().iterator().next();

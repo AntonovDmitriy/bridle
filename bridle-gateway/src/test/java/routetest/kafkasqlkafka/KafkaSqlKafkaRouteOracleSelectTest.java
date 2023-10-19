@@ -57,8 +57,8 @@ public class KafkaSqlKafkaRouteOracleSelectTest {
             getStringResources("routetest/kafka-sql-kafka/sql/data-select/expected-response.json");
 
     @Container
-    public static OracleContainer oracle = createOracleContainer().withInitScript(
-            "routetest/kafka-sql-kafka/sql/data-select/init-oracle.sql");
+    public static OracleContainer oracle =
+            createOracleContainer().withInitScript("routetest/kafka-sql-kafka/sql/data-select/init-oracle.sql");
 
     @Autowired
     private CamelContext context;

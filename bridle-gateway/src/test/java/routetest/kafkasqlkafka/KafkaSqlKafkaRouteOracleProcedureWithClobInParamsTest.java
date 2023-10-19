@@ -28,7 +28,6 @@ import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
 import static utils.KafkaContainerUtils.countMessages;
 import static utils.KafkaContainerUtils.createKafkaContainer;
 import static utils.KafkaContainerUtils.createTopic;
-import static utils.KafkaContainerUtils.readMessage;
 import static utils.KafkaContainerUtils.setupKafka;
 import static utils.MetricsTestUtils.verifyMetrics;
 import static utils.OracleContainerUtils.createOracleContainer;
@@ -100,8 +99,8 @@ public class KafkaSqlKafkaRouteOracleProcedureWithClobInParamsTest {
 
         boolean done = notify.matches(10, TimeUnit.SECONDS);
         Assertions.assertTrue(done);
-//        assertEquals(MESSAGE_IN_KAFKA,
-//                     readMessage(kafka, TOPIC_NAME_RESPONSE).stdOut().strip());
+        //        assertEquals(MESSAGE_IN_KAFKA,
+        //                     readMessage(kafka, TOPIC_NAME_RESPONSE).stdOut().strip());
         assertEquals(messageCount, countMessages(kafka, TOPIC_NAME_RESPONSE));
         verifyMetrics(GATEWAY_TYPE_KAFKA_SQL_KAFKA, messageCount, 0, 0);
     }

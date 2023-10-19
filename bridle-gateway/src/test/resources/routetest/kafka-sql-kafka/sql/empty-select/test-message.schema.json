@@ -11,7 +11,9 @@
           "format": "uuid"
         }
       },
-      "required": ["correlationId"]
+      "required": [
+        "correlationId"
+      ]
     },
     "data": {
       "type": "object",
@@ -21,8 +23,13 @@
           "pattern": "^[0-9]{4}$"
         }
       },
-      "required": ["userId"]
+      "required": [
+        "userId"
+      ]
     }
   },
-  "required": ["system", "data"]
+  "required": [
+    "system",
+    "data"
+  ]
 }
