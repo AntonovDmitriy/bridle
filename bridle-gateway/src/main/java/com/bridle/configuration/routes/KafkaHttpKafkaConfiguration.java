@@ -56,9 +56,4 @@ public class KafkaHttpKafkaConfiguration {
                                                                                          processingAfterProducerParams,
                                                                                          kafkaOutEndpoint));
     }
-
-    @Bean
-    public Converter<Clob, String> stringClobConverter() {
-        return new ClobStringConverter();
-    }
 }
