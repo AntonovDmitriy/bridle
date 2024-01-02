@@ -5,7 +5,6 @@ import com.bridle.configuration.common.datasource.DataSourceConfiguration;
 import com.bridle.configuration.common.errorhandling.ErrorHandlerConfiguration;
 import com.bridle.configuration.common.processing.AfterConsumerProcessingConfiguration;
 import com.bridle.configuration.common.processing.AfterProducerProcessingConfiguration;
-import com.bridle.converter.ClobStringConverter;
 import com.bridle.routes.ConsumerToDoubleProducerRoute;
 import com.bridle.routes.model.ConsumerToDoubleProducerRouteParams;
 import com.bridle.utils.ProcessingParams;
@@ -19,9 +18,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.convert.converter.Converter;
-
-import java.sql.Clob;
 
 @Configuration
 @Import({ErrorHandlerConfiguration.class, AfterConsumerProcessingConfiguration.class,
@@ -35,29 +31,24 @@ public class KafkaSqlKafkaConfiguration {
 
     @Bean
     public RouteBuilder kafkaSqlKafkaRoute(ErrorHandlerFactory errorHandlerFactory,
-            @Qualifier("kafka-in-endpoint")
-            EndpointConsumerBuilder kafkaInEndpoint,
-            @Qualifier("sql-out-endpoint")
-            EndpointProducerBuilder sqlCall,
-            @Qualifier("kafka-out-endpoint")
-            EndpointProducerBuilder kafkaOutEndpoint,
-            @Autowired(required = false)
-            @Qualifier("afterConsumer")
-            ProcessingParams processingAfterConsumerParams,
-            @Autowired(required = false)
-            @Qualifier("afterProducer")
-            ProcessingParams processingAfterProducerParams) {
+                                           @Qualifier("kafka-in-endpoint")
+                                           EndpointConsumerBuilder kafkaInEndpoint,
+                                           @Qualifier("sql-out-endpoint")
+                                           EndpointProducerBuilder sqlCall,
+                                           @Qualifier("kafka-out-endpoint")
+                                           EndpointProducerBuilder kafkaOutEndpoint,
+                                           @Autowired(required = false)
+                                           @Qualifier("afterConsumer")
+                                           ProcessingParams processingAfterConsumerParams,
+                                           @Autowired(required = false)
+                                           @Qualifier("afterProducer")
+                                           ProcessingParams processingAfterProducerParams) {
         return new ConsumerToDoubleProducerRoute(errorHandlerFactory,
-                                                 new ConsumerToDoubleProducerRouteParams(GATEWAY_TYPE_KAFKA_SQL_KAFKA,
-                                                                                         kafkaInEndpoint,
-                                                                                         processingAfterConsumerParams,
-                                                                                         sqlCall,
-                                                                                         processingAfterProducerParams,
-                                                                                         kafkaOutEndpoint));
-    }
-
-    @Bean
-    public Converter<Clob, String> stringClobConverter() {
-        return new ClobStringConverter();
+                new ConsumerToDoubleProducerRouteParams(GATEWAY_TYPE_KAFKA_SQL_KAFKA,
+                        kafkaInEndpoint,
+                        processingAfterConsumerParams,
+                        sqlCall,
+                        processingAfterProducerParams,
+                        kafkaOutEndpoint));
     }
 }
