@@ -45,7 +45,7 @@ public class ComponentRegistrator {
 
     private BiConsumer<String, EndpointProperties> registerEndpointBuilder(ConfigurableListableBeanFactory factory) {
         return (s, endpointProperties) -> {
-            Object endpointBuilder = createEndpointBuilder(context, endpointProperties);
+            var endpointBuilder = createEndpointBuilder(context, endpointProperties);
             if (endpointBuilder != null) {
                 factory.registerSingleton(s, endpointBuilder);
             }

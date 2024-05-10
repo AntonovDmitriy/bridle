@@ -20,8 +20,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import({ErrorHandlerConfiguration.class, AfterConsumerProcessingConfiguration.class,
-        AfterProducerProcessingConfiguration.class, DynamicComponentsComfiguration.class,
+@Import({ErrorHandlerConfiguration.class,
+        AfterConsumerProcessingConfiguration.class,
+        AfterProducerProcessingConfiguration.class,
+        DynamicComponentsComfiguration.class,
         DataSourceConfiguration.class})
 @ConditionalOnProperty(name = "gateway.type",
         havingValue = KafkaSqlKafkaConfiguration.GATEWAY_TYPE_KAFKA_SQL_KAFKA)
