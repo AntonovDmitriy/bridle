@@ -16,6 +16,13 @@ services:
       - APP_USER_PASSWORD=testPassword
     volumes:
       - ./configs/kafka-oracle-procedure-kafka/init-oracle:/container-entrypoint-startdb.d/
+    networks:
+      - gateway-network
+    healthcheck:
+      test: [ "CMD", "sqlplus", "-S", "testUser/testPassword@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=127.0.0.1)(Port=1521))(CONNECT_DATA=(SID=testDB)))", "SELECT 1 FROM DUAL" ]
+      interval: 30s
+      timeout: 10s
+      retries: 10
 
   gateway:
     image: bridle-gateway:latest
@@ -32,8 +39,10 @@ services:
     volumes:
       - ./configs/kafka-oracle-procedure-kafka/:/app/config/
     depends_on:
-      - oracle
-      - kafka-topic
+      oracle:
+        condition: service_healthy
+      kafka-topic:
+        condition: service_started
     networks:
       - gateway-network
 
@@ -89,7 +98,7 @@ services:
       - MAIN-SCHEDULER_ENDPOINT-PROPERTIES_DElAY=1000
     volumes:
       - ./configs/load-freemarker-kafka/application.yml:/app/config/application.yml
-      - ./configs/load-freemarker-kafka/load.tmpl:/app/load.tmpl
+      - ./configs/kafka-oracle-procedure-kafka/test-message.json:/app/load.tmpl
     depends_on:
       - gateway
     networks:
