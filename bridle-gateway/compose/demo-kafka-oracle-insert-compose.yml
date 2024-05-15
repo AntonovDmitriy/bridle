@@ -1,0 +1,137 @@
+version: '3'
+
+services:
+
+  oracle:
+    image: "gvenzl/oracle-xe:21-slim-faststart"
+    ports:
+      - "1521:1521" # Стандартный порт Oracle
+      - "5500:5500" # Порт Oracle Enterprise Manager (OEM)
+      - "5501:8080"
+    environment:
+      - ORACLE_ALLOW_REMOTE=true # Разрешить удаленные подключения
+      - ORACLE_PASSWORD=testPassword
+      - ORACLE_DATABASE=testDB
+      - APP_USER=testUser
+      - APP_USER_PASSWORD=testPassword
+    volumes:
+      - ./configs/kafka-oracle-insert/init-oracle:/container-entrypoint-startdb.d/
+    networks:
+      - gateway-network
+    healthcheck:
+      test: [ "CMD", "sqlplus", "-S", "testUser/testPassword@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(Host=127.0.0.1)(Port=1521))(CONNECT_DATA=(SID=testDB)))", "SELECT 1 FROM DUAL" ]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+
+  gateway:
+    image: bridle-gateway:latest
+    build: ../.
+    ports:
+      - '8080'
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+          cpus: '1'
+    environment:
+      - SPRING_CONFIG=/app/config/application.yml
+    volumes:
+      - ./configs/kafka-oracle-insert/:/app/config/
+    depends_on:
+      oracle:
+        condition: service_healthy
+      kafka-topic:
+        condition: service_started
+    networks:
+      - gateway-network
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:6.2.1
+    ports:
+      - '2181:2181'
+    environment:
+      - ZOOKEEPER_CLIENT_PORT=2181
+    networks:
+      - gateway-network
+
+  kafka:
+    image: confluentinc/cp-kafka:6.2.1
+    ports:
+      - '9092:9092'
+      - '19092:19092' # Внешний порт для доступа с хоста
+    environment:
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      - KAFKA_LISTENERS=PLAINTEXT://kafka:9092,PLAINTEXT_HOST://0.0.0.0:19092
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:19092
+      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=false
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+    depends_on:
+      - zookeeper
+    networks:
+      - gateway-network
+
+  kafka-topic:
+    image: confluentinc/cp-kafka:6.2.1
+    depends_on:
+      - kafka
+    command: >
+      bash -c "sleep 10 &&
+      kafka-topics --create --topic routetest_request --partitions 1 --replication-factor 1 --bootstrap-server kafka:9092"
+    restart: "no"
+    networks:
+      - gateway-network
+
+  load-generator:
+    image: bridle-gateway:latest
+    ports:
+      - '8081:8080'
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+          cpus: '1'
+    environment:
+      - SPRING_CONFIG=/app/config/application.yml
+      - MAIN-SCHEDULER_ENDPOINT-PROPERTIES_DElAY=1000
+    volumes:
+      - ./configs/load-freemarker-kafka/application.yml:/app/config/application.yml
+      - ./configs/kafka-oracle-insert/test-message.json:/app/load.tmpl
+    depends_on:
+      - gateway
+    networks:
+      - gateway-network
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - '9090:9090'
+    volumes:
+      - ./configs/metrics/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    depends_on:
+      - gateway
+    networks:
+      - gateway-network
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - '3000:3000'
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./configs/metrics/grafana/datasources:/etc/grafana/provisioning/datasources
+      - ./configs/metrics/grafana/dashboards:/etc/grafana/provisioning/dashboards
+    depends_on:
+      - prometheus
+    networks:
+      - gateway-network
+
+volumes:
+  grafana_data: { }
+
+networks:
+  gateway-network:

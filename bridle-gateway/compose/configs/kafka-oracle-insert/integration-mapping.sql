@@ -1,0 +1,1 @@
+INSERT INTO COMPANY (NAME, FOUNDED) VALUES (:#${body['company']['name']}, :#${body['company']['founded']})

@@ -3,7 +3,7 @@ package composetest;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.containers.DockerComposeContainer;
+import org.testcontainers.containers.ComposeContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.containers.wait.strategy.WaitAllStrategy;
 import org.testcontainers.junit.jupiter.Container;
@@ -30,10 +30,10 @@ class HttpKafkaComposeTest {
     private static final int SERVICE_PORT = 8080;
 
     @Container
-    private static final DockerComposeContainer<?> ENVIRONMENT = initEnvironment();
+    private static final ComposeContainer ENVIRONMENT = initEnvironment();
 
-    private static DockerComposeContainer initEnvironment() {
-        return new DockerComposeContainer<>(new File(COMPOSE_FILE_PATH))
+    private static ComposeContainer initEnvironment() {
+        return new ComposeContainer(new File(COMPOSE_FILE_PATH))
                 .withExposedService(SERVICE_NAME_GATEWAY,
                                     SERVICE_PORT,
                                     new WaitAllStrategy()

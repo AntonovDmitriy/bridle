@@ -4,7 +4,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.containers.DockerComposeContainer;
+import org.testcontainers.containers.ComposeContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.containers.wait.strategy.WaitAllStrategy;
 import org.testcontainers.junit.jupiter.Container;
@@ -28,7 +28,7 @@ class KafkaHttpKafkaComposeTest {
             s -> parseMessagesAmount(s, ROUTE_NAME) > 0;
 
     @Container
-    private static final DockerComposeContainer<?> ENVIRONMENT = initEnvironment();
+    private static final ComposeContainer ENVIRONMENT = initEnvironment();
 
     private static final String COMPOSE_FILE_PATH = "compose/demo-kafka-http-kafka-compose.yml";
 
@@ -38,8 +38,8 @@ class KafkaHttpKafkaComposeTest {
 
     private static final String ENDPOINT_NAME = "kafka";
 
-    private static DockerComposeContainer initEnvironment() {
-        return new DockerComposeContainer<>(new File(COMPOSE_FILE_PATH))
+    private static ComposeContainer initEnvironment() {
+        return new ComposeContainer(new File(COMPOSE_FILE_PATH))
                 .withExposedService(SERVICE_NAME_GATEWAY,
                                     SERVICE_PORT,
                                     new WaitAllStrategy()

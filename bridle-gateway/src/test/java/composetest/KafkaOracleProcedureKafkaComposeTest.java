@@ -1,5 +1,6 @@
 package composetest;
 
+import com.bridle.configuration.routes.KafkaSqlKafkaConfiguration;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -14,21 +15,20 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.function.Predicate;
 
-import static com.bridle.configuration.routes.KafkaHttpKafkaConfiguration.GATEWAY_TYPE_KAFKA_HTTP_KAFKA;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.KafkaContainerUtils.countMessages;
 import static utils.MetricsTestUtils.parseMessagesAmount;
 import static utils.MetricsTestUtils.verifyMetrics;
 
-class KafkaHttpKafkaProcessingUnmarshallingComposeTest {
+class KafkaOracleProcedureKafkaComposeTest {
 
-    private static final String ROUTE_NAME = GATEWAY_TYPE_KAFKA_HTTP_KAFKA;
+    private static final String ROUTE_NAME = KafkaSqlKafkaConfiguration.GATEWAY_TYPE_KAFKA_SQL_KAFKA;
 
     private static final Predicate<String> APP_STARTS_TO_RECIEVE_LOAD_PREDICATE =
             s -> parseMessagesAmount(s, ROUTE_NAME) > 0;
 
     private static final String COMPOSE_FILE_PATH =
-            "compose/demo-kafka-http-kafka-processing-unmarshalling-compose.yml";
+            "compose/demo-kafka-oracle-procedure-kafka-compose.yml";
 
     private static final String SERVICE_NAME_GATEWAY = "gateway";
 
