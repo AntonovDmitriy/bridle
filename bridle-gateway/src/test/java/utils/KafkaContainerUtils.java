@@ -110,6 +110,7 @@ public class KafkaContainerUtils {
     public static KafkaContainer createKafkaContainer() {
         return new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"))
                 .withEnv("KAFKA_DELETE_TOPIC_ENABLE", "true")
+                .withEnv("KAFKA_MESSAGE_MAX_BYTES", "40000000")
                 .withEnv("KAFKA_AUTO_CREATE_TOPICS_ENABLE", "false");
     }
 }

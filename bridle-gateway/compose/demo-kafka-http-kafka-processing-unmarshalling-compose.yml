@@ -63,8 +63,8 @@ services:
       - kafka
     command: >
       bash -c "sleep 10 &&
-      kafka-topics --create --topic routetest_request --partitions 1 --replication-factor 1 --bootstrap-server kafka:9092 &&
-      kafka-topics --create --topic routetest_response --partitions 1 --replication-factor 1 --bootstrap-server kafka:9092"
+      kafka-topics --create --topic routetest_request --partitions 10 --replication-factor 1 --bootstrap-server kafka:9092 &&
+      kafka-topics --create --topic routetest_response --partitions 10 --replication-factor 1 --bootstrap-server kafka:9092"
     restart: "no"
     networks:
       - gateway-network
@@ -80,7 +80,6 @@ services:
           cpus: '1'
     environment:
       - SPRING_CONFIG=/app/config/application.yml
-      - MAIN-SCHEDULER_ENDPOINT-PROPERTIES_DElAY=1000
     volumes:
       - ./configs/load-freemarker-kafka/application.yml:/app/config/application.yml
       - ./configs/load-freemarker-kafka/load.tmpl:/app/load.tmpl

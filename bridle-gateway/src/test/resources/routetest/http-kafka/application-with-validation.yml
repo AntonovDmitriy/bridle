@@ -35,7 +35,7 @@ processing:
   after-consumer:
     validation:
       format: "json-schema"
-      resource-uri: "/routetest/http-kafka/test.schema.json"
+      resource-uri: "/routetest/http-kafka/test-message.schema.json"
 rest-in:
   clientRequestValidation: "true"
   component: "servlet"

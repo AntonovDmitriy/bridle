@@ -1,0 +1,12 @@
+{
+  "system": {
+    "correlationId": "${headers.correlationId}"
+  },
+  "person": {
+    "first_name": "${body['person']['first_name']}",
+    "last_name": "${body['person']['last_name']}",
+    "age": ${headers.procedureResult.personAgeHeader},
+    "city": "${headers.procedureResult.personCityHeader}",
+    "occupation": "${headers.procedureResult.personOccupationHeader}"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "system": {
+    "correlationId": "${headers.correlationId!null}"
+  },
+  "data": {
+<#if body?has_content>
+  <#if body?size gt 1>
+    "error": "Expected only one result, but got more"
+  <#else>
+    "user": {
+      "userId": "${body[0]['USER_ID']}",
+      "firstName": "${body[0]['FIRST_NAME']}",
+      "lastName": "${body[0]['LAST_NAME']}",
+      "email": "${body[0]['EMAIL']}",
+      "phoneNumber": "${body[0]['PHONE_NUMBER']}"
+    }
+  </#if>
+<#else>
+    "error": "User is not found with id ${headers.userId}"
+</#if>
+  }
+}
+
+

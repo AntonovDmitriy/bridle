@@ -1,0 +1,6 @@
+-- Company table
+CREATE TABLE company (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name VARCHAR2(255),
+    founded INTEGER
+);

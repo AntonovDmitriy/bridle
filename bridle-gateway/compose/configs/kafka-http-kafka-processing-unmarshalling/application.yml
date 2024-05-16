@@ -58,7 +58,7 @@ components:
   kafka:
     kafka-in:
       brokers: "kafka:9092"
-      consumers-count: 1
+      consumers-count: 5
       group-id: "KAFKA_HTTP_KAFKA_FIRST_TESTING6"
       break-on-error: false
       max-poll-records: 500

@@ -1,0 +1,13 @@
+{
+  "system": {
+    "correlationId": "abc123"
+  },
+  "person": {
+    "id": 1,
+    "first_name": "Ivan",
+    "last_name": "Doe",
+    "age": 30,
+    "city": "New York",
+    "occupation": "Engineer"
+  }
+}

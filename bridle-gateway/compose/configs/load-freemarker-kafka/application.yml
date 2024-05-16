@@ -30,7 +30,7 @@ error-handler:
 main-scheduler:
   poolSize: "1"
   endpoint-properties:
-    delay: "1000"
+    delay: "100"
 processing:
   after-consumer:
     transform:

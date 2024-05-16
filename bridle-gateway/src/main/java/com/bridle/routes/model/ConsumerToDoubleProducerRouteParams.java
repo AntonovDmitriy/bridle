@@ -5,7 +5,8 @@ import org.apache.camel.builder.EndpointConsumerBuilder;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.commons.lang3.Validate;
 
-public record ConsumerToDoubleProducerRouteParams(String routeId, EndpointConsumerBuilder consumer,
+public record ConsumerToDoubleProducerRouteParams(String routeId,
+                                                  EndpointConsumerBuilder consumer,
                                                   ProcessingParams afterConsumerProcessingParams,
                                                   EndpointProducerBuilder firstProducer,
                                                   ProcessingParams afterProducerProcessingParams,

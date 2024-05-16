@@ -32,24 +32,24 @@ public class KafkaHttpKafkaConfiguration {
 
     @Bean
     public RouteBuilder kafkaHttpKafkaRoute(ErrorHandlerFactory errorHandlerFactory,
-            @Qualifier("kafka-in-endpoint")
-            EndpointConsumerBuilder kafkaInEndpoint,
-            @Qualifier("rest-call-endpoint")
-            EndpointProducerBuilder restCall,
-            @Qualifier("kafka-out-endpoint")
-            EndpointProducerBuilder kafkaOutEndpoint,
-            @Autowired(required = false)
-            @Qualifier("afterConsumer")
-            ProcessingParams processingAfterConsumerParams,
-            @Autowired(required = false)
-            @Qualifier("afterProducer")
-            ProcessingParams processingAfterProducerParams) {
+                                            @Qualifier("kafka-in-endpoint")
+                                            EndpointConsumerBuilder kafkaInEndpoint,
+                                            @Qualifier("rest-call-endpoint")
+                                            EndpointProducerBuilder restCall,
+                                            @Qualifier("kafka-out-endpoint")
+                                            EndpointProducerBuilder kafkaOutEndpoint,
+                                            @Autowired(required = false)
+                                            @Qualifier("afterConsumer")
+                                            ProcessingParams processingAfterConsumerParams,
+                                            @Autowired(required = false)
+                                            @Qualifier("afterProducer")
+                                            ProcessingParams processingAfterProducerParams) {
         return new ConsumerToDoubleProducerRoute(errorHandlerFactory,
-                                                 new ConsumerToDoubleProducerRouteParams(GATEWAY_TYPE_KAFKA_HTTP_KAFKA,
-                                                                                         kafkaInEndpoint,
-                                                                                         processingAfterConsumerParams,
-                                                                                         restCall,
-                                                                                         processingAfterProducerParams,
-                                                                                         kafkaOutEndpoint));
+                new ConsumerToDoubleProducerRouteParams(GATEWAY_TYPE_KAFKA_HTTP_KAFKA,
+                        kafkaInEndpoint,
+                        processingAfterConsumerParams,
+                        restCall,
+                        processingAfterProducerParams,
+                        kafkaOutEndpoint));
     }
 }

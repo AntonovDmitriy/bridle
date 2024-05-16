@@ -48,10 +48,8 @@ public class HttpKafkaRouteSuccessScenarioWithDefaultTemplatesTest {
     @BeforeAll
     public static void setUp() throws Exception {
         KafkaContainerUtils.setupKafka(kafka, KAFKA_PORT);
-        System.setProperty("kafka-out.brokers",
-                           "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
-        System.setProperty("kafka-in.brokers",
-                           "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
+        System.setProperty("kafka-out.brokers", "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
+        System.setProperty("kafka-in.brokers", "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
     }
 
     @Test

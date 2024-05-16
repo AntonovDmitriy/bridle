@@ -4,7 +4,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.containers.DockerComposeContainer;
+import org.testcontainers.containers.ComposeContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.containers.wait.strategy.WaitAllStrategy;
 import org.testcontainers.junit.jupiter.Container;
@@ -27,9 +27,6 @@ class KafkaHttpKafkaProcessingUnmarshallingComposeTest {
     private static final Predicate<String> APP_STARTS_TO_RECIEVE_LOAD_PREDICATE =
             s -> parseMessagesAmount(s, ROUTE_NAME) > 0;
 
-    @Container
-    private static final DockerComposeContainer<?> ENVIRONMENT = initEnvironment();
-
     private static final String COMPOSE_FILE_PATH =
             "compose/demo-kafka-http-kafka-processing-unmarshalling-compose.yml";
 
@@ -37,20 +34,23 @@ class KafkaHttpKafkaProcessingUnmarshallingComposeTest {
 
     private static final int SERVICE_PORT = 8080;
 
+    @Container
+    private static final ComposeContainer ENVIRONMENT = initEnvironment();
+
     private static final String ENDPOINT_NAME = "kafka";
 
-    private static DockerComposeContainer initEnvironment() {
-        return new DockerComposeContainer<>(new File(COMPOSE_FILE_PATH))
+    private static ComposeContainer initEnvironment() {
+        return new ComposeContainer(new File(COMPOSE_FILE_PATH))
                 .withExposedService(SERVICE_NAME_GATEWAY,
-                                    SERVICE_PORT,
-                                    new WaitAllStrategy()
-                                            .withStrategy(Wait.forLogMessage(".*Started App in.*\\n", 1))
-                                            .withStrategy(Wait
-                                                                  .forHttp("/actuator/prometheus")
-                                                                  .forResponsePredicate(
-                                                                          APP_STARTS_TO_RECIEVE_LOAD_PREDICATE)
-                                                                  .forStatusCode(200))
-                                            .withStartupTimeout(Duration.ofMinutes(10)))
+                        SERVICE_PORT,
+                        new WaitAllStrategy()
+                                .withStrategy(Wait.forLogMessage(".*Started App in.*\\n", 1))
+                                .withStrategy(Wait
+                                        .forHttp("/actuator/prometheus")
+                                        .forResponsePredicate(
+                                                APP_STARTS_TO_RECIEVE_LOAD_PREDICATE)
+                                        .forStatusCode(200))
+                                .withStartupTimeout(Duration.ofMinutes(10)))
                 .withBuild(true)
                 .withLocalCompose(true)
                 .withStartupTimeout(Duration.ofMinutes(10));
@@ -71,10 +71,10 @@ class KafkaHttpKafkaProcessingUnmarshallingComposeTest {
         String address = ENVIRONMENT.getServiceHost(SERVICE_NAME_GATEWAY, SERVICE_PORT);
         Integer port = ENVIRONMENT.getServicePort(SERVICE_NAME_GATEWAY, SERVICE_PORT);
         verifyMetrics(ROUTE_NAME,
-                      result -> result > 0,
-                      result -> result == 0,
-                      result -> result == 0,
-                      buildPrometheusEndpoint(address, port));
+                result -> result > 0,
+                result -> result == 0,
+                result -> result == 0,
+                buildPrometheusEndpoint(address, port));
         assertTrue(countMessagesInKafka() > 0);
     }
 
@@ -86,8 +86,8 @@ class KafkaHttpKafkaProcessingUnmarshallingComposeTest {
         return Assertions.assertDoesNotThrow(() -> {
             try {
                 return countMessages(ENVIRONMENT.getContainerByServiceName(ENDPOINT_NAME).orElseThrow(),
-                                     "routetest_response",
-                                     "kafka:9092");
+                        "routetest_response",
+                        "kafka:9092");
             } catch (IOException | InterruptedException e) {
                 throw new IllegalStateException(e);
             }

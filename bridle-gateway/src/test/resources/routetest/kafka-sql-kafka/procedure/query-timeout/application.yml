@@ -1,0 +1,98 @@
+spring:
+  output:
+    ansi:
+      enabled: always
+camel:
+  component:
+    kafka:
+      enabled: false
+    http:
+      enabled: false
+    scheduler:
+      enabled: false
+    rest:
+      enabled: false
+    freemarker:
+      enabled: false
+    json-validator:
+      enabled: false
+    sql-stored:
+      enabled: false
+    sql:
+      enabled: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,prometheus"
+
+gateway:
+  type: "kafka-sql-kafka"
+redelivery-policy:
+  maximum-redeliveries: 2
+  redelivery-delay: 100
+  retry-attempted-log-level: "WARN"
+error-handler:
+  redelivery-policy-ref: "redelivery-policy"
+
+components:
+  kafka:
+    kafka-in:
+      brokers: "localhost:9090"
+      consumers-count: 1
+      group-id: "KAFKA_HTTP_KAFKA_FIRST_TESTING6"
+      break-on-error: false
+      auto-offset-reset: "earliest"
+      max-poll-records: 500
+      max-partition-fetch-bytes: 1048576
+      heartbeat-interval-ms: 3000
+      session-timeout-ms: 10000
+    kafka-out:
+      brokers: "localhost:9090"
+  procedure:
+    main-procedure-call:
+      dataSource: "#mainDataSource"
+endpoints:
+  kafka-in-endpoint:
+    component-name: "kafka-in"
+    consumer: true
+    mandatory:
+      topic: "routetest_request"
+  kafka-out-endpoint:
+    component-name: "kafka-out"
+    mandatory:
+      topic: "routetest_response"
+  sql-out-endpoint:
+    component-name: "main-procedure-call"
+    mandatory:
+      sql-template-uri: "classpath:/routetest/kafka-sql-kafka/procedure/query-timeout/integration-mapping.sql"
+    additional:
+      templateOptions:
+        template:
+          queryTimeout: 1
+processing:
+  after-consumer:
+    header-collector:
+      expression-format: "JSON_PATH"
+      query-expressions-by-header-name:
+        correlationId: "$.system.correlationId"
+    unmarshalling-data-format":
+      data-format-name: "json"
+  after-producer:
+    transform:
+      resource-uri: "/routetest/kafka-sql-kafka/procedure/query-timeout/response-mapping.tmpl"
+datasources:
+  hikari:
+    main-datasource:
+      driver-class-name: "oracle.jdbc.OracleDriver"
+      jdbc-url: "jdbc:oracle:thin:@localhost:1521:xe"
+      username: "testUser"
+      password: "testPassword"
+      maximum-pool-size: 10
+      connection-timeout: 30000
+      idle-timeout: 60000
+      max-life-time: 1800000
+      dataSourceProperties:
+        oracle.jdbc.ReadTimeout: 500
+

@@ -66,10 +66,8 @@ public class HttpPollKafkaWithNoTopicScenarioTest {
                 .respond(response().withBody(POLL_SERVER_RESPONSE).withStatusCode(200));
 
         setupKafka(kafka, KAFKA_PORT);
-        System.setProperty("kafka-out.brokers",
-                           "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
-        System.setProperty("kafka-in.brokers",
-                           "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
+        System.setProperty("kafka-out.brokers", "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
+        System.setProperty("kafka-in.brokers", "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
     }
 
     @AfterAll
