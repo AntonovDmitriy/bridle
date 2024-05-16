@@ -2,7 +2,6 @@ package composetest;
 
 import com.bridle.configuration.routes.KafkaSqlConfiguration;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.ComposeContainer;
@@ -11,12 +10,9 @@ import org.testcontainers.containers.wait.strategy.WaitAllStrategy;
 import org.testcontainers.junit.jupiter.Container;
 
 import java.io.File;
-import java.io.IOException;
 import java.time.Duration;
 import java.util.function.Predicate;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static utils.KafkaContainerUtils.countMessages;
 import static utils.MetricsTestUtils.parseMessagesAmount;
 import static utils.MetricsTestUtils.verifyMetrics;
 
