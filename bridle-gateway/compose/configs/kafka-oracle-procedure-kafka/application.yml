@@ -87,6 +87,7 @@ datasources:
       username: "testUser"
       password: "testPassword"
       maximum-pool-size: 10
+      minimum-idle: 0
       connection-timeout: 30000
       idle-timeout: 60000
       max-life-time: 1800000
