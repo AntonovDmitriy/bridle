@@ -1,6 +1,6 @@
 package composetest;
 
-import com.bridle.configuration.routes.KafkaSqlKafkaConfiguration;
+import com.bridle.configuration.routes.KafkaSqlKafkaDynamicConfiguration;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -22,7 +22,7 @@ import static utils.MetricsTestUtils.verifyMetrics;
 
 class KafkaOracleProcedureKafkaComposeTest {
 
-    private static final String ROUTE_NAME = KafkaSqlKafkaConfiguration.GATEWAY_TYPE_KAFKA_SQL_KAFKA;
+    private static final String ROUTE_NAME = KafkaSqlKafkaDynamicConfiguration.GATEWAY_TYPE_KAFKA_SQL_KAFKA;
 
     private static final Predicate<String> APP_STARTS_TO_RECIEVE_LOAD_PREDICATE =
             s -> parseMessagesAmount(s, ROUTE_NAME) > 0;

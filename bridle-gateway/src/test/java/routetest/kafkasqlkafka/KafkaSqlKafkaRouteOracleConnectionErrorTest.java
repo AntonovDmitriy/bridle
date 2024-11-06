@@ -5,7 +5,6 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.NotifyBuilder;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -21,7 +20,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.bridle.configuration.routes.KafkaSqlKafkaConfiguration.GATEWAY_TYPE_KAFKA_SQL_KAFKA;
+import static com.bridle.configuration.routes.KafkaSqlKafkaDynamicConfiguration.GATEWAY_TYPE_KAFKA_SQL_KAFKA_DYNAMIC;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.testcontainers.containers.KafkaContainer.KAFKA_PORT;
 import static utils.KafkaContainerUtils.*;
@@ -62,9 +61,9 @@ public class KafkaSqlKafkaRouteOracleConnectionErrorTest {
     public static void setUp() throws Exception {
         setupKafka(kafka, KAFKA_PORT);
         System.setProperty("components.kafka.kafka-out.brokers",
-                           "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
+                "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
         System.setProperty("components.kafka.kafka-in.brokers",
-                           "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
+                "localhost:" + kafka.getMappedPort(KAFKA_PORT).toString());
         createTopic(kafka, TOPIC_NAME_REQUST);
         createTopic(kafka, TOPIC_NAME_RESPONSE);
 
@@ -83,7 +82,7 @@ public class KafkaSqlKafkaRouteOracleConnectionErrorTest {
         boolean done = notify.matches(10, TimeUnit.SECONDS);
         Assertions.assertTrue(done);
         assertEquals(0, countMessages(kafka, TOPIC_NAME_RESPONSE));
-        verifyMetrics(GATEWAY_TYPE_KAFKA_SQL_KAFKA, 0, messageCount, 0);
+        verifyMetrics(GATEWAY_TYPE_KAFKA_SQL_KAFKA_DYNAMIC, 0, messageCount, 0);
     }
 }
 

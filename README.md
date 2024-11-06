@@ -36,3 +36,5 @@ The third reason is the creation of standard routes, which, if desired, can be c
 ## Usage Examples
 (TBD)
 
+## Internals
+

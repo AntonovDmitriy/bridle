@@ -1,13 +1,10 @@
 package com.bridle.configuration.routes;
 
 import com.bridle.configuration.common.DynamicComponentsComfiguration;
-import com.bridle.configuration.common.consumer.KafkaInConfiguration;
 import com.bridle.configuration.common.datasource.DataSourceConfiguration;
 import com.bridle.configuration.common.errorhandling.ErrorHandlerConfiguration;
 import com.bridle.configuration.common.processing.AfterConsumerProcessingConfiguration;
 import com.bridle.configuration.common.processing.AfterProducerProcessingConfiguration;
-import com.bridle.configuration.common.producer.KafkaOutConfiguration;
-import com.bridle.configuration.common.producer.SqlOutConfiguration;
 import com.bridle.routes.ConsumerToDoubleProducerRoute;
 import com.bridle.routes.model.ConsumerToDoubleProducerRouteParams;
 import com.bridle.utils.ProcessingParams;
@@ -24,22 +21,23 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @Import({ErrorHandlerConfiguration.class,
-        KafkaInConfiguration.class,
-        KafkaOutConfiguration.class,
-        SqlOutConfiguration.class,
         AfterConsumerProcessingConfiguration.class,
         AfterProducerProcessingConfiguration.class,
+        DynamicComponentsComfiguration.class,
         DataSourceConfiguration.class})
 @ConditionalOnProperty(name = "gateway.type",
-        havingValue = KafkaSqlKafkaConfiguration.GATEWAY_TYPE_KAFKA_SQL_KAFKA)
-public class KafkaSqlKafkaConfiguration {
+        havingValue = KafkaSqlKafkaDynamicConfiguration.GATEWAY_TYPE_KAFKA_SQL_KAFKA_DYNAMIC)
+public class KafkaSqlKafkaDynamicConfiguration {
 
-    public static final String GATEWAY_TYPE_KAFKA_SQL_KAFKA = "kafka-sql-kafka";
+    public static final String GATEWAY_TYPE_KAFKA_SQL_KAFKA_DYNAMIC = "kafka-sql-kafka-dynamic";
 
     @Bean
     public RouteBuilder kafkaSqlKafkaRoute(ErrorHandlerFactory errorHandlerFactory,
-                                           EndpointConsumerBuilder kafkaConsumerBuilder,
+                                           @Qualifier("kafka-in-endpoint")
+                                           EndpointConsumerBuilder kafkaInEndpoint,
+                                           @Qualifier("sql-out-endpoint")
                                            EndpointProducerBuilder sqlCall,
+                                           @Qualifier("kafka-out-endpoint")
                                            EndpointProducerBuilder kafkaOutEndpoint,
                                            @Autowired(required = false)
                                            @Qualifier("afterConsumer")
@@ -48,8 +46,8 @@ public class KafkaSqlKafkaConfiguration {
                                            @Qualifier("afterProducer")
                                            ProcessingParams processingAfterProducerParams) {
         return new ConsumerToDoubleProducerRoute(errorHandlerFactory,
-                new ConsumerToDoubleProducerRouteParams(GATEWAY_TYPE_KAFKA_SQL_KAFKA,
-                        kafkaConsumerBuilder,
+                new ConsumerToDoubleProducerRouteParams(GATEWAY_TYPE_KAFKA_SQL_KAFKA_DYNAMIC,
+                        kafkaInEndpoint,
                         processingAfterConsumerParams,
                         sqlCall,
                         processingAfterProducerParams,

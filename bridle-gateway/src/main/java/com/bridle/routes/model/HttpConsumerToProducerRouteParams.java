@@ -4,7 +4,8 @@ import com.bridle.utils.ProcessingParams;
 import org.apache.camel.builder.EndpointProducerBuilder;
 import org.apache.commons.lang3.Validate;
 
-public record HttpConsumerToProducerRouteParams(String routeId, EndpointProducerBuilder mainProducer,
+public record HttpConsumerToProducerRouteParams(String routeId,
+                                                EndpointProducerBuilder mainProducer,
                                                 EndpointProducerBuilder successResponseBuilder,
                                                 EndpointProducerBuilder errorResponseBuilder,
                                                 EndpointProducerBuilder validationErrorResponseBuilder,
